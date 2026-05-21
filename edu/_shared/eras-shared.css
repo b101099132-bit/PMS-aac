@@ -1,1 +1,901 @@
+/* ════════════════════════════════════════════════════════════════════════
+   日間麻醉中心 ERAS 衛教 — 共用設計系統(eras-shared.css)
+   ────────────────────────────────────────────────────────────────────────
+   • 適用於:edu/*.html(所有衛教單張)、survey.html、preop.html 等表單頁
+   • 不適用於:edu/index.html、PMS 根目錄的 index.html(這兩頁自帶 inline CSS)
+   • 設計來源:從心臟版 3 份典範衛教反推共用模式 + 日間版差異化色彩(--clay)
+   • 維護原則:任何頁面用 2 次以上的模式,提升到這裡;頁面專屬樣式留在該頁 <style>
+   ════════════════════════════════════════════════════════════════════════ */
 
+/* ──────────────────────────────────────────────────────────────────────
+   1 · CSS 變數(色票 / 字體 / 間距)
+   ────────────────────────────────────────────────────────────────────── */
+:root {
+
+  /* ─ 背景 ─ */
+  --cream:        #FAF7F2;   /* 主背景 — 頁面底色 */
+  --cream-deep:   #F0EBDE;   /* 次背景 — 名詞速查 / placeholder */
+  --paper:        #FFFFFF;   /* 卡片 / 內容區白底 */
+
+  /* ─ 文字 ─ */
+  --ink:          #1A1A1A;   /* 主文字 */
+  --ink-soft:     #5C5C5C;   /* 次文字 / 描述 */
+  --ink-faint:    #8A8580;   /* 弱文字 / metadata */
+
+  /* ─ 主強調色:teal(冷靜、專業)─ */
+  --teal:         #1F5A5A;
+  --teal-tint:    #F5F9F9;   /* teal 極淺底(visiting-hours、lead 漸層尾)*/
+  --teal-soft:    #E6EDED;   /* teal 淺底(connection cards)*/
+
+  /* ─ 次強調色:gold(溫暖、重要)─ */
+  --gold:         #A87B4D;
+  --gold-soft:    #F5EAD0;   /* gold 淺底(eras-benefits、dir-footer-note)*/
+  --gold-border:  #E0C9A8;   /* gold 邊框 */
+
+  /* ─ 輔助色(用於跨單張識別、特殊群組)─ */
+  --plum:         #6B5876;   /* 家屬視角 / 認知議題 */
+  --navy:         #2C4866;   /* 管理 / 統計 / cold 同色 */
+  --sage:         #5A7A52;   /* 資源 / 緩和 / safe 同色 */
+  --clay:         #9C5B3D;   /* ★ 日間版獨有 — PADSS 離院關卡 */
+
+  /* ─ 邊框 ─ */
+  --border:           #E8E2D5;
+  --border-strong:    #D4CDB8;
+  --highlight-border: #E0C9A8;  /* 同 gold-border,語義 alias */
+
+  /* ─ 語義色(以情境命名,跨頁可重用)─ */
+  /* cold(冷色) — 手術 / ICU / 報到當天 */
+  --cold:         #2C4866;
+  --cold-bg:      #E3ECF3;
+  /* warn(警示)— 出院前 / 回家當晚 / 注意事項 */
+  --warn:         #C77F4A;
+  --warn-bg:      #FBEEDD;
+  /* safe(安全)— 回家後 / 已完成 / 通過標準 */
+  --safe:         #5A7A52;
+  --safe-bg:      #E8EFE3;
+  --safe-border:  #C2D2BA;
+  /* danger(嚴重警告)— 立即就醫、警示徵兆 */
+  --danger:         #B5453A;
+  --danger-bg:      #FAE9E7;
+  --danger-border:  #E9B8B0;
+
+  /* ─ 字體 ─ */
+  --font-sans:  'Noto Sans TC', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Noto Serif TC', 'Times New Roman', serif;
+  --font-mono:  'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   2 · Reset + base typography
+   ────────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-padding-top: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.7;
+  padding: 32px 16px 60px;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: var(--teal); text-decoration: none; }
+a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+strong { font-weight: 600; color: var(--ink); }
+em { font-style: italic; }
+
+p {
+  margin-bottom: 14px;
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  line-height: 1.85;
+}
+p:last-child { margin-bottom: 0; }
+p strong { color: var(--ink); font-weight: 600; }
+
+ul, ol { margin: 0 0 14px 0; padding-left: 22px; }
+li {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.85;
+  margin-bottom: 6px;
+}
+li strong { color: var(--ink); font-weight: 600; }
+li:last-child { margin-bottom: 0; }
+
+/* ──────────────────────────────────────────────────────────────────────
+   3 · 頁面骨架:container
+   ────────────────────────────────────────────────────────────────────── */
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   4 · Header(eyebrow / h1 / subtitle / divider)
+   ────────────────────────────────────────────────────────────────────── */
+header {
+  text-align: center;
+  margin: 16px 0 32px;
+  padding-bottom: 22px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.35em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  font-weight: 500;
+  font-family: var(--font-serif);
+}
+
+h1 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: clamp(24px, 5vw, 30px);
+  color: var(--ink);
+  margin-bottom: 12px;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.subtitle {
+  color: var(--ink-soft);
+  font-size: 14.5px;
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.divider {
+  width: 48px;
+  height: 1px;
+  background: var(--gold);
+  margin: 24px auto 0;
+  position: relative;
+}
+.divider::before, .divider::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  width: 5px;
+  height: 5px;
+  background: var(--gold);
+  border-radius: 50%;
+}
+.divider::before { left: -10px; }
+.divider::after  { right: -10px; }
+
+/* ──────────────────────────────────────────────────────────────────────
+   5 · Lead(導讀區塊 — 每篇衛教開頭的「破題三段」)
+   ────────────────────────────────────────────────────────────────────── */
+.lead {
+  background: linear-gradient(180deg, var(--paper) 0%, var(--teal-tint) 100%);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--teal);
+  border-radius: 4px;
+  padding: 22px 26px;
+  margin-bottom: 28px;
+}
+.lead > strong:first-child,
+.lead > strong:first-of-type {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.55;
+  margin-bottom: 12px;
+  letter-spacing: -0.005em;
+}
+.lead p {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.85;
+  margin-bottom: 10px;
+}
+.lead p:last-child { margin-bottom: 0; }
+.lead p strong { color: var(--ink); font-weight: 600; }
+
+/* ──────────────────────────────────────────────────────────────────────
+   6 · Lexicon(名詞速查 — 給民眾的字典)
+   ────────────────────────────────────────────────────────────────────── */
+.lexicon {
+  background: var(--cream-deep);
+  border-radius: 4px;
+  padding: 22px 24px;
+  margin-bottom: 28px;
+}
+.lexicon h4 {
+  font-family: var(--font-serif);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.lex-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 14px;
+  padding: 8px 0;
+  border-top: 1px dashed var(--border-strong);
+}
+.lex-row:first-of-type { border-top: none; padding-top: 0; }
+.lex-row:last-of-type { padding-bottom: 0; }
+.lex-term {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--teal);
+  line-height: 1.5;
+}
+.lex-def {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.75;
+}
+.lex-def strong { color: var(--ink); font-weight: 600; }
+@media (max-width: 480px) {
+  .lex-row { grid-template-columns: 1fr; gap: 4px; }
+  .lex-term { font-size: 13.5px; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   7 · 行內元素:em / em-teal / link-ref
+   ────────────────────────────────────────────────────────────────────── */
+/* 強調(預設 — 內文金句)*/
+.em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--ink);
+  background: linear-gradient(transparent 60%, var(--gold-soft) 60%);
+  padding: 0 1px;
+}
+/* teal 變體 — 用於「本院做法」「核心訊息」等強識別 */
+.em-teal {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--teal);
+  background: linear-gradient(transparent 60%, var(--teal-tint) 60%);
+  padding: 0 1px;
+}
+
+/* 跨單張連結徽章 */
+.link-ref {
+  display: inline-block;
+  font-family: var(--font-serif);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--teal);
+  background: var(--teal-tint);
+  border: 1px solid var(--teal-soft);
+  padding: 1px 7px;
+  border-radius: 2px;
+  margin: 0 2px;
+  white-space: nowrap;
+  vertical-align: 1px;
+}
+a.link-ref:hover { background: var(--teal-soft); text-decoration: none; }
+
+/* ──────────────────────────────────────────────────────────────────────
+   8 · Section 標頭與 intro
+   ────────────────────────────────────────────────────────────────────── */
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--teal);
+  letter-spacing: -0.005em;
+  margin: 36px 0 12px;
+  padding-left: 12px;
+  border-left: 3px solid var(--gold);
+  line-height: 1.45;
+}
+.section-title:first-of-type { margin-top: 8px; }
+
+.section-intro {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  line-height: 1.85;
+  margin-bottom: 18px;
+  font-style: italic;
+}
+.section-intro .em,
+.section-intro .em-teal { font-style: normal; }
+
+/* ──────────────────────────────────────────────────────────────────────
+   9 · Reading map(建議閱讀路徑 — 整套衛教的網絡感)
+   ────────────────────────────────────────────────────────────────────── */
+.reading-map {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 18px 22px;
+  margin: 24px 0;
+}
+.reading-map h4 {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.reading-map .sub {
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  line-height: 1.7;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+.reading-map ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: rm-counter;
+}
+.reading-map li {
+  position: relative;
+  padding: 4px 0 4px 28px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  counter-increment: rm-counter;
+  margin-bottom: 0;
+}
+.reading-map li::before {
+  content: counter(rm-counter);
+  position: absolute;
+  left: 0; top: 4px;
+  width: 20px;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 11px;
+  color: var(--gold);
+  font-weight: 600;
+}
+.reading-map li strong { color: var(--ink); font-weight: 600; }
+.reading-map li.current {
+  background: var(--gold-soft);
+  border-left: 2px solid var(--gold);
+  padding-left: 30px;
+  margin-left: -8px;
+  border-radius: 0 3px 3px 0;
+}
+.reading-map li.current::before {
+  left: 6px;
+  color: var(--gold);
+}
+.reading-map li.current strong { color: var(--ink); }
+
+/* ──────────────────────────────────────────────────────────────────────
+   10 · Callout(資訊框 — 4 種語義變體)
+   ────────────────────────────────────────────────────────────────────── */
+.callout {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--teal);
+  border-radius: 4px;
+  padding: 18px 22px;
+  margin: 18px 0;
+}
+.callout h4 {
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--teal);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.callout p {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  line-height: 1.85;
+  margin-bottom: 8px;
+}
+.callout p:last-child { margin-bottom: 0; }
+.callout ul, .callout ol { margin: 6px 0 6px 4px; padding-left: 20px; }
+.callout li { font-size: 13.5px; color: var(--ink-soft); line-height: 1.85; }
+
+/* warnings 變體 — 提醒、注意事項(amber/gold)*/
+.callout.warnings {
+  background: var(--warn-bg);
+  border: 1px solid var(--gold-border);
+  border-left: 3px solid var(--warn);
+}
+.callout.warnings h4 { color: var(--warn); }
+.callout.warnings h4::before { content: '⚠ '; }
+
+/* danger 變體 — 嚴重警告、立即就醫(red)*/
+.callout.danger {
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+  border-left: 3px solid var(--danger);
+}
+.callout.danger h4 { color: var(--danger); }
+.callout.danger h4::before { content: '⚠ '; }
+
+/* safe 變體 — 已通過 / 正常範圍(green)*/
+.callout.safe {
+  background: var(--safe-bg);
+  border: 1px solid var(--safe-border);
+  border-left: 3px solid var(--safe);
+}
+.callout.safe h4 { color: var(--safe); }
+.callout.safe h4::before { content: '✓ '; }
+
+/* info 變體 — 一般說明(預設 teal 樣式即 info,額外 alias)*/
+.callout.info { /* 沿用預設 */ }
+
+/* eras-banner — ERAS 品牌通用 callout(gold 系)*/
+.callout.eras-banner {
+  background: var(--gold-soft);
+  border: 1px solid var(--gold-border);
+  border-left: 3px solid var(--gold);
+}
+.callout.eras-banner h4 { color: var(--gold); }
+
+/* eras-benefits — ERAS 好處清單(teal-tint 系)*/
+.callout.eras-benefits {
+  background: var(--teal-tint);
+  border: 1px solid var(--teal-soft);
+  border-left: 3px solid var(--teal);
+}
+.callout.eras-benefits h4 { color: var(--teal); }
+
+/* ──────────────────────────────────────────────────────────────────────
+   11 · References(參考文獻)
+   ────────────────────────────────────────────────────────────────────── */
+.references {
+  margin: 32px 0 0;
+  padding: 18px 22px;
+  background: var(--cream-deep);
+  border-radius: 4px;
+  border-left: 2px solid var(--border-strong);
+}
+.ref-title {
+  font-family: var(--font-serif);
+  font-size: 11.5px;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.references ol {
+  list-style: decimal;
+  padding-left: 22px;
+  margin: 0;
+}
+.references li {
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin-bottom: 8px;
+}
+.references li:last-child { margin-bottom: 0; }
+.references em { color: var(--teal); font-style: italic; }
+.references a { color: var(--teal); }
+
+/* ──────────────────────────────────────────────────────────────────────
+   12 · Closing + Signature(每篇衛教的收束)
+   ────────────────────────────────────────────────────────────────────── */
+.closing {
+  margin: 36px 0 24px;
+  padding: 26px 28px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  text-align: center;
+}
+.closing p {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  line-height: 1.85;
+  margin-bottom: 12px;
+}
+.closing p:last-of-type { margin-bottom: 18px; }
+.closing .em {
+  background: linear-gradient(transparent 60%, var(--gold-soft) 60%);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.signature {
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--teal);
+  letter-spacing: 0.05em;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.signature-note {
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+  font-family: var(--font-serif);
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   13 · Footer(衛教檔結尾的院方識別與免責聲明)
+   ────────────────────────────────────────────────────────────────────── */
+footer {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  line-height: 1.7;
+}
+footer .clinic {
+  font-family: var(--font-serif);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+  letter-spacing: 0.05em;
+}
+footer .disclaimer {
+  font-size: 11px;
+  max-width: 580px;
+  margin: 8px auto 0;
+  line-height: 1.7;
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   14 · Forms(基礎表單元件 — 給 survey.html / preop.html 用)
+   ────────────────────────────────────────────────────────────────────── */
+.form-section {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 22px 24px;
+  margin-bottom: 18px;
+}
+.form-section .section-label {
+  font-family: var(--font-serif);
+  font-size: 11.5px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.form-section h3 {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.field {
+  margin-bottom: 18px;
+}
+.field:last-child { margin-bottom: 0; }
+.field label,
+.field .label {
+  display: block;
+  font-size: 14px;
+  color: var(--ink);
+  font-weight: 500;
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+.field .label-sub {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  font-weight: 400;
+  margin-top: 2px;
+  font-style: italic;
+}
+.field input[type="text"],
+.field input[type="tel"],
+.field input[type="email"],
+.field input[type="date"],
+.field input[type="number"],
+.field textarea,
+.field select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.5;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(31, 90, 90, 0.12);
+}
+.field textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: var(--font-sans);
+  line-height: 1.7;
+}
+.field .required { color: var(--danger); margin-left: 2px; }
+
+/* Likert / 單選按鈕群組(行動裝置友善大目標)*/
+.likert {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+.likert input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.likert label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 60px;
+  padding: 10px 6px;
+  background: var(--paper);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  text-align: center;
+  line-height: 1.4;
+  transition: all 0.12s ease;
+  font-weight: 500;
+}
+.likert label:hover { border-color: var(--teal); background: var(--teal-tint); }
+.likert input[type="radio"]:checked + label {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: white;
+  font-weight: 600;
+}
+.likert input[type="radio"]:focus-visible + label {
+  box-shadow: 0 0 0 3px rgba(31, 90, 90, 0.2);
+}
+.likert .anchor-num {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+}
+.likert .anchor-label {
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+}
+
+/* Yes/No 按鈕對 */
+.binary-choice {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+.binary-choice input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.binary-choice label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 12px;
+  background: var(--paper);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.12s ease;
+}
+.binary-choice label:hover { border-color: var(--teal); background: var(--teal-tint); }
+.binary-choice input[type="radio"]:checked + label {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: white;
+  font-weight: 600;
+}
+
+/* 主要送出按鈕 */
+.btn-primary {
+  display: inline-block;
+  background: var(--teal);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 14px 32px;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.12s ease;
+  min-height: 48px;
+  width: 100%;
+}
+.btn-primary:hover { background: #174646; }
+.btn-primary:active { transform: translateY(1px); }
+.btn-primary:disabled {
+  background: var(--border-strong);
+  color: var(--ink-faint);
+  cursor: not-allowed;
+}
+
+/* 次要按鈕 */
+.btn-secondary {
+  display: inline-block;
+  background: var(--paper);
+  color: var(--teal);
+  border: 1px solid var(--teal);
+  border-radius: 3px;
+  padding: 12px 24px;
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.btn-secondary:hover { background: var(--teal-tint); }
+
+/* 表單頂部 hero(問卷介紹區)*/
+.form-hero {
+  background: linear-gradient(180deg, var(--paper) 0%, var(--teal-tint) 100%);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--teal);
+  border-radius: 4px;
+  padding: 22px 26px;
+  margin-bottom: 22px;
+}
+.form-hero h2 {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.form-hero p {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  line-height: 1.8;
+  margin-bottom: 6px;
+}
+.form-hero .meta {
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+
+/* 進度條(可選用 — 多步表單)*/
+.form-progress {
+  position: sticky;
+  top: 0;
+  background: var(--cream);
+  padding: 8px 0;
+  margin: -8px 0 16px;
+  z-index: 10;
+}
+.form-progress .bar {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.form-progress .fill {
+  height: 100%;
+  background: var(--teal);
+  transition: width 0.3s ease;
+}
+.form-progress .label {
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-top: 4px;
+  letter-spacing: 0.1em;
+  font-family: var(--font-serif);
+}
+
+/* 送出後確認頁 */
+.form-thank-you {
+  text-align: center;
+  padding: 40px 24px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-top: 24px;
+}
+.form-thank-you .icon {
+  font-size: 36px;
+  color: var(--teal);
+  margin-bottom: 12px;
+}
+.form-thank-you h3 {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.form-thank-you p {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  max-width: 380px;
+  margin: 0 auto 12px;
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   15 · Responsive 微調(< 480px)
+   ────────────────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  body { padding: 24px 14px 50px; font-size: 14.5px; }
+  h1 { font-size: 24px; }
+  .subtitle { font-size: 13.5px; }
+  .lead { padding: 18px 20px; }
+  .lead > strong:first-of-type { font-size: 15.5px; }
+  .lexicon { padding: 18px 20px; }
+  .section-title { font-size: 16.5px; margin-top: 30px; padding-left: 10px; }
+  .callout { padding: 16px 18px; }
+  .closing { padding: 22px 22px; }
+  .form-section { padding: 18px 20px; }
+  .likert label { font-size: 11px; padding: 8px 4px; min-height: 54px; }
+  .likert .anchor-num { font-size: 14px; }
+  .likert .anchor-label { font-size: 10px; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   16 · 列印樣式(病人可能列印整篇衛教)
+   ────────────────────────────────────────────────────────────────────── */
+@media print {
+  body { background: white; padding: 0; font-size: 11pt; }
+  .container { max-width: 100%; }
+  .reading-map, footer { page-break-inside: avoid; }
+  .section-title { page-break-after: avoid; }
+  a, a:visited { color: var(--ink); text-decoration: none; }
+  .link-ref { border: 1px solid #999; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   END · 維護筆記
+   ────────────────────────────────────────────────────────────────────── */
+/*
+   ▸ 新增頁面專屬樣式 → 放在該頁的 inline <style>,不放這裡
+   ▸ 同樣模式在 2+ 頁出現 → 提升到本檔
+   ▸ 色彩務必走 var(--xxx),避免硬編寫死(方便整套色彩重調)
+   ▸ 字體用 var(--font-serif) / var(--font-sans) / var(--font-mono)
+   ▸ 修改本檔後,任何 <link rel="stylesheet" href="_shared/eras-shared.css"> 的頁面都會更新
+   ▸ 部署位置:/PMS-aac/edu/_shared/eras-shared.css
+*/
