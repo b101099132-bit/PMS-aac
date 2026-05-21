@@ -291,6 +291,74 @@
   .quad-choice label { font-size: 12px; padding: 8px 4px; }
 }
 
+/* ════════════════════════════════════════════════════════════════════
+   Severity Ladder — 垂直列表式選擇,適合具體行為錨點(C1a PONV 嚴重度、
+   C1b 止吐藥效果)。每個選項是一整列,文字長度不受限。
+   設計依據:Wengritzky BJA 2010 / Myles BJA 2012 / SPONVSS BMC Anesthesiol 2025
+   ════════════════════════════════════════════════════════════════════ */
+.severity-ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+.severity-ladder input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.severity-ladder label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  min-height: 48px;
+  background: var(--paper);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  font-weight: 500;
+}
+.severity-ladder label:hover {
+  border-color: var(--teal);
+  background: var(--teal-tint);
+}
+.severity-ladder input[type="radio"]:checked + label {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: white;
+  font-weight: 600;
+}
+.severity-ladder .level-text {
+  flex: 1;
+}
+.severity-ladder .level-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  background: var(--cream-deep);
+  border-radius: 50%;
+  font-family: var(--font-serif);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gold);
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+.severity-ladder input[type="radio"]:checked + label .level-num {
+  background: white;
+  color: var(--teal);
+}
+@media (max-width: 480px) {
+  .severity-ladder label { font-size: 13px; padding: 10px 14px; }
+}
+
 /* 條件式欄位 */
 .conditional {
   display: none;
@@ -547,37 +615,58 @@
         </div>
       </div>
 
+      <!-- ─────────────────────────────────────────────────────────────
+           C1a / C1b 設計依據(PONV 量測,2026 修訂):
+           ▸ Wengritzky R, et al. Br J Anaesth 2010;104(2):158-166.
+             奠基研究 — 提出 PONV Intensity Scale,確認「嘔吐 ≥ 3 次」
+             為臨床顯著 PONV (csPONV) 的關鍵閾值。
+           ▸ Myles PS, Wengritzky R. Br J Anaesth 2012;108(3):423-429.
+             簡化版 SPONVIS,適合門診/出院後病人填寫。
+           ▸ Weng SF, et al. BMC Anesthesiol 2025;25:236.
+             SPONVSS — 台灣團隊(成大 + 嘉基)驗證的 3 維度簡化量表,
+             總分 ≥ 3 即為臨床顯著 PONV,獨立預測止吐藥需求、睡眠、活力。
+
+           C1a 採具體行為錨點(輕微反胃 → 嘔吐 ≥ 3 次),Level 5 對應
+                Wengritzky 所定義之 csPONV 閾值。
+           C1b 整合「rescue antiemetic 是否給予」與「效果」於單題,
+                Level 1「沒有給止吐藥」本身即為品質指標。
+           ───────────────────────────────────────────────────────────── -->
+
       <!-- C1a, C1b 條件式 -->
       <div class="conditional" data-show-if="C1=yes">
         <div class="field">
-          <label><span class="q-num">C1a.</span>程度?</label>
-          <div class="likert">
+          <label><span class="q-num">C1a.</span>過去 24 小時內,您噁心嘔吐的<strong>最嚴重程度</strong>是哪一個?
+            <span class="label-sub">由上到下,情況由輕至重 — 請選最接近您狀況的一項</span>
+          </label>
+          <div class="severity-ladder">
             <input type="radio" name="C1a" id="C1a-1" value="1">
-            <label for="C1a-1"><span class="anchor-num">1</span><span class="anchor-label">嚴重</span></label>
+            <label for="C1a-1"><span class="level-num">1</span><span class="level-text">輕微反胃,沒有持續不適</span></label>
             <input type="radio" name="C1a" id="C1a-2" value="2">
-            <label for="C1a-2"><span class="anchor-num">2</span><span class="anchor-label">明顯</span></label>
+            <label for="C1a-2"><span class="level-num">2</span><span class="level-text">持續噁心,但沒有乾嘔或嘔吐</span></label>
             <input type="radio" name="C1a" id="C1a-3" value="3">
-            <label for="C1a-3"><span class="anchor-num">3</span><span class="anchor-label">中度</span></label>
+            <label for="C1a-3"><span class="level-num">3</span><span class="level-text">有乾嘔(想吐的感覺),但沒吐出來</span></label>
             <input type="radio" name="C1a" id="C1a-4" value="4">
-            <label for="C1a-4"><span class="anchor-num">4</span><span class="anchor-label">輕微</span></label>
+            <label for="C1a-4"><span class="level-num">4</span><span class="level-text">嘔吐 1-2 次</span></label>
             <input type="radio" name="C1a" id="C1a-5" value="5">
-            <label for="C1a-5"><span class="anchor-num">5</span><span class="anchor-label">幾乎沒有</span></label>
+            <label for="C1a-5"><span class="level-num">5</span><span class="level-text">嘔吐 3 次以上</span></label>
           </div>
         </div>
 
         <div class="field">
-          <label><span class="q-num">C1b.</span>給您的止吐藥效果如何?</label>
-          <div class="likert">
+          <label><span class="q-num">C1b.</span>醫護有給您止吐藥嗎?效果如何?
+            <span class="label-sub">由上到下,介入由少到多、效果由差到好</span>
+          </label>
+          <div class="severity-ladder">
             <input type="radio" name="C1b" id="C1b-1" value="1">
-            <label for="C1b-1"><span class="anchor-num">1</span><span class="anchor-label">沒效</span></label>
+            <label for="C1b-1"><span class="level-num">1</span><span class="level-text">沒有給止吐藥</span></label>
             <input type="radio" name="C1b" id="C1b-2" value="2">
-            <label for="C1b-2"><span class="anchor-num">2</span><span class="anchor-label">稍微</span></label>
+            <label for="C1b-2"><span class="level-num">2</span><span class="level-text">有給,但完全沒效</span></label>
             <input type="radio" name="C1b" id="C1b-3" value="3">
-            <label for="C1b-3"><span class="anchor-num">3</span><span class="anchor-label">普通</span></label>
+            <label for="C1b-3"><span class="level-num">3</span><span class="level-text">有給,稍微緩解</span></label>
             <input type="radio" name="C1b" id="C1b-4" value="4">
-            <label for="C1b-4"><span class="anchor-num">4</span><span class="anchor-label">有效</span></label>
+            <label for="C1b-4"><span class="level-num">4</span><span class="level-text">有給,大致緩解</span></label>
             <input type="radio" name="C1b" id="C1b-5" value="5">
-            <label for="C1b-5"><span class="anchor-num">5</span><span class="anchor-label">完全解決</span></label>
+            <label for="C1b-5"><span class="level-num">5</span><span class="level-text">有給,完全解決</span></label>
           </div>
         </div>
       </div>
