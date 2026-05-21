@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>術後第 1 天 · 麻醉照護回饋</title>
+<meta name="description" content="術後 24 小時麻醉照護回饋問卷 — 術前準備、麻醉甦醒、腸胃與食慾、疼痛控制、整體滿意度。約 3 分鐘填寫。協助麻醉團隊持續優化照護品質。">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- 共用 CSS -->
+<link rel="stylesheet" href="_shared/eras-shared.css">
+
+<style>
+/* ════════════════════════════════════════════════════════════════════
+   Q1 術後 24hr · 麻醉照護回饋 — 頁面專屬樣式
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ─ Progress bar 微調 ─ */
+.form-progress {
+  background: linear-gradient(180deg, var(--cream) 0%, var(--cream) 75%, rgba(250, 247, 242, 0) 100%);
+  padding: 12px 0 16px;
+  margin: -32px -16px 0;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* ─ 章節編號徽章 ─ */
+.section-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: var(--gold);
+  color: white;
+  border-radius: 50%;
+  font-family: var(--font-serif);
+  font-size: 12px;
+  font-weight: 600;
+  margin-right: 6px;
+  vertical-align: -3px;
+}
+
+/* ─ 題目編號 ─ */
+.q-num {
+  display: inline-block;
+  font-family: var(--font-serif);
+  color: var(--gold);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-right: 4px;
+  font-size: 13px;
+}
+
+/* ─ 章節間距 ─ */
+.form-section + .form-section { margin-top: 16px; }
+
+/* ════════════════════════════════════════════════════════════════════
+   NRS 0-10 widget + 分級對照圖例
+   ════════════════════════════════════════════════════════════════════ */
+.nrs-block {
+  margin-top: 10px;
+}
+
+/* 分級對照圖例(顯示在 NRS 上方,讓病人理解每個數字代表的意義)*/
+.nrs-legend {
+  background: var(--gold-soft);
+  border: 1px solid var(--gold-border);
+  border-left: 3px solid var(--gold);
+  border-radius: 3px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+.nrs-legend .legend-title {
+  font-family: var(--font-serif);
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.nrs-legend-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px 14px;
+}
+.nrs-legend-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.nrs-legend-num {
+  display: inline-block;
+  min-width: 30px;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold);
+  background: white;
+  border: 1px solid var(--gold-border);
+  border-radius: 2px;
+  padding: 1px 4px;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+.nrs-legend-text strong { color: var(--ink); font-weight: 600; }
+
+/* NRS 0-10 按鈕 ─ */
+.nrs {
+  margin-top: 6px;
+}
+.nrs-row {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 3px;
+}
+.nrs-row input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.nrs-row label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  background: var(--paper);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.12s ease;
+  user-select: none;
+}
+.nrs-row label:hover {
+  border-color: var(--teal);
+  background: var(--teal-tint);
+}
+.nrs-row input[type="radio"]:checked + label {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: white;
+  font-weight: 700;
+}
+.nrs-row input[type="radio"]:focus-visible + label {
+  box-shadow: 0 0 0 3px rgba(31, 90, 90, 0.25);
+}
+.nrs-anchors {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--ink-faint);
+  font-family: var(--font-serif);
+  letter-spacing: 0.05em;
+  padding: 0 2px;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   其他互動元件
+   ════════════════════════════════════════════════════════════════════ */
+
+/* Tri-choice(3 點選擇)*/
+.tri-choice {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+.tri-choice input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.tri-choice label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 10px 8px;
+  background: var(--paper);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.12s ease;
+  text-align: center;
+  line-height: 1.4;
+}
+.tri-choice label:hover { border-color: var(--teal); background: var(--teal-tint); }
+.tri-choice input[type="radio"]:checked + label {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: white;
+  font-weight: 600;
+}
+
+/* Likert 的「不適用 / 未使用」逸出選項 — 視覺上與 1-5 量表分離 */
+.likert-na {
+  margin-top: 6px;
+}
+.likert-na input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.likert-na label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  background: var(--cream-deep);
+  border: 1px dashed var(--border-strong);
+  border-radius: 3px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.12s ease;
+}
+.likert-na label:hover {
+  border-style: solid;
+  border-color: var(--teal);
+  background: var(--teal-tint);
+  color: var(--ink);
+}
+.likert-na input[type="radio"]:checked + label {
+  background: var(--teal);
+  border-color: var(--teal);
+  border-style: solid;
+  color: white;
+  font-weight: 600;
+}
+
+/* 條件式欄位 */
+.conditional {
+  display: none;
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: var(--teal-tint);
+  border: 1px solid var(--teal-soft);
+  border-left: 3px solid var(--teal);
+  border-radius: 0 3px 3px 0;
+}
+.conditional.show {
+  display: block;
+  animation: slideDown 0.22s ease;
+}
+.conditional .field { margin-bottom: 14px; }
+.conditional .field:last-child { margin-bottom: 0; }
+.conditional .field label { font-size: 13.5px; }
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 可選題標記 */
+.optional-mark {
+  display: inline-block;
+  font-size: 10.5px;
+  color: var(--ink-faint);
+  background: var(--cream-deep);
+  padding: 1px 6px;
+  border-radius: 2px;
+  margin-left: 6px;
+  letter-spacing: 0.05em;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  vertical-align: 1px;
+}
+
+/* 送出區塊 */
+.submit-area {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.submit-area .submit-hint {
+  font-size: 12px;
+  color: var(--ink-faint);
+  text-align: center;
+  margin-top: 10px;
+}
+.submit-area .error-msg {
+  display: none;
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+  color: var(--danger);
+  padding: 10px 14px;
+  border-radius: 3px;
+  font-size: 13px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.submit-area .error-msg.show { display: block; }
+
+/* ─ 行動裝置 ─ */
+@media (max-width: 480px) {
+  .nrs-row label { font-size: 12px; min-height: 40px; }
+  .nrs-anchors { font-size: 10.5px; }
+  .tri-choice label { min-height: 44px; font-size: 13.5px; padding: 8px 4px; }
+  .section-num { width: 20px; height: 20px; font-size: 11px; }
+  .form-section h3 { font-size: 15.5px; }
+  .nrs-legend-grid { grid-template-columns: 1fr; gap: 4px; }
+  .nrs-legend-item { font-size: 11.5px; }
+}
+
+@media (max-width: 360px) {
+  .nrs-row { gap: 2px; }
+  .nrs-row label { font-size: 11.5px; }
+  .likert label { padding: 8px 3px; font-size: 10.5px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Progress bar -->
+  <div class="form-progress">
+    <div class="bar"><div class="fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="label" id="progress-label">已完成 0 / 12 題</div>
+  </div>
+
+  <header>
+    <div class="eyebrow">麻醉科 · 術後第 1 天</div>
+    <h1>麻醉照護回饋</h1>
+    <p class="subtitle">您於 <span id="ctx-date">手術日</span> 接受 <span id="ctx-surg">手術</span>,謝謝您撥 3 分鐘讓麻醉團隊知道過去 24 小時的感受</p>
+    <div class="divider"></div>
+  </header>
+
+  <div class="form-hero">
+    <p>這份問卷涵蓋<span class="em-teal">術前準備、麻醉甦醒、腸胃與食慾、疼痛控制、整體滿意度</span>五個面向。</p>
+    <p>您的回答會直接協助麻醉團隊<span class="em-teal">持續優化每一次的麻醉照護品質</span>。<strong>沒有對錯</strong>,憑直覺勾選即可。</p>
+    <div class="meta">⏱ 約 3 分鐘 · 🔒 僅用於本院內部品質改善 · 不影響後續就醫權益</div>
+  </div>
+
+  <form id="survey-form" novalidate>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         A · 術前準備與溝通(3 主題 + 1 條件式)
+         ════════════════════════════════════════════════════════════════ -->
+    <div class="form-section" data-section="A">
+      <div class="section-label"><span class="section-num">A</span>術前準備與溝通</div>
+      <h3>術前評估、風險解釋、自費項目的清楚度</h3>
+
+      <div class="field">
+        <label><span class="q-num">A1.</span>術前的麻醉評估過程(門診 / 術前訪視),整體感受如何? <span class="required">*</span></label>
+        <div class="likert">
+          <input type="radio" name="A1" id="A1-1" value="1" required>
+          <label for="A1-1"><span class="anchor-num">1</span><span class="anchor-label">很不滿意</span></label>
+          <input type="radio" name="A1" id="A1-2" value="2">
+          <label for="A1-2"><span class="anchor-num">2</span><span class="anchor-label">不滿意</span></label>
+          <input type="radio" name="A1" id="A1-3" value="3">
+          <label for="A1-3"><span class="anchor-num">3</span><span class="anchor-label">普通</span></label>
+          <input type="radio" name="A1" id="A1-4" value="4">
+          <label for="A1-4"><span class="anchor-num">4</span><span class="anchor-label">滿意</span></label>
+          <input type="radio" name="A1" id="A1-5" value="5">
+          <label for="A1-5"><span class="anchor-num">5</span><span class="anchor-label">很滿意</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label><span class="q-num">A2.</span>麻醉相關的風險與注意事項,醫師說明得清楚嗎? <span class="required">*</span></label>
+        <div class="likert">
+          <input type="radio" name="A2" id="A2-1" value="1" required>
+          <label for="A2-1"><span class="anchor-num">1</span><span class="anchor-label">完全不清楚</span></label>
+          <input type="radio" name="A2" id="A2-2" value="2">
+          <label for="A2-2"><span class="anchor-num">2</span><span class="anchor-label">不太清楚</span></label>
+          <input type="radio" name="A2" id="A2-3" value="3">
+          <label for="A2-3"><span class="anchor-num">3</span><span class="anchor-label">普通</span></label>
+          <input type="radio" name="A2" id="A2-4" value="4">
+          <label for="A2-4"><span class="anchor-num">4</span><span class="anchor-label">清楚</span></label>
+          <input type="radio" name="A2" id="A2-5" value="5">
+          <label for="A2-5"><span class="anchor-num">5</span><span class="anchor-label">非常清楚</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label><span class="q-num">A3.</span>對於這次的<strong>麻醉自費項目</strong>,您的滿意度? <span class="required">*</span></label>
+        <div class="likert">
+          <input type="radio" name="A3" id="A3-1" value="1" required>
+          <label for="A3-1"><span class="anchor-num">1</span><span class="anchor-label">非常不滿意</span></label>
+          <input type="radio" name="A3" id="A3-2" value="2">
+          <label for="A3-2"><span class="anchor-num">2</span><span class="anchor-label">不滿意</span></label>
+          <input type="radio" name="A3" id="A3-3" value="3">
+          <label for="A3-3"><span class="anchor-num">3</span><span class="anchor-label">普通</span></label>
+          <input type="radio" name="A3" id="A3-4" value="4">
+          <label for="A3-4"><span class="anchor-num">4</span><span class="anchor-label">滿意</span></label>
+          <input type="radio" name="A3" id="A3-5" value="5">
+          <label for="A3-5"><span class="anchor-num">5</span><span class="anchor-label">非常滿意</span></label>
+        </div>
+        <div class="likert-na">
+          <input type="radio" name="A3" id="A3-na" value="na">
+          <label for="A3-na">未使用自費項目</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         B · 麻醉甦醒(3 題)
+         ════════════════════════════════════════════════════════════════ -->
+    <div class="form-section" data-section="B">
+      <div class="section-label"><span class="section-num">B</span>麻醉甦醒</div>
+      <h3>您從麻醉中醒來時的身體狀況</h3>
+
+      <div class="field">
+        <label><span class="q-num">B1.</span>麻醉醒來時的整體感覺如何? <span class="required">*</span></label>
+        <div class="likert">
+          <input type="radio" name="B1" id="B1-1" value="1" required>
+          <label for="B1-1"><span class="anchor-num">1</span><span class="anchor-label">很不舒服</span></label>
+          <input type="radio" name="B1" id="B1-2" value="2">
+          <label for="B1-2"><span class="anchor-num">2</span><span class="anchor-label">不舒服</span></label>
+          <input type="radio" name="B1" id="B1-3" value="3">
+          <label for="B1-3"><span class="anchor-num">3</span><span class="anchor-label">普通</span></label>
+          <input type="radio" name="B1" id="B1-4" value="4">
+          <label for="B1-4"><span class="anchor-num">4</span><span class="anchor-label">舒適</span></label>
+          <input type="radio" name="B1" id="B1-5" value="5">
+          <label for="B1-5"><span class="anchor-num">5</span><span class="anchor-label">很舒適</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label><span class="q-num">B2.</span>有沒有頭暈、想睡、注意力不集中? <span class="required">*</span></label>
+        <div class="likert">
+          <input type="radio" name="B2" id="B2-1" value="1" required>
+          <label for="B2-1"><span class="anchor-num">1</span><span class="anchor-label">嚴重</span></label>
+          <input type="radio" name="B2" id="B2-2" value="2">
+          <label for="B2-2"><span class="anchor-num">2</span><span class="anchor-label">明顯</span></label>
+          <input type="radio" name="B2" id="B2-3" value="3">
+          <label for="B2-3"><span class="anchor-num">3</span><span class="anchor-label">普通</span></label>
+          <input type="radio" name="B2" id="B2-4" value="4">
+          <label for="B2-4"><span class="anchor-num">4</span><span class="anchor-label">輕微</span></label>
+          <input type="radio" name="B2" id="B2-5" value="5">
+          <label for="B2-5"><span class="anchor-num">5</span><span class="anchor-label">沒有</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label><span class="q-num">B3.</span>有沒有發抖、冷顫? <span class="required">*</span></label>
+        <div class="likert">
+          <input type="radio" name="B3" id="B3-1" value="1" required>
+          <label for="B3-1"><span class="anchor-num">1</span><span class="anchor-label">嚴重</span></label>
+          <input type="radio" name="B3" id="B3-2" value="2">
+          <label for="B3-2"><span class="anchor-num">2</span><span class="anchor-label">明顯</span></label>
+          <input type="radio" name="B3" id="B3-3" value="3">
+          <label for="B3-3"><span class="anchor-num">3</span><span class="anchor-label">普通</span></label>
+          <input type="radio" name="B3" id="B3-4" value="4">
+          <label for="B3-4"><span class="anchor-num">4</span><span class="anchor-label">輕微</span></label>
+          <input type="radio" name="B3" id="B3-5" value="5">
+          <label for="B3-5"><span class="anchor-num">5</span><span class="anchor-label">沒有</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         C · 腸胃與食慾(PONV + 食慾)
+         ════════════════════════════════════════════════════════════════ -->
+    <div class="form-section" data-section="C">
+      <div class="section-label"><span class="section-num">C</span>腸胃與食慾</div>
+      <h3>過去 24 小時的腸胃感受</h3>
+
+      <div class="field">
+        <label><span class="q-num">C1.</span>過去 24 小時內,您有沒有噁心或嘔吐? <span class="required">*</span></label>
+        <div class="binary-choice">
+          <input type="radio" name="C1" id="C1-yes" value="yes" required>
+          <label for="C1-yes">有</label>
+          <input type="radio" name="C1" id="C1-no" value="no">
+          <label for="C1-no">沒有</label>
+        </div>
+      </div>
+
+      <!-- C1a, C1b 條件式 -->
+      <div class="conditional" data-show-if="C1=yes">
+        <div class="field">
+          <label><span class="q-num">C1a.</span>程度?</label>
+          <div class="likert">
+            <input type="radio" name="C1a" id="C1a-1" value="1">
+            <label for="C1a-1"><span class="anchor-num">1</span><span class="anchor-label">嚴重</span></label>
+            <input type="radio" name="C1a" id="C1a-2" value="2">
+            <label for="C1a-2"><span class="anchor-num">2</span><span class="anchor-label">明顯</span></label>
+            <input type="radio" name="C1a" id="C1a-3" value="3">
+            <label for="C1a-3"><span class="anchor-num">3</span><span class="anchor-label">中度</span></label>
+            <input type="radio" name="C1a" id="C1a-4" value="4">
+            <label for="C1a-4"><span class="anchor-num">4</span><span class="anchor-label">輕微</span></label>
+            <input type="radio" name="C1a" id="C1a-5" value="5">
+            <label for="C1a-5"><span class="anchor-num">5</span><span class="anchor-label">幾乎沒有</span></label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label><span class="q-num">C1b.</span>給您的止吐藥效果如何?</label>
+          <div class="likert">
+            <input type="radio" name="C1b" id="C1b-1" value="1">
+            <label for="C1b-1"><span class="anchor-num">1</span><span class="anchor-label">沒效</span></label>
+            <input type="radio" name="C1b" id="C1b-2" value="2">
+            <label for="C1b-2"><span class="anchor-num">2</span><span class="anchor-label">稍微</span></label>
+            <input type="radio" name="C1b" id="C1b-3" value="3">
+            <label for="C1b-3"><span class="anchor-num">3</span><span class="anchor-label">普通</span></label>
+            <input type="radio" name="C1b" id="C1b-4" value="4">
+            <label for="C1b-4"><span class="anchor-num">4</span><span class="anchor-label">有效</span></label>
+            <input type="radio" name="C1b" id="C1b-5" value="5">
+            <label for="C1b-5"><span class="anchor-num">5</span><span class="anchor-label">完全解決</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label><span class="q-num">C2.</span>過去 24 小時的<strong>食慾</strong>如何? <span class="required">*</span></label>
+        <div class="likert">
+          <input type="radio" name="C2" id="C2-1" value="1" required>
+          <label for="C2-1"><span class="anchor-num">1</span><span class="anchor-label">完全沒胃口</span></label>
+          <input type="radio" name="C2" id="C2-2" value="2">
+          <label for="C2-2"><span class="anchor-num">2</span><span class="anchor-label">稍微吃一點</span></label>
+          <input type="radio" name="C2" id="C2-3" value="3">
+          <label for="C2-3"><span class="anchor-num">3</span><span class="anchor-label">普通</span></label>
+          <input type="radio" name="C2" id="C2-4" value="4">
+          <label for="C2-4"><span class="anchor-num">4</span><span class="anchor-label">不錯</span></label>
+          <input type="radio" name="C2" id="C2-5" value="5">
+          <label for="C2-5"><span class="anchor-num">5</span><span class="anchor-label">完全正常</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         D · 疼痛控制(2 個 NRS,含分級對照圖例)
+         ════════════════════════════════════════════════════════════════ -->
+    <div class="form-section" data-section="D">
+      <div class="section-label"><span class="section-num">D</span>疼痛控制</div>
+      <h3>過去 24 小時的疼痛情況</h3>
+
+      <!-- NRS 分級對照圖例(D1、D2 共用)-->
+      <div class="nrs-legend">
+        <div class="legend-title">疼痛分級對照</div>
+        <div class="nrs-legend-grid">
+          <div class="nrs-legend-item">
+            <span class="nrs-legend-num">0</span>
+            <span class="nrs-legend-text"><strong>完全沒有疼痛</strong></span>
+          </div>
+          <div class="nrs-legend-item">
+            <span class="nrs-legend-num">1-3</span>
+            <span class="nrs-legend-text"><strong>輕度</strong>:可忍受、不影響日常活動與睡眠</span>
+          </div>
+          <div class="nrs-legend-item">
+            <span class="nrs-legend-num">4-6</span>
+            <span class="nrs-legend-text"><strong>中度</strong>:影響活動或睡眠、需要止痛藥</span>
+          </div>
+          <div class="nrs-legend-item">
+            <span class="nrs-legend-num">7-9</span>
+            <span class="nrs-legend-text"><strong>重度</strong>:難以忍受、無法配合活動</span>
+          </div>
+          <div class="nrs-legend-item">
+            <span class="nrs-legend-num">10</span>
+            <span class="nrs-legend-text"><strong>痛到無法忍受</strong>:是您能想像到最痛的程度</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label><span class="q-num">D1.</span>過去 24 小時內,<strong>最痛</strong>的那一刻,疼痛程度? <span class="required">*</span></label>
+        <div class="nrs-block">
+          <div class="nrs">
+            <div class="nrs-row">
+              <input type="radio" name="D1" id="D1-0" value="0" required>
+              <label for="D1-0">0</label>
+              <input type="radio" name="D1" id="D1-1" value="1">
+              <label for="D1-1">1</label>
+              <input type="radio" name="D1" id="D1-2" value="2">
+              <label for="D1-2">2</label>
+              <input type="radio" name="D1" id="D1-3" value="3">
+              <label for="D1-3">3</label>
+              <input type="radio" name="D1" id="D1-4" value="4">
+              <label for="D1-4">4</label>
+              <input type="radio" name="D1" id="D1-5" value="5">
+              <label for="D1-5">5</label>
+              <input type="radio" name="D1" id="D1-6" value="6">
+              <label for="D1-6">6</label>
+              <input type="radio" name="D1" id="D1-7" value="7">
+              <label for="D1-7">7</label>
+              <input type="radio" name="D1" id="D1-8" value="8">
+              <label for="D1-8">8</label>
+              <input type="radio" name="D1" id="D1-9" value="9">
+              <label for="D1-9">9</label>
+              <input type="radio" name="D1" id="D1-10" value="10">
+              <label for="D1-10">10</label>
+            </div>
+            <div class="nrs-anchors">
+              <span class="anchor-left">不痛</span>
+              <span class="anchor-right">最痛</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label><span class="q-num">D2.</span><strong>現在這一刻</strong>的疼痛程度? <span class="required">*</span></label>
+        <div class="nrs-block">
+          <div class="nrs">
+            <div class="nrs-row">
+              <input type="radio" name="D2" id="D2-0" value="0" required>
+              <label for="D2-0">0</label>
+              <input type="radio" name="D2" id="D2-1" value="1">
+              <label for="D2-1">1</label>
+              <input type="radio" name="D2" id="D2-2" value="2">
+              <label for="D2-2">2</label>
+              <input type="radio" name="D2" id="D2-3" value="3">
+              <label for="D2-3">3</label>
+              <input type="radio" name="D2" id="D2-4" value="4">
+              <label for="D2-4">4</label>
+              <input type="radio" name="D2" id="D2-5" value="5">
+              <label for="D2-5">5</label>
+              <input type="radio" name="D2" id="D2-6" value="6">
+              <label for="D2-6">6</label>
+              <input type="radio" name="D2" id="D2-7" value="7">
+              <label for="D2-7">7</label>
+              <input type="radio" name="D2" id="D2-8" value="8">
+              <label for="D2-8">8</label>
+              <input type="radio" name="D2" id="D2-9" value="9">
+              <label for="D2-9">9</label>
+              <input type="radio" name="D2" id="D2-10" value="10">
+              <label for="D2-10">10</label>
+            </div>
+            <div class="nrs-anchors">
+              <span class="anchor-left">不痛</span>
+              <span class="anchor-right">最痛</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         E · 整體與留言(整體滿意度 + 開放式)
+         ════════════════════════════════════════════════════════════════ -->
+    <div class="form-section" data-section="E">
+      <div class="section-label"><span class="section-num">E</span>整體與留言</div>
+      <h3>對這次麻醉照護的整體印象與想說的話</h3>
+
+      <div class="field">
+        <label><span class="q-num">E1.</span>對這次的<strong>整體麻醉照護</strong>,您的滿意度? <span class="required">*</span></label>
+        <div class="likert">
+          <input type="radio" name="E1" id="E1-1" value="1" required>
+          <label for="E1-1"><span class="anchor-num">1</span><span class="anchor-label">非常不滿意</span></label>
+          <input type="radio" name="E1" id="E1-2" value="2">
+          <label for="E1-2"><span class="anchor-num">2</span><span class="anchor-label">不滿意</span></label>
+          <input type="radio" name="E1" id="E1-3" value="3">
+          <label for="E1-3"><span class="anchor-num">3</span><span class="anchor-label">普通</span></label>
+          <input type="radio" name="E1" id="E1-4" value="4">
+          <label for="E1-4"><span class="anchor-num">4</span><span class="anchor-label">滿意</span></label>
+          <input type="radio" name="E1" id="E1-5" value="5">
+          <label for="E1-5"><span class="anchor-num">5</span><span class="anchor-label">非常滿意</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="E2"><span class="q-num">E2.</span>想跟麻醉團隊或照護同仁說的話?<span class="optional-mark">可選填</span>
+          <span class="label-sub">您(或家屬)有任何想分享的 — 讚美、建議、抱怨、感謝、想法、疑問,都歡迎寫下</span>
+        </label>
+        <textarea id="E2" name="E2" rows="3" maxlength="500" placeholder="(可留空)"></textarea>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         送出
+         ════════════════════════════════════════════════════════════════ -->
+    <div class="submit-area">
+      <div class="error-msg" id="error-msg"></div>
+      <button type="submit" class="btn-primary" id="submit-btn">送出問卷</button>
+      <div class="submit-hint">系統會自動儲存填寫中的答案 · 不小心關掉也能回來繼續</div>
+    </div>
+
+  </form>
+
+  <!-- 送出完成後顯示 -->
+  <div class="form-thank-you" id="thank-you" style="display:none">
+    <div class="icon">✓</div>
+    <h3>感謝您的回饋</h3>
+    <p>您的回答已經送達麻醉團隊。<br>我們會持續優化每一次的麻醉照護品質。</p>
+    <p style="font-size:13px;color:var(--ink-faint);margin-top:14px">如果您之後想到還有什麼要補充,可以告訴照護同仁或於回診時與醫師討論。</p>
+    <div class="signature" style="margin-top:18px;border-top:1px solid var(--border);padding-top:14px">麻醉加速康復團隊 · 與你同莘</div>
+    <div class="signature-note">同莘 — 同心 · 耕莘</div>
+  </div>
+
+  <footer>
+    <div class="clinic">麻醉科 — 麻醉品質改善追蹤</div>
+    <div class="disclaimer">本問卷僅用於本院內部品質改善,由授權的麻醉團隊成員存取。<br>本問卷不取代任何醫療照護 — 如有不適,請告知照護同仁或於回診時與醫師討論。</div>
+  </footer>
+
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     行為邏輯 — URL hash 解析、條件式、進度、localStorage、JSONP 送出
+     ════════════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  // 設定區 — 部署時請改 APPS_SCRIPT_URL
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/REPLACE_WITH_YOUR_URL/exec';
+  const ACTION_NAME = 'surveyD1';
+  const SURG_MAP = {
+    upper:  '上肢骨科手術',
+    spine:  '椎體成形手術',
+    uro:    '膀胱鏡 / 輸尿管鏡手術'
+  };
+
+  // ─────────────────────────────────────────────────────────────────
+  // 1. 解析 URL hash:#pid=XXX&surg=upper&date=2026-05-20
+  // ─────────────────────────────────────────────────────────────────
+  function parseHash() {
+    const hash = window.location.hash.replace(/^#/, '');
+    const params = {};
+    hash.split('&').forEach(pair => {
+      const [k, v] = pair.split('=');
+      if (k) params[k] = decodeURIComponent((v || '').replace(/\+/g, ' '));
+    });
+    return params;
+  }
+  const ctx = parseHash();
+
+  if (ctx.date) document.getElementById('ctx-date').textContent = ctx.date;
+  if (ctx.surg && SURG_MAP[ctx.surg]) {
+    document.getElementById('ctx-surg').textContent = SURG_MAP[ctx.surg];
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // 2. 條件式欄位
+  // ─────────────────────────────────────────────────────────────────
+  function updateConditionals() {
+    document.querySelectorAll('[data-show-if]').forEach(el => {
+      const cond = el.getAttribute('data-show-if');
+      const [name, expectedValue] = cond.split('=');
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      const shouldShow = checked && checked.value === expectedValue;
+      el.classList.toggle('show', shouldShow);
+
+      if (!shouldShow) {
+        el.querySelectorAll('input[type="radio"]:checked').forEach(r => { r.checked = false; });
+        el.querySelectorAll('textarea').forEach(t => { t.value = ''; });
+      }
+    });
+  }
+  document.querySelectorAll('input[type="radio"]').forEach(r => {
+    r.addEventListener('change', () => {
+      updateConditionals();
+      updateProgress();
+      saveDraft();
+    });
+  });
+  document.querySelectorAll('textarea').forEach(t => {
+    t.addEventListener('input', saveDraft);
+  });
+
+  // ─────────────────────────────────────────────────────────────────
+  // 3. 進度追蹤
+  // ─────────────────────────────────────────────────────────────────
+  const fill   = document.getElementById('progress-fill');
+  const labelE = document.getElementById('progress-label');
+
+  function updateProgress() {
+    const requiredRadios = document.querySelectorAll('input[type="radio"][required]');
+    const requiredNames  = new Set();
+    requiredRadios.forEach(r => requiredNames.add(r.name));
+    const total = requiredNames.size;
+
+    let answered = 0;
+    requiredNames.forEach(name => {
+      if (document.querySelector(`input[name="${name}"]:checked`)) answered++;
+    });
+
+    const pct = total > 0 ? (answered / total) * 100 : 0;
+    fill.style.width = pct + '%';
+    labelE.textContent = `已完成 ${answered} / ${total} 題`;
+    if (answered === total) {
+      labelE.textContent = `✓ 全部完成 · 可送出`;
+    }
+  }
+  updateProgress();
+
+  // ─────────────────────────────────────────────────────────────────
+  // 4. localStorage 草稿儲存 / 還原
+  // ─────────────────────────────────────────────────────────────────
+  const STORAGE_KEY = 'asc-survey-d1-' + (ctx.pid || 'anon');
+
+  function saveDraft() {
+    const data = {};
+    document.querySelectorAll('input[type="radio"]:checked').forEach(r => {
+      data[r.name] = r.value;
+    });
+    document.querySelectorAll('textarea').forEach(t => {
+      if (t.value.trim()) data[t.name] = t.value.trim();
+    });
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+  }
+
+  function loadDraft() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      Object.entries(data).forEach(([name, value]) => {
+        const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
+        if (radio) {
+          radio.checked = true;
+          return;
+        }
+        const textarea = document.querySelector(`textarea[name="${name}"]`);
+        if (textarea) textarea.value = value;
+      });
+      updateConditionals();
+      updateProgress();
+    } catch (e) {
+      console.debug('[draft] load failed:', e.message);
+    }
+  }
+  loadDraft();
+
+  // ─────────────────────────────────────────────────────────────────
+  // 5. JSONP 送出
+  // ─────────────────────────────────────────────────────────────────
+  function safeEncode(value) {
+    return encodeURIComponent(String(value))
+      .replace(/\(/g, '%28')
+      .replace(/\)/g, '%29');
+  }
+
+  function collectFormData() {
+    const data = {
+      action: ACTION_NAME,
+      pid:    ctx.pid    || '',
+      surg:   ctx.surg   || '',
+      surg_date: ctx.date || '',
+      submitted_at: new Date().toISOString()
+    };
+    document.querySelectorAll('input[type="radio"]:checked').forEach(r => {
+      data[r.name] = r.value;
+    });
+    document.querySelectorAll('textarea').forEach(t => {
+      const v = t.value.trim();
+      if (v) data[t.name] = v;
+    });
+    return data;
+  }
+
+  function showError(message) {
+    const el = document.getElementById('error-msg');
+    el.textContent = message;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 5000);
+  }
+
+  function showThankYou() {
+    document.getElementById('survey-form').style.display = 'none';
+    document.querySelector('.form-hero').style.display = 'none';
+    document.querySelector('.form-progress').style.display = 'none';
+    document.getElementById('thank-you').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function submitJSONP(data) {
+    const cb = '_cb_' + Date.now() + '_' + Math.floor(Math.random() * 1e6);
+    const parts = [];
+
+    Object.keys(data).forEach(k => {
+      const v = data[k];
+      if (v === '' || v == null) return;
+      parts.push(encodeURIComponent(k) + '=' + safeEncode(v));
+    });
+    parts.push('callback=' + cb);
+    const url = APPS_SCRIPT_URL + '?' + parts.join('&');
+
+    const script = document.createElement('script');
+    script.src = url;
+    script.async = true;
+
+    window[cb] = function (response) {
+      cleanup();
+      if (response && response.ok) {
+        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+        showThankYou();
+      } else {
+        const msg = (response && response.error) || '伺服器回應失敗,請稍後再試';
+        showError(msg);
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('submit-btn').textContent = '送出問卷';
+      }
+    };
+    script.onerror = function () {
+      cleanup();
+      showError('連線失敗,請檢查網路後再試一次');
+      document.getElementById('submit-btn').disabled = false;
+      document.getElementById('submit-btn').textContent = '送出問卷';
+    };
+    function cleanup() {
+      try { delete window[cb]; } catch (e) { window[cb] = undefined; }
+      if (script.parentNode) script.parentNode.removeChild(script);
+    }
+    document.head.appendChild(script);
+
+    setTimeout(() => {
+      if (window[cb]) {
+        cleanup();
+        showError('送出逾時,請檢查網路後再試一次');
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('submit-btn').textContent = '送出問卷';
+      }
+    }, 10000);
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // 6. Submit handler
+  // ─────────────────────────────────────────────────────────────────
+  document.getElementById('survey-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const requiredRadios = document.querySelectorAll('input[type="radio"][required]');
+    const requiredNames = new Set();
+    requiredRadios.forEach(r => requiredNames.add(r.name));
+    const missing = [];
+    requiredNames.forEach(name => {
+      if (!document.querySelector(`input[name="${name}"]:checked`)) missing.push(name);
+    });
+    if (missing.length > 0) {
+      showError(`還有 ${missing.length} 題必填項目沒回答(進度條未滿)`);
+      const firstMissing = document.querySelector(`input[name="${missing[0]}"]`);
+      if (firstMissing) {
+        firstMissing.closest('.field').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = '送出中...';
+
+    const data = collectFormData();
+
+    if (APPS_SCRIPT_URL.indexOf('REPLACE_WITH_YOUR_URL') !== -1) {
+      console.log('[Survey D1] APPS_SCRIPT_URL 尚未設定,以下為將送出的資料:', data);
+      setTimeout(() => {
+        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+        showThankYou();
+      }, 500);
+      return;
+    }
+
+    submitJSONP(data);
+  });
+
+})();
+</script>
+
+</body>
+</html>
