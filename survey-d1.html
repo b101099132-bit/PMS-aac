@@ -248,6 +248,49 @@
   font-weight: 600;
 }
 
+/* Quad-choice(4 點選擇,進度型問題如活動力)*/
+.quad-choice {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+.quad-choice input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.quad-choice label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 10px 6px;
+  background: var(--paper);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  text-align: center;
+  font-weight: 500;
+  transition: all 0.12s ease;
+  line-height: 1.4;
+}
+.quad-choice label:hover {
+  border-color: var(--teal);
+  background: var(--teal-tint);
+}
+.quad-choice input[type="radio"]:checked + label {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: white;
+  font-weight: 600;
+}
+@media (max-width: 360px) {
+  .quad-choice label { font-size: 12px; padding: 8px 4px; }
+}
+
 /* 條件式欄位 */
 .conditional {
   display: none;
@@ -291,12 +334,6 @@
   padding-top: 20px;
   border-top: 1px solid var(--border);
 }
-.submit-area .submit-hint {
-  font-size: 12px;
-  color: var(--ink-faint);
-  text-align: center;
-  margin-top: 10px;
-}
 .submit-area .error-msg {
   display: none;
   background: var(--danger-bg);
@@ -334,7 +371,7 @@
   <!-- Progress bar -->
   <div class="form-progress">
     <div class="bar"><div class="fill" id="progress-fill" style="width:0%"></div></div>
-    <div class="label" id="progress-label">已完成 0 / 12 題</div>
+    <div class="label" id="progress-label">已完成 0 / 14 題</div>
   </div>
 
   <header>
@@ -345,12 +382,37 @@
   </header>
 
   <div class="form-hero">
-    <p>這份問卷涵蓋<span class="em-teal">術前準備、麻醉甦醒、腸胃與食慾、疼痛控制、整體滿意度</span>五個面向。</p>
+    <p>這份問卷涵蓋<span class="em-teal">術前準備、麻醉甦醒、功能恢復(如食慾、意識、活動力)、疼痛控制、整體滿意度</span>五個面向。</p>
     <p>您的回答會直接協助麻醉團隊<span class="em-teal">持續優化每一次的麻醉照護品質</span>。<strong>沒有對錯</strong>,憑直覺勾選即可。</p>
     <div class="meta">⏱ 約 3 分鐘 · 🔒 僅用於本院內部品質改善 · 不影響後續就醫權益</div>
   </div>
 
   <form id="survey-form" novalidate>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         填寫資訊(不計入 A-E 五大段)
+         ════════════════════════════════════════════════════════════════ -->
+    <div class="form-section" data-section="meta">
+      <div class="section-label">填寫資訊</div>
+      <h3>填寫前的基本資料</h3>
+
+      <div class="field">
+        <label for="patient_name">病患姓名 <span class="optional-mark">可選填</span>
+          <span class="label-sub">填寫可幫助醫療團隊對應病歷;不填也完全可以</span>
+        </label>
+        <input type="text" id="patient_name" name="patient_name" maxlength="30" placeholder="(可留空)">
+      </div>
+
+      <div class="field">
+        <label>填寫人 <span class="required">*</span></label>
+        <div class="binary-choice">
+          <input type="radio" name="filler" id="filler-self" value="self" required>
+          <label for="filler-self">病患本人</label>
+          <input type="radio" name="filler" id="filler-family" value="family">
+          <label for="filler-family">家屬 / 親友代填</label>
+        </div>
+      </div>
+    </div>
 
     <!-- ════════════════════════════════════════════════════════════════
          A · 術前準備與溝通(3 主題 + 1 條件式)
@@ -436,7 +498,7 @@
       </div>
 
       <div class="field">
-        <label><span class="q-num">B2.</span>有沒有頭暈、想睡、注意力不集中? <span class="required">*</span></label>
+        <label><span class="q-num">B2.</span>有沒有頭暈、頭痛、噁心? <span class="required">*</span></label>
         <div class="likert">
           <input type="radio" name="B2" id="B2-1" value="1" required>
           <label for="B2-1"><span class="anchor-num">1</span><span class="anchor-label">嚴重</span></label>
@@ -452,7 +514,7 @@
       </div>
 
       <div class="field">
-        <label><span class="q-num">B3.</span>有沒有發抖、冷顫? <span class="required">*</span></label>
+        <label><span class="q-num">B3.</span>有沒有發寒、顫抖? <span class="required">*</span></label>
         <div class="likert">
           <input type="radio" name="B3" id="B3-1" value="1" required>
           <label for="B3-1"><span class="anchor-num">1</span><span class="anchor-label">嚴重</span></label>
@@ -469,11 +531,11 @@
     </div>
 
     <!-- ════════════════════════════════════════════════════════════════
-         C · 腸胃與食慾(PONV + 食慾)
+         C · 功能回復(PONV、食慾、意識、活動力)
          ════════════════════════════════════════════════════════════════ -->
     <div class="form-section" data-section="C">
-      <div class="section-label"><span class="section-num">C</span>腸胃與食慾</div>
-      <h3>過去 24 小時的腸胃感受</h3>
+      <div class="section-label"><span class="section-num">C</span>功能回復</div>
+      <h3>過去 24 小時的功能恢復狀況</h3>
 
       <div class="field">
         <label><span class="q-num">C1.</span>過去 24 小時內,您有沒有噁心或嘔吐? <span class="required">*</span></label>
@@ -533,6 +595,38 @@
           <label for="C2-4"><span class="anchor-num">4</span><span class="anchor-label">不錯</span></label>
           <input type="radio" name="C2" id="C2-5" value="5">
           <label for="C2-5"><span class="anchor-num">5</span><span class="anchor-label">完全正常</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label><span class="q-num">C3.</span>您覺得<strong>意識恢復</strong>得清楚嗎? <span class="required">*</span></label>
+        <div class="likert">
+          <input type="radio" name="C3" id="C3-1" value="1" required>
+          <label for="C3-1"><span class="anchor-num">1</span><span class="anchor-label">完全不清楚</span></label>
+          <input type="radio" name="C3" id="C3-2" value="2">
+          <label for="C3-2"><span class="anchor-num">2</span><span class="anchor-label">不太清楚</span></label>
+          <input type="radio" name="C3" id="C3-3" value="3">
+          <label for="C3-3"><span class="anchor-num">3</span><span class="anchor-label">普通</span></label>
+          <input type="radio" name="C3" id="C3-4" value="4">
+          <label for="C3-4"><span class="anchor-num">4</span><span class="anchor-label">清楚</span></label>
+          <input type="radio" name="C3" id="C3-5" value="5">
+          <label for="C3-5"><span class="anchor-num">5</span><span class="anchor-label">非常清楚</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label><span class="q-num">C4.</span>您目前的<strong>活動力</strong>? <span class="required">*</span>
+          <span class="label-sub">勾選最接近您目前狀態的選項(由左到右代表恢復程度由低到高)</span>
+        </label>
+        <div class="quad-choice">
+          <input type="radio" name="C4" id="C4-1" value="1" required>
+          <label for="C4-1">臥床</label>
+          <input type="radio" name="C4" id="C4-2" value="2">
+          <label for="C4-2">坐床緣</label>
+          <input type="radio" name="C4" id="C4-3" value="3">
+          <label for="C4-3">已下床</label>
+          <input type="radio" name="C4" id="C4-4" value="4">
+          <label for="C4-4">活動自如</label>
         </div>
       </div>
     </div>
@@ -681,7 +775,6 @@
     <div class="submit-area">
       <div class="error-msg" id="error-msg"></div>
       <button type="submit" class="btn-primary" id="submit-btn">送出問卷</button>
-      <div class="submit-hint">系統會自動儲存填寫中的答案 · 不小心關掉也能回來繼續</div>
     </div>
 
   </form>
