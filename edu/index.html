@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日間麻醉中心衛教目錄 — Patient Education Library</title>
+<meta name="description" content="日間麻醉加速康復團隊衛教單張目錄,涵蓋上肢骨科 / 椎體成形 / 膀胱鏡三大手術族群,從術前禁食、區域阻斷、PADSS 離院到回家後 72 小時的完整旅程">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- 共用 CSS(沿用衛教檔的設計語言)-->
+<link rel="stylesheet" href="_shared/eras-shared.css">
+
+<style>
+/* ════════════════════════════════════════════════════════════════════ */
+/* 內嵌變數 — 給 _shared/eras-shared.css 尚未設定時的 graceful fallback   */
+/* 與系統入口 PMS-aac/index.html 同色票                                  */
+/* ════════════════════════════════════════════════════════════════════ */
+:root {
+  --cream: #FAF7F2;
+  --cream-deep: #F0EBDE;
+  --paper: #FFFFFF;
+  --ink: #1A1A1A;
+  --ink-soft: #5C5C5C;
+  --ink-faint: #8A8580;
+  --teal: #1F5A5A;
+  --teal-tint: #F5F9F9;
+  --teal-soft: #E6EDED;
+  --gold: #A87B4D;
+  --gold-soft: #F5EAD0;
+  --plum: #6B5876;
+  --navy: #2C4866;
+  --sage: #5A7A52;
+  --clay: #9C5B3D;                /* ★ 日間版獨有 — PADSS 離院關卡用 */
+  --border: #E8E2D5;
+  --border-strong: #D4CDB8;
+  --highlight-border: #E0C9A8;
+  /* 語義色 — 沿用心臟版命名,日間版重新映射 */
+  --cold: #2C4866;                /* 手術當天(navy-blue) */
+  --cold-bg: #E3ECF3;
+  --warn: #A87B4D;                /* 回家當晚(amber/gold) */
+  --warn-bg: #F5EAD0;
+  --safe: #5A7A52;                /* 48-72 小時(sage green) */
+  --safe-bg: #E8EFE3;
+  --safe-border: #C2D2BA;
+}
+
+* , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans TC', system-ui, sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.6;
+  padding: 24px 16px 60px;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+.container { max-width: 1000px; margin: 0 auto; }
+
+/* ============ Header(寬版略不同於衛教檔)============ */
+header {
+  margin-bottom: 28px;
+  padding-bottom: 22px;
+  text-align: center;
+}
+.back-link {
+  display: inline-block;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-decoration: none;
+  margin-bottom: 14px;
+  border: 1px solid var(--gold);
+  padding: 4px 12px;
+  border-radius: 2px;
+  transition: background 0.15s ease;
+}
+.back-link:hover { background: var(--gold-soft); }
+.back-link::before { content: '← '; }
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.35em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+h1 {
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 600;
+  font-size: 30px;
+  color: var(--ink);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+.subtitle {
+  color: var(--ink-soft);
+  font-size: 14px;
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+.divider {
+  width: 48px;
+  height: 1px;
+  background: var(--gold);
+  margin: 24px auto 0;
+  position: relative;
+}
+.divider::before, .divider::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  width: 5px;
+  height: 5px;
+  background: var(--gold);
+  border-radius: 50%;
+}
+.divider::before { left: -10px; }
+.divider::after { right: -10px; }
+
+/* ============ Stats bar ============ */
+.stats-bar {
+  background: linear-gradient(180deg, var(--paper) 0%, var(--teal-tint) 100%);
+  border: 1px solid #C9D6D6;
+  border-left: 3px solid var(--teal);
+  border-radius: 3px;
+  padding: 18px 22px;
+  margin-bottom: 22px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+.stats-bar .stat-item { display: flex; flex-direction: column; gap: 4px; }
+.stats-bar .stat-num {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--teal);
+  line-height: 1.1;
+}
+.stats-bar .stat-num .unit {
+  font-size: 13px;
+  color: var(--ink-faint);
+  font-weight: 400;
+  margin-left: 4px;
+}
+.stats-bar .stat-num .planned {
+  font-size: 13px;
+  color: var(--ink-faint);
+  font-weight: 400;
+  margin-left: 2px;
+}
+.stats-bar .stat-label {
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  letter-spacing: 0.05em;
+}
+.stats-bar .stat-label strong { color: var(--ink-soft); font-weight: 500; }
+
+/* ============ Timing legend ============ */
+.timing-legend {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 14px 18px;
+  margin-bottom: 22px;
+}
+.timing-legend .legend-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 11.5px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.timing-legend .legend-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+.timing-legend .legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  text-decoration: none;
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: background 0.12s ease;
+}
+.timing-legend .legend-item:hover {
+  background: var(--cream-deep);
+  color: var(--ink);
+}
+.timing-legend .legend-item .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ============ Timing badge colors(piece-card 內使用)============ */
+.tim {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 500;
+  margin-right: 4px;
+  line-height: 1.5;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.12s ease, box-shadow 0.12s ease;
+  user-select: none;
+}
+.tim[data-anchor]:hover {
+  transform: translateY(-1px);
+  filter: brightness(0.96);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+.tim[data-anchor]:active { transform: translateY(0); }
+/* 日間版 5 個 timing 類別 */
+.tim.preop    { background: var(--teal-tint); color: var(--teal); border: 1px solid #C9D6D6; }
+.tim.checkin  { background: var(--cold-bg);   color: var(--cold); border: 1px solid #B5CADC; }
+.tim.padss    { background: #F5E8DD;          color: var(--clay); border: 1px solid #E0BDA0; }
+.tim.recovery { background: var(--warn-bg);   color: var(--warn); border: 1px solid var(--highlight-border); }
+.tim.home     { background: var(--safe-bg);   color: var(--safe); border: 1px solid var(--safe-border); }
+
+/* ============ Series section ============ */
+.series-section { margin-bottom: 32px; }
+.series-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.series-header .series-num {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+}
+.series-header .series-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.series-header .series-badge {
+  background: var(--clay);
+  color: white;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 600;
+}
+.series-header .series-count {
+  margin-left: auto;
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  letter-spacing: 0.05em;
+}
+.series-desc {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin-bottom: 14px;
+  font-style: italic;
+}
+
+/* ============ Piece card grid(等有衛教檔再啟用)============ */
+.piece-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+@media (min-width: 640px) { .piece-grid { grid-template-columns: 1fr 1fr; } }
+.piece-card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px 16px;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.15s ease;
+  border-left: 3px solid var(--border-strong);
+  position: relative;
+}
+.piece-card:hover {
+  border-color: var(--teal);
+  border-left-color: var(--teal);
+  box-shadow: 0 4px 12px rgba(31, 90, 90, 0.08);
+  transform: translateY(-1px);
+}
+.piece-card .pc-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.piece-card .pc-num {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  font-weight: 600;
+}
+.piece-card .pc-read {
+  font-size: 10.5px;
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+  font-family: 'Noto Serif TC', serif;
+}
+.piece-card .pc-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.piece-card .pc-sub {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.piece-card .pc-timing { margin-top: 2px; }
+.piece-card .pc-foot {
+  margin-top: auto;
+  padding-top: 6px;
+  font-size: 10.5px;
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+  font-family: 'Noto Serif TC', serif;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.piece-card .pc-foot .updated-recent { color: var(--teal); font-weight: 600; }
+.piece-card.recent {
+  border-left-color: var(--teal);
+  background: linear-gradient(135deg, var(--paper) 0%, var(--teal-tint) 200%);
+}
+.piece-card.recent::after {
+  content: 'NEW';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--teal);
+  color: var(--paper);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  padding: 1px 6px;
+  border-radius: 2px;
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 600;
+}
+
+/* Audience tags(病人 / 家屬 / 通用)*/
+.aud {
+  display: inline-block;
+  font-size: 10.5px;
+  padding: 1px 6px;
+  border-radius: 2px;
+  margin-left: 4px;
+  letter-spacing: 0.04em;
+  font-family: 'Noto Serif TC', serif;
+  background: var(--cream-deep);
+  color: var(--ink-soft);
+}
+.aud.fam { background: #F0E6F0; color: #6B5876; }
+
+/* ============ Section placeholder(規劃中)============ */
+.section-placeholder {
+  background: var(--cream-deep);
+  border: 1px dashed var(--border-strong);
+  border-radius: 3px;
+  padding: 16px 20px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+.section-placeholder .ph-status {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.section-placeholder .planned-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  list-style: none;
+}
+@media (min-width: 640px) {
+  .section-placeholder .planned-list { grid-template-columns: 1fr 1fr; gap: 6px 18px; }
+}
+.section-placeholder .planned-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 4px 0;
+}
+.section-placeholder .planned-list .p-num {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  font-weight: 600;
+  min-width: 36px;
+}
+.section-placeholder .planned-list .p-title {
+  color: var(--ink-soft);
+  font-style: normal;
+}
+
+/* ============ Timing index section(依發送時機)============ */
+html { scroll-padding-top: 16px; }
+.timing-index {
+  margin-bottom: 36px;
+  padding-bottom: 22px;
+  border-bottom: 2px solid var(--border);
+}
+.timing-group { margin-bottom: 22px; scroll-margin-top: 16px; }
+.timing-group:last-child { margin-bottom: 0; }
+.t-group-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.t-marker {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.t-label { font-weight: 600; }
+.t-unique-badge {
+  background: var(--clay);
+  color: white;
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  padding: 1px 6px;
+  border-radius: 2px;
+  font-weight: 600;
+}
+.t-count {
+  margin-left: auto;
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+}
+.t-group-desc {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin-bottom: 10px;
+  font-style: italic;
+  padding-left: 22px;
+}
+.t-piece-list {
+  list-style: none;
+  padding: 0 0 0 22px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+}
+@media (min-width: 640px) {
+  .t-piece-list { grid-template-columns: 1fr 1fr; gap: 4px 16px; }
+}
+.t-item a {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 3px;
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.5;
+  transition: background 0.12s ease;
+  border-left: 2px solid transparent;
+}
+.t-item a:hover { background: var(--cream-deep); border-left-color: var(--gold); }
+.t-item .t-num {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  font-weight: 600;
+  min-width: 38px;
+  flex-shrink: 0;
+}
+.t-item .t-title { flex: 1; color: var(--ink); }
+.t-item.recent .t-num { color: var(--teal); }
+.t-item.recent .t-title::after {
+  content: 'NEW';
+  display: inline-block;
+  margin-left: 6px;
+  background: var(--teal);
+  color: var(--paper);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  padding: 1px 5px;
+  border-radius: 2px;
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 600;
+  vertical-align: 2px;
+}
+.t-empty {
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  font-style: italic;
+  padding: 6px 0 6px 22px;
+}
+
+/* ============ Dir footer note ============ */
+.dir-footer-note {
+  margin-top: 36px;
+  padding: 18px 22px;
+  background: var(--gold-soft);
+  border: 1px solid var(--highlight-border);
+  border-radius: 3px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.75;
+}
+.dir-footer-note strong { color: var(--gold); font-weight: 600; }
+
+/* ============ Closing & footer(沿用衛教檔風格)============ */
+.closing {
+  margin-top: 32px;
+  padding: 24px 26px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  text-align: center;
+}
+.closing p {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.75;
+  margin-bottom: 12px;
+}
+.closing .em {
+  color: var(--teal);
+  font-weight: 600;
+  font-family: 'Noto Serif TC', serif;
+}
+.closing .signature {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 14px;
+  color: var(--teal);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-top: 14px;
+}
+.closing .signature-note {
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+footer {
+  text-align: center;
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  line-height: 1.7;
+}
+footer .clinic {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+  letter-spacing: 0.05em;
+}
+footer .disclaimer {
+  font-size: 11px;
+  max-width: 580px;
+  margin: 8px auto 0;
+  line-height: 1.65;
+}
+
+@media (max-width: 480px) {
+  .stats-bar { padding: 14px 16px; }
+  .stats-bar .stat-num { font-size: 20px; }
+  .series-header .series-num { font-size: 18px; }
+  .series-header .series-title { font-size: 16px; }
+  .piece-card { padding: 12px 14px; }
+  .piece-card .pc-title { font-size: 15px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <a class="back-link" href="../index.html">返回系統入口</a>
+    <div class="eyebrow">Patient Education Library · 衛教資源目錄</div>
+    <h1>日間麻醉中心衛教目錄</h1>
+    <p class="subtitle">預計 <strong>20</strong> 份病人教育單張(目前 <span data-count="total">0</span> 份已上線)<br>從術前禁食、區域阻斷、PADSS 離院到回家後 72 小時的完整旅程<br>由日間麻醉加速康復團隊製作 · 與你同莘</p>
+    <div class="divider"></div>
+  </header>
+
+  <!-- Stats bar -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num"><span data-stat="total">0</span><span class="planned"> / 20 預計</span></div>
+      <div class="stat-label">已建置衛教單張</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span data-stat="series">0</span><span class="planned"> / 7 規劃</span></div>
+      <div class="stat-label">已啟動系列(1-x 至 7-x)</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span data-stat="recent">0</span><span class="unit">份</span></div>
+      <div class="stat-label">最近 7 日更新</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span data-stat="latest-date">—</span></div>
+      <div class="stat-label">最後更新日期</div>
+    </div>
+  </div>
+
+  <!-- Timing legend(5 個時段,日間版獨有的 PADSS 離院為 clay 色)-->
+  <div class="timing-legend">
+    <div class="legend-title">發送時機色標</div>
+    <div class="legend-items">
+      <a class="legend-item" href="#t-preop"><span class="dot" style="background:var(--teal)"></span>術前訪視期</a>
+      <a class="legend-item" href="#t-checkin"><span class="dot" style="background:var(--cold)"></span>手術當天</a>
+      <a class="legend-item" href="#t-padss"><span class="dot" style="background:var(--clay)"></span>PADSS 離院關卡 ★</a>
+      <a class="legend-item" href="#t-recovery"><span class="dot" style="background:var(--warn)"></span>回家當晚</a>
+      <a class="legend-item" href="#t-home"><span class="dot" style="background:var(--safe)"></span>48-72 小時</a>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 依發送時機快速瀏覽 -->
+  <!-- ============================================ -->
+  <section class="timing-index">
+    <div class="series-header">
+      <span class="series-num">⏱</span>
+      <span class="series-title">依發送時機快速瀏覽</span>
+      <span class="series-count">同一份單張可能跨多個時段</span>
+    </div>
+    <p class="series-desc">依日間手術病人的時間軸把衛教單張分類。點上方色標可快速跳轉。</p>
+
+    <div class="timing-group" id="t-preop">
+      <h3 class="t-group-header">
+        <span class="t-marker" style="background:var(--teal)"></span>
+        <span class="t-label">術前訪視期</span>
+        <span class="t-count">規劃中</span>
+      </h3>
+      <p class="t-group-desc">術前 7 / 3 / 1 天 — 認識日間手術、選擇麻醉方式、評估風險、開始禁食與停藥準備。</p>
+      <p class="t-empty">尚無已上線單張。1-x 認識日間手術、2-x 三大手術介紹、3-x 麻醉方式、4-x 術前準備上線後將自動顯示於此。</p>
+    </div>
+
+    <div class="timing-group" id="t-checkin">
+      <h3 class="t-group-header">
+        <span class="t-marker" style="background:var(--cold)"></span>
+        <span class="t-label">手術當天</span>
+        <span class="t-count">規劃中</span>
+      </h3>
+      <p class="t-group-desc">報到 → 麻醉誘導 → 手術 → PACU 甦醒。包含當天清流質、神經阻斷感覺、PACU 觀察。</p>
+      <p class="t-empty">尚無已上線單張。4-1 術前禁食、5-3 神經阻斷感覺回來等上線後將自動顯示於此。</p>
+    </div>
+
+    <div class="timing-group" id="t-padss">
+      <h3 class="t-group-header">
+        <span class="t-marker" style="background:var(--clay)"></span>
+        <span class="t-label">PADSS 離院關卡</span>
+        <span class="t-unique-badge">日間獨有</span>
+        <span class="t-count">規劃中</span>
+      </h3>
+      <p class="t-group-desc">五指標逐項評分(生命徵象 / 活動 / 噁心嘔吐 / 疼痛 / 出血)達標 → 當日返家。日間 ERAS 的核心關卡。</p>
+      <p class="t-empty">尚無已上線單張。6-1 PADSS 五指標、6-2 出院前確認單上線後將自動顯示於此。</p>
+    </div>
+
+    <div class="timing-group" id="t-recovery">
+      <h3 class="t-group-header">
+        <span class="t-marker" style="background:var(--warn)"></span>
+        <span class="t-label">回家當晚</span>
+        <span class="t-count">規劃中</span>
+      </h3>
+      <p class="t-group-desc">術後 0-24 小時 — 神經阻斷退去、夜間觀察、警訊辨識、止痛續服、給陪伴者的提醒。</p>
+      <p class="t-empty">尚無已上線單張。7-1 24 小時警訊清單、7-2 給陪伴者上線後將自動顯示於此。</p>
+    </div>
+
+    <div class="timing-group" id="t-home">
+      <h3 class="t-group-header">
+        <span class="t-marker" style="background:var(--safe)"></span>
+        <span class="t-label">48-72 小時</span>
+        <span class="t-count">規劃中</span>
+      </h3>
+      <p class="t-group-desc">完整恢復期 — 24 / 48 / 72 小時 follow-up 來電、補充衛教、轉介後續門診。</p>
+      <p class="t-empty">尚無已上線單張。7-3 follow-up 流程上線後將自動顯示於此。</p>
+    </div>
+
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 1-x 認識日間手術 -->
+  <!-- ============================================ -->
+  <section class="series-section">
+    <div class="series-header">
+      <span class="series-num">1-x</span>
+      <span class="series-title">認識日間手術</span>
+      <span class="series-count">規劃中 · 預計 2 份</span>
+    </div>
+    <p class="series-desc">病人最常問的「為什麼可以當天回家?」、「我適合做日間手術嗎?」— 定錨整套衛教的論述基調。</p>
+    <div class="section-placeholder">
+      <div class="ph-status">規劃中 · 預計 2 份</div>
+      <ul class="planned-list">
+        <li><span class="p-num">1-1</span><span class="p-title">什麼是日間手術 · 為什麼可以 < 24 小時回家</span></li>
+        <li><span class="p-num">1-2</span><span class="p-title">適合 / 不適合日間手術的條件</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 2-x 三大手術族群介紹 -->
+  <!-- ============================================ -->
+  <section class="series-section">
+    <div class="series-header">
+      <span class="series-num">2-x</span>
+      <span class="series-title">三大手術族群介紹</span>
+      <span class="series-count">規劃中 · 預計 3 份</span>
+    </div>
+    <p class="series-desc">病人快速找到自己的手術 — 上肢骨科、椎體成形、膀胱鏡。每篇聚焦該族群的術式、麻醉、止痛、特殊注意事項。</p>
+    <div class="section-placeholder">
+      <div class="ph-status">規劃中 · 預計 3 份</div>
+      <ul class="planned-list">
+        <li><span class="p-num">2-1</span><span class="p-title">上肢骨科(肩關節鏡 / 腕隧道 / 扳機指 / 橈骨遠端骨折)</span></li>
+        <li><span class="p-num">2-2</span><span class="p-title">椎體成形術(vertebroplasty)</span></li>
+        <li><span class="p-num">2-3</span><span class="p-title">膀胱鏡 / 輸尿管鏡(TURBT / URS)</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 3-x 麻醉方式 -->
+  <!-- ============================================ -->
+  <section class="series-section">
+    <div class="series-header">
+      <span class="series-num">3-x</span>
+      <span class="series-title">麻醉方式</span>
+      <span class="series-count">規劃中 · 預計 4 份</span>
+    </div>
+    <p class="series-desc">日間 ERAS 麻醉主軸:<strong>區域阻斷為主、短效全麻為輔</strong>。讓病人理解為什麼這樣選、會有什麼感受、清醒後感覺怎麼回來。</p>
+    <div class="section-placeholder">
+      <div class="ph-status">規劃中 · 預計 4 份</div>
+      <ul class="planned-list">
+        <li><span class="p-num">3-1</span><span class="p-title">全身麻醉(短效藥物為主)</span></li>
+        <li><span class="p-num">3-2</span><span class="p-title">區域阻斷(肩部 / 上肢神經阻斷)</span></li>
+        <li><span class="p-num">3-3</span><span class="p-title">脊椎 / 硬膜外麻醉</span></li>
+        <li><span class="p-num">3-4</span><span class="p-title">監測麻醉 MAC(輕鎮靜 + 區域)</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 4-x 術前準備 -->
+  <!-- ============================================ -->
+  <section class="series-section">
+    <div class="series-header">
+      <span class="series-num">4-x</span>
+      <span class="series-title">術前準備</span>
+      <span class="series-count">規劃中 · 預計 3 份</span>
+    </div>
+    <p class="series-desc">日間 ERAS 核心差異化點 — <strong>清流質可至術前 2 小時 + 碳水化合物負荷</strong>(不是傳統 8 小時禁食)、停藥指引、當天注意事項。</p>
+    <div class="section-placeholder">
+      <div class="ph-status">規劃中 · 預計 3 份</div>
+      <ul class="planned-list">
+        <li><span class="p-num">4-1</span><span class="p-title">術前禁食指引(清流質 2 hr + 碳水化合物負荷)</span></li>
+        <li><span class="p-num">4-2</span><span class="p-title">術前停藥指引(抗凝血 / 抗血小板 / 降血糖)</span></li>
+        <li><span class="p-num">4-3</span><span class="p-title">當天注意事項(服裝 / 陪同人 / 貴重物品)</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 5-x 術後核心 -->
+  <!-- ============================================ -->
+  <section class="series-section">
+    <div class="series-header">
+      <span class="series-num">5-x</span>
+      <span class="series-title">術後核心</span>
+      <span class="series-count">規劃中 · 預計 4 份</span>
+    </div>
+    <p class="series-desc">日間 ERAS 多模式策略 — <strong>非鴉片止痛、多模式止吐、區域阻斷感覺回來、早期口服與下床</strong>。讓病人理解每一個藥物與動作的意義。</p>
+    <div class="section-placeholder">
+      <div class="ph-status">規劃中 · 預計 4 份</div>
+      <ul class="planned-list">
+        <li><span class="p-num">5-1</span><span class="p-title">多模式止痛(非鴉片為主)</span></li>
+        <li><span class="p-num">5-2</span><span class="p-title">PONV 預防與處理(術後噁心嘔吐)</span></li>
+        <li><span class="p-num">5-3</span><span class="p-title">區域阻斷的「感覺漸漸回來」— 12-24 hr</span></li>
+        <li><span class="p-num">5-4</span><span class="p-title">早期口服 + 早期下床</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 6-x 離院標準與流程 ★ 日間獨有 -->
+  <!-- ============================================ -->
+  <section class="series-section">
+    <div class="series-header">
+      <span class="series-num">6-x</span>
+      <span class="series-title">離院標準與流程</span>
+      <span class="series-badge">日間獨有</span>
+      <span class="series-count">規劃中 · 預計 2 份</span>
+    </div>
+    <p class="series-desc">PADSS 五指標 — 日間手術 ERAS 最核心的離院關卡。為什麼要等到分數達標,而不是「醒了就走」。</p>
+    <div class="section-placeholder">
+      <div class="ph-status">規劃中 · 預計 2 份</div>
+      <ul class="planned-list">
+        <li><span class="p-num">6-1</span><span class="p-title">PADSS 五指標 — 為什麼要等到達標才能走</span></li>
+        <li><span class="p-num">6-2</span><span class="p-title">出院前確認單 + 24/7 緊急聯絡</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 7-x 回家後 24-72 小時 -->
+  <!-- ============================================ -->
+  <section class="series-section">
+    <div class="series-header">
+      <span class="series-num">7-x</span>
+      <span class="series-title">回家後 24-72 小時</span>
+      <span class="series-count">規劃中 · 預計 3 份</span>
+    </div>
+    <p class="series-desc">回家不等於結束 — 神經阻斷退去後的疼痛、夜間警訊、給陪伴者的觀察重點、24 / 48 / 72 小時 follow-up 流程。</p>
+    <div class="section-placeholder">
+      <div class="ph-status">規劃中 · 預計 3 份</div>
+      <ul class="planned-list">
+        <li><span class="p-num">7-1</span><span class="p-title">24 小時警訊清單 + 何時聯絡</span></li>
+        <li><span class="p-num">7-2</span><span class="p-title">給陪伴者的衛教(夜間觀察重點)</span></li>
+        <li><span class="p-num">7-3</span><span class="p-title">follow-up 流程(LINE / 電話追蹤)</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="dir-footer-note">
+    <strong>關於這份目錄</strong> — 本目錄為日間麻醉加速康復團隊內部維護的衛教資源總覽。各單張依病人個別情況(手術族群 / 共病 / Apfel 嘔吐風險 / 麻醉方式),由醫療團隊透過 LINE / Email / 紙本等方式於合適時機提供給病人與家屬。如需擴充或調整單張內容,請聯繫日間麻醉加速康復團隊。
+  </div>
+
+  <!-- Closing & signature(沿用衛教檔風格)-->
+  <div class="closing">
+    <p>每一份衛教,都是為了讓病人在 24 小時內<span class="em">安心回家</span>而設計。<span class="em">理解 → 預備 → 主動參與</span> — 這是本院日間麻醉 ERAS 加速康復的核心精神。</p>
+    <div class="signature">日間麻醉加速康復團隊 · 與你同莘</div>
+    <div class="signature-note">同莘 — 同心 · 耕莘</div>
+  </div>
+
+  <footer>
+    <div class="clinic">日間麻醉加速康復團隊衛教資源</div>
+    <div class="disclaimer">本目錄列出之單張為一般性衛教資訊,個別病人的醫療決策請依麻醉科、外科、護理團隊評估為準。<br>Patient Education Library · 由日間麻醉加速康復團隊維護</div>
+  </footer>
+
+</div>
+
+<script>
+// 點 tim 時跳到對應 timing 區塊;阻止冒泡到外層 .piece-card 的連結
+document.querySelectorAll('.tim[data-anchor]').forEach(function(tim) {
+  tim.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var id = tim.getAttribute('data-anchor');
+    var target = document.getElementById(id);
+    if (target) {
+      history.pushState(null, '', '#' + id);
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- 衛教索引自動同步系統(沿用心臟版 2026-05 設計,日間版微調)            -->
+<!--                                                                      -->
+<!-- 兩階段同步:                                                          -->
+<!--   階段 1(立即執行):靜態統計 — 不需 fetch                           -->
+<!--     · 總份數、已啟動系列數                                            -->
+<!--     · 各 timing-group 的 t-count                                       -->
+<!--     · 各 series-section 的 series-count                                -->
+<!--                                                                      -->
+<!--   階段 2(fetch 完成後):動態統計 — 需要各檔的 meta 日期             -->
+<!--     · 每張 piece-card 的更新日期顯示                                   -->
+<!--     · 近 7 日更新自動加 .updated-recent                                -->
+<!--     · 「最近 7 日更新」總數(stats-bar)                                -->
+<!--     · 「最後更新日期」(stats-bar,所有 meta 中最新的)                  -->
+<!--                                                                      -->
+<!-- 維護方式:                                                             -->
+<!--   · 新增衛教檔:在該 HTML 內加 <meta name="article:modified_time">     -->
+<!--     並在 index.html 加 piece-card → 所有統計自動同步                    -->
+<!--   · 修改衛教檔:只需更新該檔的 meta 日期 → index 自動更新                -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<script>
+(function autoSyncIndex() {
+  const RECENT_DAYS = 7;
+  const META_REGEX = /<meta\s+name=["']article:modified_time["']\s+content=["']([^"']+)["']/i;
+
+  function parseDate(str) {
+    if (!str) return null;
+    const m = str.trim().match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})/);
+    if (!m) return null;
+    return new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]));
+  }
+
+  function isRecent(date) {
+    if (!date) return false;
+    const now = new Date();
+    const cutoff = new Date(now.getTime() - RECENT_DAYS * 24 * 60 * 60 * 1000);
+    return date >= cutoff;
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // 階段 1:靜態統計
+  // ────────────────────────────────────────────────────────────
+  function syncStaticStats() {
+    // 1. 總份數 = 所有 series-section 內的 piece-card[href] 總和
+    const allCards = document.querySelectorAll('.series-section .piece-card[href]');
+    const totalCount = allCards.length;
+
+    // 2. 已啟動系列數 = 有 piece-card 的 series-section 數量(不算「規劃中」)
+    const sectionsWithCards = Array.from(document.querySelectorAll('.series-section'))
+      .filter(s => s.querySelectorAll('.piece-card[href]').length > 0);
+    const totalSeries = sectionsWithCards.length;
+
+    // 寫入 stats bar + 所有文案中的 [data-count="total"]
+    document.querySelectorAll('[data-stat="total"], [data-count="total"]').forEach(el => {
+      el.textContent = totalCount;
+    });
+    document.querySelectorAll('[data-stat="series"]').forEach(el => {
+      el.textContent = totalSeries;
+    });
+
+    // 3. 各 timing-group t-count = 該 group 內 t-item 數量
+    //    日間版:有 t-item 才顯示「N 份」;規劃中保留原文字
+    document.querySelectorAll('.timing-group').forEach(group => {
+      const itemCount = group.querySelectorAll('.t-item').length;
+      const countSpan = group.querySelector('.t-count');
+      if (!countSpan) return;
+      // 跳過特殊文案
+      if (/跨|提示|說明/.test(countSpan.textContent)) return;
+      // 日間版:若 itemCount=0,保留「規劃中」原文字
+      if (itemCount === 0) return;
+      countSpan.textContent = itemCount + ' 份';
+    });
+
+    // 4. 各 series-section series-count = 該 section 內 piece-card 數量
+    //    日間版:有 piece-card 才更新;規劃中保留原文字
+    document.querySelectorAll('.series-section').forEach(section => {
+      const cardCount = section.querySelectorAll('.piece-card[href]').length;
+      const countSpan = section.querySelector('.series-count');
+      if (!countSpan) return;
+      // 跳過「規劃中」「跨多個」等特殊文案
+      if (/規劃中|跨|尚未/.test(countSpan.textContent)) return;
+      // 保留 「· 完整」「· 含三部曲」這類字尾標籤
+      const suffixMatch = countSpan.textContent.match(/·\s*(.+)$/);
+      const suffix = suffixMatch ? ' · ' + suffixMatch[1] : '';
+      countSpan.textContent = cardCount + ' 份' + suffix;
+    });
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // 階段 2:每張卡片的日期(fetch 對應 HTML 的 meta)
+  // ────────────────────────────────────────────────────────────
+  async function syncCardDate(card) {
+    const href = card.getAttribute('href');
+    if (!href || !href.endsWith('.html')) return null;
+    const footSpan = card.querySelector('.pc-foot > span:first-child');
+    if (!footSpan) return null;
+
+    try {
+      const res = await fetch(href, { method: 'GET', cache: 'no-cache' });
+      if (!res.ok) return null;
+      const html = await res.text();
+      const match = html.match(META_REGEX);
+      if (!match) return null;
+
+      const dateStr = match[1];
+      const dateObj = parseDate(dateStr);
+
+      footSpan.textContent = '更新 ' + dateStr;
+
+      if (isRecent(dateObj)) {
+        footSpan.classList.add('updated-recent');
+        card.classList.add('recent');
+      } else {
+        footSpan.classList.remove('updated-recent');
+        card.classList.remove('recent');
+      }
+
+      return { card, dateStr, dateObj, isRecent: isRecent(dateObj) };
+    } catch (err) {
+      console.debug('[autoSync] skip ' + href + ':', err.message);
+      return null;
+    }
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // 階段 3:fetch 完成後彙整
+  // ────────────────────────────────────────────────────────────
+  function syncAggregateStats(results) {
+    const valid = results.filter(r => r && r.dateObj);
+
+    const recentCount = valid.filter(r => r.isRecent).length;
+    document.querySelectorAll('[data-stat="recent"]').forEach(el => {
+      el.textContent = recentCount;
+    });
+
+    if (valid.length > 0) {
+      const sorted = valid.sort((a, b) => b.dateObj - a.dateObj);
+      const latest = sorted[0].dateStr;
+      const formatted = latest.replace(/-/g, '·');
+      document.querySelectorAll('[data-stat="latest-date"]').forEach(el => {
+        el.textContent = formatted;
+      });
+    }
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // 主流程
+  // ────────────────────────────────────────────────────────────
+  async function runAll() {
+    syncStaticStats();
+    const cards = document.querySelectorAll('.piece-card[href]');
+    const results = await Promise.all(Array.from(cards).map(syncCardDate));
+    syncAggregateStats(results);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runAll);
+  } else {
+    runAll();
+  }
+})();
+</script>
+
+<script src="pageview.js" defer></script>
+</body>
+</html>
