@@ -328,13 +328,13 @@ footer .clinic {
   </div>
 
   <div class="grid">
-    <a class="card" data-color="teal" href="preop.html#mode=create" id="card-preop">
+    <a class="card" data-color="teal" href="surgery.html" id="card-surgery">
       <div class="card-head">
-        <span class="card-tag">01 · 術前建檔</span>
+        <span class="card-tag">01 · 醫師建檔</span>
         <span class="card-role">外科醫師</span>
       </div>
-      <div class="card-title">建立新手術紀錄</div>
-      <p class="card-desc">輸入主治醫師通行碼 → 選術式 → 填手術日期 / 同意項 / 補充事項 → 系統自動建立 surgery_id 並啟動術前衛教推送。</p>
+      <div class="card-title">為既有病人建立手術</div>
+      <p class="card-desc">醫師通行碼登入 → 末四碼搜尋病人 → 選病人 → 填術式 / 日期 / 麻醉計畫 → 系統自動建立 surgery_id 並啟動術前衛教推送。</p>
       <div class="card-arrow">→</div>
     </a>
 
@@ -407,25 +407,18 @@ if (window.location.hash.startsWith('#k=')) {
 }
 
 // 更新所有需要通行碼的連結
-// v2.1:醫師端(preop)需要通行碼,自動帶到 #surgeonKey=
-// PACU 端(pacu)有自己的 sessionStorage 登入流程,不需從 hash 帶
-// 病人服務(patient-portal)不需通行碼
+// v2.2:醫師端 surgery.html 和 PACU 端 pacu.html 都有自己的 sessionStorage 登入流程
+// 在 index.html 輸入通行碼後,存到 sessionStorage,後續開啟工具會自動帶入
 function updateLinks() {
   const v = $('doctor_key').value.trim();
-  const preopCard = $('card-preop');
-  if (preopCard) {
-    if (!preopCard.getAttribute('data-base')) {
-      preopCard.setAttribute('data-base', preopCard.getAttribute('href'));
-    }
-    const base = preopCard.getAttribute('data-base');
-    // base 已含 #mode=create,把 surgeonKey 加在後面
-    preopCard.setAttribute('href', v
-      ? `${base}&surgeonKey=${encodeURIComponent(v)}`
-      : base);
-  }
   if (v) {
+    // 同時寫入兩個 key,方便 surgery 與 pacu 共用
+    sessionStorage.setItem('surgery_key', v);
+    sessionStorage.setItem('pacu_key', v);
     history.replaceState(null, '', '#k=' + encodeURIComponent(v));
   } else {
+    sessionStorage.removeItem('surgery_key');
+    sessionStorage.removeItem('pacu_key');
     history.replaceState(null, '', '#');
   }
 }
