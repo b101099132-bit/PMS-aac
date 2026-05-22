@@ -213,7 +213,7 @@
 
   <script>
     // ⚠️ 部署後請更新 GAS_ENDPOINT
-    const GAS_ENDPOINT = 'YOUR_GAS_DEPLOYMENT_URL_HERE';
+    const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyd7bIOosg_v1lyhkcJO2oi0EzaUdMYSkf7EVJQ7oetv8QY2zhlnyaO1XaGyLs8rphF/exec';
 
     let ctx = {};
     let selectedNrs = null;
@@ -283,7 +283,9 @@
       ctx = parseHash();
 
       if (!ctx.sid) {
-        return showInlineError('連結缺少手術編號(sid),請從 LINE 訊息點進來。');
+        // ★ 無 sid → 導到 patient-portal 搜尋
+        window.location.replace('patient-portal.html');
+        return;
       }
 
       document.getElementById('loading').hidden = true;
