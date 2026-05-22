@@ -743,15 +743,6 @@
 
     const data = collectFormData();
 
-    if (APPS_SCRIPT_URL.indexOf('REPLACE_WITH_YOUR_URL') !== -1) {
-      console.log('[Survey D3] APPS_SCRIPT_URL 尚未設定,以下為將送出的資料:', data);
-      setTimeout(() => {
-        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-        showThankYou();
-      }, 500);
-      return;
-    }
-
     submitJSONP(data);
   });
 
