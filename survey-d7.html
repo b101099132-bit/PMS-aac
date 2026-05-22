@@ -795,7 +795,7 @@
   // ─────────────────────────────────────────────────────────────────
   // 設定區
   // ─────────────────────────────────────────────────────────────────
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/REPLACE_WITH_YOUR_URL/exec';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyd7bIOosg_v1lyhkcJO2oi0EzaUdMYSkf7EVJQ7oetv8QY2zhlnyaO1XaGyLs8rphF/exec';
   const ACTION_NAME = 'surveyD7';
   const SURG_MAP = {
     upper:  '上肢骨科手術',
@@ -858,6 +858,11 @@
     return params;
   }
   const ctx = parseHash();
+
+  // ★ 無 sid / pid → 導到 patient-portal 搜尋(從 index.html 直接點進來的情境)
+  if (!ctx.sid && !ctx.pid) {
+    window.location.replace("patient-portal.html");
+  }
 
   if (ctx.date) document.getElementById('ctx-date').textContent = ctx.date;
   if (ctx.surg && SURG_MAP[ctx.surg]) {
