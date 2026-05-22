@@ -630,6 +630,15 @@
                 Wengritzky 所定義之 csPONV 閾值。
            C1b 整合「rescue antiemetic 是否給予」與「效果」於單題,
                 Level 1「沒有給止吐藥」本身即為品質指標。
+
+           ★ 方向設計(C1a):刻意與本問卷其他 Likert 相反,作為:
+             (a) 對齊 PONV 文獻習慣(higher score = worse severity),
+                 方便日後 audit / 學術發表時與既有研究可比;
+             (b) 反向命題(reverse-coded item),用於識別 acquiescent
+                 responding(全部勾同一邊)、careless answering 的無效
+                 問卷,提升資料品質。資料分析時可一致性檢查:
+                   若 E1(整體滿意度)= 5 但 C1a = 5(嘔吐 ≥ 3 次),
+                   需 flag 為可疑回答,人工 review 或剔除。
            ───────────────────────────────────────────────────────────── -->
 
       <!-- C1a, C1b 條件式 -->
@@ -1025,6 +1034,7 @@
     const data = {
       action: ACTION_NAME,
       pid:    ctx.pid    || '',
+      surgery_id: ctx.sid || '',    // ★ v2.0 新增:從 hash #sid= 抓 surgery_id
       surg:   ctx.surg   || '',
       surg_date: ctx.date || '',
       submitted_at: new Date().toISOString()

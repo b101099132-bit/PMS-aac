@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>疼痛回報 — PMS-aac</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background: #f5f7fa; margin: 0; padding: 16px;
+      -webkit-tap-highlight-color: transparent;
+      color: #1f2937;
+    }
+    .container { max-width: 480px; margin: 0 auto; }
+
+    .card {
+      background: white; border-radius: 14px; padding: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .header h1 {
+      margin: 0 0 4px 0; color: #c2410c; font-size: 22px;
+    }
+    .header .subtitle { color: #666; font-size: 14px; margin: 0; }
+
+    .badge {
+      display: inline-block; padding: 5px 14px;
+      background: #fff7ed; color: #c2410c; border-radius: 14px;
+      font-size: 13px; margin-top: 10px; font-weight: 500;
+    }
+
+    .nrs-instruction {
+      margin: 24px 0 16px 0; text-align: center;
+      font-size: 16px;
+    }
+    .nrs-instruction strong { color: #c2410c; }
+
+    .nrs-grid {
+      display: grid; grid-template-columns: repeat(11, 1fr);
+      gap: 4px; margin: 16px 0;
+    }
+    .nrs-btn {
+      aspect-ratio: 1; min-height: 44px;
+      border: 2px solid #e5e7eb; border-radius: 8px;
+      background: white; font-size: 17px; font-weight: bold;
+      cursor: pointer; transition: all 0.15s;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: inherit;
+    }
+    .nrs-btn:hover { border-color: #c2410c; }
+    .nrs-btn:active { transform: scale(0.95); }
+
+    /* 顏色漸層 */
+    .nrs-btn[data-val="0"], .nrs-btn[data-val="1"] { color: #047857; }
+    .nrs-btn[data-val="2"], .nrs-btn[data-val="3"] { color: #65a30d; }
+    .nrs-btn[data-val="4"], .nrs-btn[data-val="5"], .nrs-btn[data-val="6"] { color: #d97706; }
+    .nrs-btn[data-val="7"], .nrs-btn[data-val="8"] { color: #dc2626; }
+    .nrs-btn[data-val="9"], .nrs-btn[data-val="10"] { color: #991b1b; }
+
+    .nrs-btn.selected {
+      transform: scale(1.1); border-width: 3px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+    }
+    .nrs-btn.selected[data-val="0"], .nrs-btn.selected[data-val="1"] {
+      background: #d1fae5; border-color: #047857;
+    }
+    .nrs-btn.selected[data-val="2"], .nrs-btn.selected[data-val="3"] {
+      background: #ecfccb; border-color: #65a30d;
+    }
+    .nrs-btn.selected[data-val="4"], .nrs-btn.selected[data-val="5"], .nrs-btn.selected[data-val="6"] {
+      background: #fef3c7; border-color: #d97706;
+    }
+    .nrs-btn.selected[data-val="7"], .nrs-btn.selected[data-val="8"] {
+      background: #fee2e2; border-color: #dc2626;
+    }
+    .nrs-btn.selected[data-val="9"], .nrs-btn.selected[data-val="10"] {
+      background: #fecaca; border-color: #991b1b;
+    }
+
+    .nrs-labels {
+      display: flex; justify-content: space-between;
+      color: #666; font-size: 12px; padding: 0 4px;
+    }
+
+    .selected-display {
+      text-align: center; padding: 16px;
+      background: #fff7ed; border-radius: 10px;
+      margin: 16px 0;
+      display: none;
+    }
+    .selected-display.show { display: block; }
+    .selected-display .big-num {
+      font-size: 44px; font-weight: bold; color: #c2410c;
+      line-height: 1;
+    }
+    .selected-display .interp {
+      color: #666; font-size: 14px; margin-top: 6px;
+    }
+    .selected-display .interp.urgent { color: #c53030; font-weight: bold; }
+
+    .submit-btn {
+      width: 100%; padding: 18px; font-size: 18px; font-weight: bold;
+      background: #c2410c; color: white; border: none; border-radius: 10px;
+      cursor: pointer; margin-top: 16px;
+      transition: background 0.2s;
+      font-family: inherit;
+    }
+    .submit-btn:disabled { background: #d1d5db; cursor: not-allowed; }
+    .submit-btn:hover:not(:disabled) { background: #9a3412; }
+    .submit-btn:active:not(:disabled) { transform: scale(0.99); }
+
+    .stop-link {
+      display: block; text-align: center; margin-top: 14px;
+      color: #999; font-size: 13px; text-decoration: underline;
+      cursor: pointer; background: none; border: none;
+      width: 100%; padding: 8px; font-family: inherit;
+    }
+    .stop-link:hover { color: #c2410c; }
+
+    .notes-box {
+      width: 100%; padding: 10px; font-size: 14px;
+      border: 1px solid #e5e7eb; border-radius: 6px;
+      margin-top: 12px; font-family: inherit;
+      resize: vertical; min-height: 60px;
+      box-sizing: border-box;
+    }
+    .notes-toggle {
+      color: #6b7280; font-size: 13px; cursor: pointer;
+      margin-top: 14px; text-align: center;
+      background: none; border: none; padding: 4px;
+      width: 100%; font-family: inherit;
+    }
+    .notes-toggle:hover { color: #c2410c; }
+
+    .success-card { text-align: center; padding: 50px 24px; }
+    .success-card .check {
+      font-size: 60px; color: #047857; display: block; margin-bottom: 12px;
+    }
+    .success-card h2 { margin: 8px 0; color: #047857; }
+    .success-card .recap {
+      display: inline-block; padding: 16px 24px;
+      background: #f0fdf4; border-radius: 10px;
+      margin-top: 12px;
+    }
+    .success-card .recap .num {
+      font-size: 36px; font-weight: bold; color: #047857;
+    }
+    .success-card .next {
+      color: #666; font-size: 13px; margin-top: 16px;
+    }
+
+    .error-message {
+      background: #fee; color: #c53030; padding: 12px;
+      border-radius: 6px; margin-top: 12px; font-size: 14px;
+    }
+
+    #loading { text-align: center; padding: 60px 20px; color: #666; }
+
+    @media (max-width: 380px) {
+      .nrs-btn { font-size: 14px; min-height: 38px; }
+      .header h1 { font-size: 19px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loading">載入中⋯⋯</div>
+
+  <div id="main" class="container" hidden>
+    <div class="card">
+      <div class="header">
+        <h1>🩹 疼痛回報</h1>
+        <p class="subtitle">花 5 秒,讓我們了解您的恢復狀況</p>
+        <div class="badge" id="timepoint-badge"></div>
+      </div>
+
+      <p class="nrs-instruction"><strong>請評估您「現在」的疼痛程度</strong></p>
+
+      <div class="nrs-grid" id="nrs-grid"></div>
+
+      <div class="nrs-labels">
+        <span>0 = 不痛</span>
+        <span>5 = 中度</span>
+        <span>10 = 最痛</span>
+      </div>
+
+      <div class="selected-display" id="selected-display">
+        <div class="big-num" id="selected-num">-</div>
+        <div class="interp" id="selected-interp"></div>
+      </div>
+
+      <button class="submit-btn" id="submit-btn" disabled type="button">送出</button>
+
+      <button class="notes-toggle" id="notes-toggle" type="button">＋ 加備註(可選)</button>
+      <textarea class="notes-box" id="notes-box" placeholder="例如:有服止痛藥、傷口紅腫" hidden></textarea>
+
+      <button class="stop-link" id="stop-link" type="button">我已完全恢復,提早結束追蹤</button>
+
+      <div id="form-error" class="error-message" hidden></div>
+    </div>
+  </div>
+
+  <div id="success-screen" class="container" hidden>
+    <div class="card success-card">
+      <span class="check">✓</span>
+      <h2 id="success-title">感謝您的回報</h2>
+      <div class="recap" id="success-recap"></div>
+      <p class="next" id="next-time"></p>
+    </div>
+  </div>
+
+  <script>
+    // ⚠️ 部署後請更新 GAS_ENDPOINT
+    const GAS_ENDPOINT = 'YOUR_GAS_DEPLOYMENT_URL_HERE';
+
+    let ctx = {};
+    let selectedNrs = null;
+    let willStop = false;
+
+    // ═══════════════════════════════════════════════════════════════
+    // Hash 解析
+    // ═══════════════════════════════════════════════════════════════
+    function parseHash() {
+      const hash = window.location.hash.replace(/^#/, '');
+      const params = {};
+      if (!hash) return params;
+      hash.split('&').forEach(part => {
+        const eq = part.indexOf('=');
+        if (eq < 0) { params[decodeURIComponent(part)] = ''; return; }
+        const k = decodeURIComponent(part.substring(0, eq));
+        const v = decodeURIComponent(part.substring(eq + 1).replace(/\+/g, ' '));
+        params[k] = v;
+      });
+      return params;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // JSONP
+    // ═══════════════════════════════════════════════════════════════
+    function jsonpCall(action, params) {
+      return new Promise((resolve, reject) => {
+        const cbName = '__jsonp_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+        const timer = setTimeout(() => {
+          delete window[cbName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+          reject(new Error('Request timeout'));
+        }, 15000);
+
+        window[cbName] = function(data) {
+          clearTimeout(timer);
+          delete window[cbName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+          if (data && data.ok) resolve(data);
+          else reject(new Error((data && data.error) || 'Unknown error'));
+        };
+
+        const usp = new URLSearchParams();
+        usp.set('action', action);
+        usp.set('callback', cbName);
+        for (const k in params) {
+          if (params[k] !== undefined && params[k] !== null && params[k] !== '') {
+            usp.set(k, String(params[k]));
+          }
+        }
+
+        const script = document.createElement('script');
+        script.src = GAS_ENDPOINT + '?' + usp.toString();
+        script.onerror = () => {
+          clearTimeout(timer);
+          delete window[cbName];
+          reject(new Error('Network error'));
+        };
+        document.body.appendChild(script);
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 初始化
+    // ═══════════════════════════════════════════════════════════════
+    function init() {
+      ctx = parseHash();
+
+      if (!ctx.sid) {
+        return showInlineError('連結缺少手術編號(sid),請從 LINE 訊息點進來。');
+      }
+
+      document.getElementById('loading').hidden = true;
+      document.getElementById('main').hidden = false;
+
+      // 渲染 NRS 0-10 按鈕
+      const grid = document.getElementById('nrs-grid');
+      for (let i = 0; i <= 10; i++) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'nrs-btn';
+        btn.dataset.val = i;
+        btn.textContent = i;
+        btn.addEventListener('click', () => selectNrs(i));
+        grid.appendChild(btn);
+      }
+
+      // 渲染 timepoint badge
+      const badge = document.getElementById('timepoint-badge');
+      const seq = parseInt(ctx.seq, 10) || 0;
+      const hours = parseInt(ctx.hours, 10) || 0;
+      if (seq > 0) {
+        const day = Math.ceil(seq / 4);
+        if (hours > 0) {
+          badge.textContent = `第 ${day} 天 / 術後約 ${hours} 小時 (#${seq})`;
+        } else {
+          badge.textContent = `回報 #${seq}(第 ${day} 天)`;
+        }
+      } else {
+        badge.textContent = '疼痛追蹤';
+      }
+
+      // 事件 binding
+      document.getElementById('submit-btn').addEventListener('click', handleSubmit);
+      document.getElementById('stop-link').addEventListener('click', handleStop);
+      document.getElementById('notes-toggle').addEventListener('click', () => {
+        const box = document.getElementById('notes-box');
+        const toggle = document.getElementById('notes-toggle');
+        if (box.hidden) {
+          box.hidden = false;
+          toggle.textContent = '− 收起備註';
+          box.focus();
+        } else {
+          box.hidden = true;
+          toggle.textContent = '＋ 加備註(可選)';
+        }
+      });
+    }
+
+    function selectNrs(n) {
+      selectedNrs = n;
+      document.querySelectorAll('.nrs-btn').forEach(b => {
+        b.classList.toggle('selected', parseInt(b.dataset.val, 10) === n);
+      });
+
+      const display = document.getElementById('selected-display');
+      const numEl = document.getElementById('selected-num');
+      const interpEl = document.getElementById('selected-interp');
+
+      display.classList.add('show');
+      numEl.textContent = n;
+
+      const interps = [
+        '完全不痛 🎉 — 恭喜!',
+        '幾乎沒有痛感',
+        '輕微疼痛 — 可忍受',
+        '輕微疼痛',
+        '中度疼痛 — 影響活動',
+        '中度疼痛 — 影響活動',
+        '中度疼痛 — 建議服止痛藥',
+        '嚴重疼痛 — 建議服止痛藥',
+        '嚴重疼痛 — 請聯絡醫護人員',
+        '嚴重疼痛 — 請聯絡醫護人員',
+        '⚠️ 無法忍受 — 請立即聯絡本院'
+      ];
+      interpEl.textContent = interps[n] || '';
+      interpEl.classList.toggle('urgent', n >= 8);
+
+      document.getElementById('submit-btn').disabled = false;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 送出
+    // ═══════════════════════════════════════════════════════════════
+    async function handleSubmit() {
+      if (selectedNrs === null) return;
+
+      const btn = document.getElementById('submit-btn');
+      const errBox = document.getElementById('form-error');
+      errBox.hidden = true;
+      btn.disabled = true;
+      btn.textContent = '送出中⋯⋯';
+
+      try {
+        const notes = document.getElementById('notes-box').value.trim();
+        const result = await jsonpCall('painTrackSubmit', {
+          sid: ctx.sid,
+          seq: ctx.seq || '0',
+          hours: ctx.hours || '0',
+          nrs: selectedNrs,
+          stopTracking: willStop ? '是' : '否',
+          filler: 'patient',
+          notes: notes
+        });
+        showSuccess(result);
+      } catch (err) {
+        errBox.textContent = '送出失敗:' + err.message;
+        errBox.hidden = false;
+        btn.disabled = false;
+        btn.textContent = '送出';
+      }
+    }
+
+    function handleStop() {
+      if (selectedNrs === null) {
+        alert('請先選擇目前的疼痛分數,我們會記錄您最後一次的狀況。');
+        return;
+      }
+      const ok = confirm(
+        '確認停止疼痛追蹤?\n\n' +
+        '您最後回報的疼痛分數是 ' + selectedNrs + '。\n' +
+        '停止後我們將不再發送疼痛追蹤訊息。\n\n' +
+        '(若日後疼痛加劇,請主動聯絡本院)'
+      );
+      if (ok) {
+        willStop = true;
+        handleSubmit();
+      }
+    }
+
+    function showSuccess(result) {
+      document.getElementById('main').hidden = true;
+      const screen = document.getElementById('success-screen');
+      const title = document.getElementById('success-title');
+      const recap = document.getElementById('success-recap');
+      const next = document.getElementById('next-time');
+
+      if (result.stopped) {
+        title.textContent = '已停止疼痛追蹤';
+        recap.innerHTML = `<div style="font-size:20px;">祝您早日完全康復!</div>`;
+        next.innerHTML = '若日後疼痛加劇,請主動聯絡本院。';
+      } else {
+        title.textContent = '感謝您的回報';
+        recap.innerHTML = `
+          已記錄您的疼痛分數
+          <div class="num">${result.nrs}</div>
+        `;
+        const seq = parseInt(result.seq, 10) || 0;
+        if (seq >= 28) {
+          next.innerHTML = '✓ 您已完成 7 天的追蹤,謝謝配合!';
+        } else if (result.nrs >= 7) {
+          next.innerHTML = '⚠️ 疼痛分數較高,若無法忍受請主動聯絡本院。下次回報約 4 小時後。';
+        } else {
+          next.innerHTML = '下次回報約 4 小時後 / 明天早上。';
+        }
+      }
+      screen.hidden = false;
+    }
+
+    function showInlineError(msg) {
+      document.getElementById('loading').hidden = true;
+      document.getElementById('main').hidden = false;
+      document.getElementById('nrs-grid').style.display = 'none';
+      document.querySelector('.nrs-labels').style.display = 'none';
+      document.querySelector('.nrs-instruction').style.display = 'none';
+      document.getElementById('submit-btn').style.display = 'none';
+      document.getElementById('stop-link').style.display = 'none';
+      document.getElementById('notes-toggle').style.display = 'none';
+      const errBox = document.getElementById('form-error');
+      errBox.textContent = msg;
+      errBox.hidden = false;
+    }
+
+    init();
+  </script>
+
+</body>
+</html>

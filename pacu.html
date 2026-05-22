@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PACU 評估 — PMS-aac</title>
+  <link rel="stylesheet" href="_shared/eras-shared.css">
+  <style>
+    /*
+     * 平板優先設計 — 大字體、大按鈕、清晰對比
+     * 主要使用情境:PACU 護理師 / 醫師在 iPad 或 Android Tablet 上填寫
+     */
+    body {
+      font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 0;
+      font-size: 16px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ── 容器 ────────────────────────────────── */
+    .pacu-container { max-width: 900px; margin: 0 auto; padding: 16px; }
+
+    .pacu-banner {
+      background: #c2410c; color: white; padding: 14px 22px; font-weight: bold;
+      border-radius: 10px 10px 0 0; font-size: 17px;
+    }
+    .pacu-header {
+      background: white; border-radius: 0 0 10px 10px;
+      padding: 18px 22px; margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .pacu-header h1 { margin: 0; font-size: 22px; color: #c2410c; }
+    .pacu-header .filler {
+      font-size: 13px; color: #666; margin-top: 4px;
+    }
+
+    /* ── 登入卡 ────────────────────────────────── */
+    .login-card {
+      max-width: 460px; margin: 50px auto; padding: 40px;
+      background: white; border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .login-card h2 { margin-top: 0; color: #c2410c; }
+    .login-card input {
+      width: 100%; padding: 14px; font-size: 17px;
+      border: 1px solid #ccc; border-radius: 8px;
+      box-sizing: border-box; margin: 12px 0;
+    }
+    .login-card .big-btn {
+      width: 100%; padding: 16px; font-size: 18px; font-weight: bold;
+      background: #c2410c; color: white; border: none; border-radius: 8px;
+      cursor: pointer;
+    }
+    .login-card .big-btn:hover { background: #9a3412; }
+
+    /* ── 手術列表 ────────────────────────────────── */
+    .surgery-list-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 12px;
+    }
+    .surgery-list-header h2 {
+      margin: 0; color: #c2410c; font-size: 19px;
+    }
+    .refresh-btn {
+      padding: 8px 16px; background: white; border: 1px solid #ccc;
+      border-radius: 6px; cursor: pointer; font-size: 14px;
+    }
+    .refresh-btn:hover { background: #f5f5f5; }
+
+    .surgery-card {
+      background: white; border-radius: 10px; padding: 18px;
+      margin-bottom: 12px; cursor: pointer;
+      border: 2px solid transparent; transition: all 0.15s;
+      display: grid; grid-template-columns: 1fr auto; gap: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .surgery-card:hover { border-color: #c2410c; }
+    .surgery-card:active { transform: scale(0.99); }
+    .surgery-card .patient-name {
+      font-size: 19px; font-weight: bold; color: #1f2937;
+    }
+    .surgery-card .surgery-info {
+      font-size: 14px; color: #666; margin-top: 4px;
+    }
+    .surgery-card .comorbidities {
+      font-size: 12px; color: #c2410c; margin-top: 6px;
+      display: inline-block; padding: 2px 8px;
+      background: #fff7ed; border-radius: 12px;
+    }
+    .surgery-card .right-arrow {
+      align-self: center; font-size: 28px; color: #c2410c;
+    }
+
+    .empty-state {
+      text-align: center; padding: 60px 20px; color: #666;
+    }
+
+    /* ── 表單區塊 ────────────────────────────────── */
+    .form-section {
+      background: white; border-radius: 10px; padding: 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .form-section h2 {
+      margin: 0 0 14px 0; color: #c2410c; font-size: 18px;
+      padding-bottom: 10px; border-bottom: 2px solid #fff7ed;
+    }
+    .form-section .help { color: #666; font-size: 13px; margin: 0 0 12px 0; }
+
+    .field-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .field-grid label {
+      display: block; font-size: 13px; color: #555; margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .field-grid input {
+      width: 100%; padding: 14px; font-size: 18px;
+      border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box;
+      text-align: center;
+    }
+    .field-grid input:focus {
+      outline: none; border-color: #c2410c;
+      box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.1);
+    }
+
+    /* ── PADSS 大按鈕評分 ────────────────────────────────── */
+    .padss-row {
+      margin-bottom: 18px; padding-bottom: 18px;
+      border-bottom: 1px dashed #e5e7eb;
+    }
+    .padss-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .padss-label {
+      font-weight: bold; font-size: 15px; margin-bottom: 8px;
+      color: #1f2937;
+    }
+    .padss-buttons {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+    }
+    .padss-btn {
+      padding: 14px 10px; background: white; border: 2px solid #ddd;
+      border-radius: 8px; cursor: pointer; text-align: center;
+      transition: all 0.15s; font-size: 13px;
+    }
+    .padss-btn:hover { border-color: #c2410c; background: #fff7ed; }
+    .padss-btn .score {
+      display: block; font-size: 22px; font-weight: bold;
+      color: #c2410c; margin-bottom: 4px;
+    }
+    .padss-btn.selected {
+      background: #c2410c; border-color: #c2410c; color: white;
+    }
+    .padss-btn.selected .score { color: white; }
+
+    .padss-total {
+      padding: 16px; text-align: center; font-size: 17px;
+      background: #fff7ed; border-radius: 8px; margin-top: 14px;
+      font-weight: bold; color: #c2410c;
+    }
+    .padss-total .score-big { font-size: 32px; }
+    .padss-warning {
+      margin-top: 8px; font-size: 14px; color: #c53030;
+      font-weight: normal;
+    }
+
+    /* ── NRS Slider ────────────────────────────────── */
+    .nrs-display {
+      text-align: center; font-size: 40px; font-weight: bold;
+      color: #c2410c; margin-bottom: 12px;
+    }
+    .nrs-slider-container {
+      padding: 0 8px;
+    }
+    .nrs-slider {
+      width: 100%; -webkit-appearance: none; appearance: none;
+      height: 40px; background: linear-gradient(to right, #4ade80, #facc15, #ef4444);
+      border-radius: 20px; outline: none;
+    }
+    .nrs-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 44px; height: 44px; background: white;
+      border: 3px solid #c2410c; border-radius: 50%; cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .nrs-slider::-moz-range-thumb {
+      width: 44px; height: 44px; background: white;
+      border: 3px solid #c2410c; border-radius: 50%; cursor: pointer;
+    }
+    .nrs-labels {
+      display: flex; justify-content: space-between; margin-top: 8px;
+      font-size: 12px; color: #666; padding: 0 8px;
+    }
+
+    /* ── Yes/No 大按鈕 ────────────────────────────────── */
+    .yn-buttons {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    .yn-btn {
+      padding: 18px; background: white; border: 2px solid #ddd;
+      border-radius: 8px; cursor: pointer; text-align: center;
+      font-size: 17px; font-weight: bold;
+      transition: all 0.15s;
+    }
+    .yn-btn:hover { border-color: #c2410c; }
+    .yn-btn.selected.yes { background: #fbbf24; border-color: #f59e0b; color: white; }
+    .yn-btn.selected.no  { background: #10b981; border-color: #059669; color: white; }
+
+    /* ── 麻醉方式 ────────────────────────────────── */
+    .anes-buttons {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
+    }
+    .anes-btn {
+      padding: 14px 8px; background: white; border: 2px solid #ddd;
+      border-radius: 8px; cursor: pointer; text-align: center;
+      font-size: 14px;
+    }
+    .anes-btn:hover { border-color: #c2410c; }
+    .anes-btn.selected { background: #c2410c; border-color: #c2410c; color: white; }
+
+    /* ── Canvas 簽名 ────────────────────────────────── */
+    .signature-area {
+      background: white; border: 2px dashed #c2410c;
+      border-radius: 8px; overflow: hidden;
+      position: relative; touch-action: none;
+    }
+    #signature-canvas {
+      display: block; width: 100%;
+      background: white;
+      cursor: crosshair;
+      touch-action: none;
+    }
+    .signature-actions {
+      display: flex; justify-content: space-between;
+      padding: 8px; background: #fafafa; border-top: 1px solid #e5e7eb;
+    }
+    .signature-actions button {
+      padding: 8px 16px; background: white; border: 1px solid #ccc;
+      border-radius: 6px; cursor: pointer; font-size: 13px;
+    }
+    .signature-placeholder {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      color: #ccc; pointer-events: none; font-size: 16px;
+    }
+
+    /* ── 離院決議大按鈕 ────────────────────────────────── */
+    .discharge-buttons {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+    }
+    .discharge-btn {
+      padding: 20px 12px; background: white; border: 2px solid #ddd;
+      border-radius: 8px; cursor: pointer; text-align: center;
+      font-size: 16px; font-weight: bold;
+      transition: all 0.15s;
+    }
+    .discharge-btn:hover { border-color: #c2410c; }
+    .discharge-btn.selected {
+      background: #c2410c; border-color: #c2410c; color: white;
+    }
+    .discharge-btn[data-value="改收住院"].selected { background: #dc2626; border-color: #b91c1c; }
+    .discharge-btn[data-value="轉院"].selected { background: #7c2d12; border-color: #571c0d; }
+    .discharge-btn .icon { display: block; font-size: 24px; margin-bottom: 4px; }
+    .discharge-btn .sub { display: block; font-size: 12px; font-weight: normal; margin-top: 4px; opacity: 0.85; }
+
+    /* ── 提交 ────────────────────────────────── */
+    .submit-btn {
+      width: 100%; padding: 22px; font-size: 20px; font-weight: bold;
+      background: #c2410c; color: white; border: none; border-radius: 10px;
+      cursor: pointer; margin-top: 16px;
+      box-shadow: 0 2px 8px rgba(194, 65, 12, 0.3);
+    }
+    .submit-btn:hover { background: #9a3412; }
+    .submit-btn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
+
+    .back-btn {
+      padding: 10px 16px; background: #f3f4f6; border: 1px solid #ccc;
+      border-radius: 6px; cursor: pointer; font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .error-message {
+      background: #fee; color: #c53030; padding: 14px;
+      border-radius: 8px; margin: 12px 0; font-size: 14px;
+    }
+
+    /* ── 病人資訊 readout ────────────────────────────────── */
+    .patient-readout {
+      background: #fff7ed; border-left: 4px solid #c2410c;
+      padding: 14px 18px; border-radius: 6px; margin-bottom: 14px;
+    }
+    .patient-readout .name {
+      font-size: 22px; font-weight: bold; color: #c2410c;
+    }
+    .patient-readout dl {
+      margin: 8px 0 0 0; display: grid;
+      grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 14px;
+    }
+    .patient-readout dt { color: #666; }
+    .patient-readout dd { margin: 0; font-weight: 500; }
+
+    /* ── Success screen ────────────────────────────────── */
+    .success-screen {
+      text-align: center; padding: 60px 20px; background: white;
+      border-radius: 12px; max-width: 600px; margin: 40px auto;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+    }
+    .success-screen .check { font-size: 70px; display: block; margin-bottom: 14px; }
+    .success-screen.ok .check { color: #047857; }
+    .success-screen .next-steps {
+      text-align: left; padding: 16px; background: #f0fdf4;
+      border-radius: 8px; margin-top: 20px; font-size: 14px;
+    }
+    .trigger-content-list {
+      list-style: none; padding: 0; margin: 8px 0;
+    }
+    .trigger-content-list li {
+      padding: 8px 0; border-bottom: 1px solid #e5e7eb;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .trigger-content-list li:last-child { border-bottom: none; }
+
+    #loading { text-align: center; padding: 80px 20px; color: #666; }
+
+    /* ── Tablet 觸控優化 ────────────────────────────────── */
+    @media (max-width: 768px) {
+      .pacu-container { padding: 10px; }
+      .pacu-banner { font-size: 15px; padding: 12px 16px; }
+      .pacu-header h1 { font-size: 18px; }
+      .field-grid { grid-template-columns: 1fr; }
+      .padss-buttons { grid-template-columns: 1fr; }
+      .discharge-buttons { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading -->
+  <div id="loading"><p>載入中⋯⋯</p></div>
+
+  <!-- Login -->
+  <div id="login-screen" class="login-card" hidden>
+    <h2>🏥 PACU 評估系統</h2>
+    <p style="color:#666;">請輸入 PACU 通行碼</p>
+    <input type="password" id="pacu-key-input" placeholder="PACU_KEY" autocomplete="off">
+    <button class="big-btn" id="pacu-login-btn">登入</button>
+    <div id="pacu-login-error" class="error-message" hidden></div>
+  </div>
+
+  <!-- Surgery list -->
+  <div id="surgery-list-screen" class="pacu-container" hidden>
+    <div class="pacu-banner">PACU 評估系統 — 今日待簽核手術</div>
+    <div class="pacu-header">
+      <div class="surgery-list-header">
+        <h2 id="surgery-list-title">今日手術</h2>
+        <button class="refresh-btn" id="refresh-btn">↻ 重新整理</button>
+      </div>
+    </div>
+    <div id="surgery-list-container"></div>
+  </div>
+
+  <!-- PACU evaluation form -->
+  <div id="pacu-form-screen" class="pacu-container" hidden>
+    <button class="back-btn" id="back-btn">← 回手術列表</button>
+
+    <div class="pacu-banner">PACU 評估表單</div>
+    <div class="pacu-header">
+      <h1 id="form-patient-title">病人姓名</h1>
+      <div class="filler" id="form-surgery-summary"></div>
+    </div>
+
+    <form id="pacu-form">
+
+      <!-- 病人 readout -->
+      <div class="patient-readout" id="patient-readout"></div>
+
+      <!-- 實際麻醉方式 -->
+      <section class="form-section">
+        <h2>① 實際麻醉方式</h2>
+        <div class="anes-buttons" id="anes-buttons">
+          <div class="anes-btn" data-value="全身麻醉(GA)">全身麻醉<br><small>GA</small></div>
+          <div class="anes-btn" data-value="喉罩(LMA)">喉罩<br><small>LMA</small></div>
+          <div class="anes-btn" data-value="區域阻斷">區域阻斷<br><small>Block</small></div>
+          <div class="anes-btn" data-value="脊椎麻醉">脊椎麻醉<br><small>Spinal</small></div>
+          <div class="anes-btn" data-value="硬膜外麻醉">硬膜外麻醉<br><small>Epidural</small></div>
+          <div class="anes-btn" data-value="監測麻醉(MAC)">監測麻醉<br><small>MAC</small></div>
+          <div class="anes-btn" data-value="其他">其他</div>
+        </div>
+      </section>
+
+      <!-- Vital Signs -->
+      <section class="form-section">
+        <h2>② 離院前 Vital Signs</h2>
+        <div class="field-grid">
+          <div>
+            <label>BP(收縮/舒張)</label>
+            <input type="text" id="pacu-bp" placeholder="120/80">
+          </div>
+          <div>
+            <label>HR(/min)</label>
+            <input type="number" id="pacu-hr" min="30" max="200" placeholder="80">
+          </div>
+          <div>
+            <label>SpO2(%)</label>
+            <input type="number" id="pacu-spo2" min="0" max="100" placeholder="98">
+          </div>
+        </div>
+      </section>
+
+      <!-- PADSS Scoring -->
+      <section class="form-section">
+        <h2>③ PADSS 離院評分</h2>
+        <p class="help">每項 0/1/2 分,總分 ≥ 9 表示可離院。</p>
+
+        <div class="padss-row" data-padss="VS">
+          <div class="padss-label">1. 生命徵象(BP/HR 與術前差距)</div>
+          <div class="padss-buttons">
+            <div class="padss-btn" data-value="0"><span class="score">0</span>差距 &gt; 40%</div>
+            <div class="padss-btn" data-value="1"><span class="score">1</span>差距 20-40%</div>
+            <div class="padss-btn" data-value="2"><span class="score">2</span>差距 &lt; 20%</div>
+          </div>
+        </div>
+
+        <div class="padss-row" data-padss="Activity">
+          <div class="padss-label">2. 活動力(步行 / 站立)</div>
+          <div class="padss-buttons">
+            <div class="padss-btn" data-value="0"><span class="score">0</span>無法行走</div>
+            <div class="padss-btn" data-value="1"><span class="score">1</span>需要協助</div>
+            <div class="padss-btn" data-value="2"><span class="score">2</span>步態穩定</div>
+          </div>
+        </div>
+
+        <div class="padss-row" data-padss="PONV">
+          <div class="padss-label">3. 噁心 / 嘔吐</div>
+          <div class="padss-buttons">
+            <div class="padss-btn" data-value="0"><span class="score">0</span>嚴重 / 持續</div>
+            <div class="padss-btn" data-value="1"><span class="score">1</span>中度(已處置)</div>
+            <div class="padss-btn" data-value="2"><span class="score">2</span>輕微 / 無</div>
+          </div>
+        </div>
+
+        <div class="padss-row" data-padss="Pain">
+          <div class="padss-label">4. 疼痛(口服止痛可控制)</div>
+          <div class="padss-buttons">
+            <div class="padss-btn" data-value="0"><span class="score">0</span>嚴重(NRS ≥ 7)</div>
+            <div class="padss-btn" data-value="1"><span class="score">1</span>中度(NRS 4-6)</div>
+            <div class="padss-btn" data-value="2"><span class="score">2</span>輕微(NRS &lt; 4)</div>
+          </div>
+        </div>
+
+        <div class="padss-row" data-padss="Bleeding">
+          <div class="padss-label">5. 手術部位出血</div>
+          <div class="padss-buttons">
+            <div class="padss-btn" data-value="0"><span class="score">0</span>嚴重</div>
+            <div class="padss-btn" data-value="1"><span class="score">1</span>中度</div>
+            <div class="padss-btn" data-value="2"><span class="score">2</span>輕微 / 無</div>
+          </div>
+        </div>
+
+        <div class="padss-total">
+          PADSS 總分:<span class="score-big" id="padss-total">0</span> / 10
+          <div class="padss-warning" id="padss-warning"></div>
+        </div>
+      </section>
+
+      <!-- 離院前最後 NRS -->
+      <section class="form-section">
+        <h2>④ 離院前最後一次疼痛 NRS</h2>
+        <div class="nrs-display"><span id="nrs-value">0</span></div>
+        <div class="nrs-slider-container">
+          <input type="range" id="nrs-slider" min="0" max="10" value="0" class="nrs-slider">
+          <div class="nrs-labels">
+            <span>0 — 完全不痛</span>
+            <span>5</span>
+            <span>10 — 最痛</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PONV 發生 -->
+      <section class="form-section">
+        <h2>⑤ PACU 期間有發生 PONV(噁心/嘔吐)嗎?</h2>
+        <div class="yn-buttons">
+          <div class="yn-btn yes" data-value="是">是,有發生</div>
+          <div class="yn-btn no" data-value="否">否,未發生</div>
+        </div>
+      </section>
+
+      <!-- 家屬簽名 -->
+      <section class="form-section">
+        <h2>⑥ 家屬簽名</h2>
+        <p class="help">請主要照顧者簽名確認接走病人(順利離院必填;其他狀態選填)</p>
+        <div class="signature-area">
+          <canvas id="signature-canvas" width="600" height="180"></canvas>
+          <div class="signature-placeholder" id="signature-placeholder">請在此簽名</div>
+          <div class="signature-actions">
+            <span style="font-size:13px; color:#666; align-self:center;" id="signature-status">尚未簽名</span>
+            <button type="button" id="clear-signature">清除重簽</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 離院決議 -->
+      <section class="form-section">
+        <h2>⑦ 離院決議</h2>
+        <div class="discharge-buttons" id="discharge-buttons">
+          <div class="discharge-btn" data-value="順利離院">
+            <span class="icon">✓</span>
+            順利離院
+            <span class="sub">PADSS ≥ 9,符合離院條件</span>
+          </div>
+          <div class="discharge-btn" data-value="延後離院">
+            <span class="icon">⏰</span>
+            延後離院
+            <span class="sub">需繼續觀察,稍後再評估</span>
+          </div>
+          <div class="discharge-btn" data-value="改收住院">
+            <span class="icon">🏥</span>
+            改收住院
+            <span class="sub">無法離院,轉入病房</span>
+          </div>
+          <div class="discharge-btn" data-value="轉院">
+            <span class="icon">🚑</span>
+            轉院
+            <span class="sub">轉至其他醫院</span>
+          </div>
+        </div>
+
+        <!-- 順利離院 → 時段 -->
+        <div id="discharge-time-row" style="margin-top:14px;" hidden>
+          <label style="font-weight:bold; font-size:14px;">離院時段</label>
+          <div class="anes-buttons" id="discharge-time-buttons" style="margin-top:6px;">
+            <div class="anes-btn" data-value="08-10">08-10</div>
+            <div class="anes-btn" data-value="10-12">10-12</div>
+            <div class="anes-btn" data-value="12-14">12-14</div>
+            <div class="anes-btn" data-value="14-16">14-16</div>
+            <div class="anes-btn" data-value="16-18">16-18</div>
+            <div class="anes-btn" data-value="18-20">18-20</div>
+          </div>
+        </div>
+
+        <!-- 改收住院 → 病房號 -->
+        <div id="ward-number-row" style="margin-top:14px;" hidden>
+          <label style="font-weight:bold; font-size:14px;">病房號</label>
+          <input type="text" id="ward-number" placeholder="例:8B-12"
+            style="width:100%; padding:14px; font-size:17px; border:1px solid #ccc; border-radius:8px; box-sizing:border-box; margin-top:6px;">
+        </div>
+
+        <!-- 轉院 → 目的醫院 -->
+        <div id="transfer-row" style="margin-top:14px;" hidden>
+          <label style="font-weight:bold; font-size:14px;">轉至何處</label>
+          <input type="text" id="transfer-to" placeholder="例:台大醫院 急診"
+            style="width:100%; padding:14px; font-size:17px; border:1px solid #ccc; border-radius:8px; box-sizing:border-box; margin-top:6px;">
+        </div>
+      </section>
+
+      <!-- PACU 填寫者 -->
+      <section class="form-section">
+        <h2>⑧ PACU 填寫者</h2>
+        <input type="text" id="pacu-filler" placeholder="您的姓名 / 工號" required
+          style="width:100%; padding:14px; font-size:17px; border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+      </section>
+
+      <button type="submit" class="submit-btn" id="submit-btn">提交 PACU 評估</button>
+      <div id="form-error" class="error-message" hidden></div>
+    </form>
+  </div>
+
+  <!-- Success screen -->
+  <div id="success-screen" class="success-screen ok" hidden>
+    <span class="check">✓</span>
+    <h1 id="success-title">PACU 評估完成</h1>
+    <p id="success-message"></p>
+    <div class="next-steps" id="next-steps"></div>
+    <button class="big-btn" id="continue-btn"
+      style="margin-top:20px; padding:14px 30px; background:#c2410c; color:white; border:none; border-radius:8px; cursor:pointer; font-size:16px;">
+      繼續評估下一位病人
+    </button>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════
+    // 設定
+    // ═══════════════════════════════════════════════════════════════
+    // ⚠️ 部署後請更新此 URL:Apps Script 部署 → 取得 web app URL
+    const GAS_ENDPOINT = 'YOUR_GAS_DEPLOYMENT_URL_HERE';
+
+    // 全域狀態
+    let pacuKey = '';
+    let surgeries = [];           // 今日待簽核手術
+    let currentSurgery = null;    // 目前正在填的手術
+    let formState = {
+      anes:        '',
+      padssVS:     null,
+      padssActivity: null,
+      padssPONV:   null,
+      padssPain:   null,
+      padssBleeding: null,
+      nrs:         0,
+      ponv:        '',
+      dischargeStatus: '',
+      dischargeTime: '',
+      signature:   ''
+    };
+
+    // ═══════════════════════════════════════════════════════════════
+    // JSONP utility
+    // ═══════════════════════════════════════════════════════════════
+    function jsonpCall(action, params) {
+      return new Promise((resolve, reject) => {
+        const cbName = '__jsonp_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+        const timer = setTimeout(() => {
+          delete window[cbName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+          reject(new Error('Request timeout(20s)'));
+        }, 20000);
+
+        window[cbName] = function(data) {
+          clearTimeout(timer);
+          delete window[cbName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+          if (data && data.ok) resolve(data);
+          else reject(new Error((data && data.error) || 'Unknown error'));
+        };
+
+        const usp = new URLSearchParams();
+        usp.set('action', action);
+        usp.set('callback', cbName);
+        for (const k in params) {
+          if (params[k] !== undefined && params[k] !== null && params[k] !== '') {
+            usp.set(k, String(params[k]));
+          }
+        }
+
+        const script = document.createElement('script');
+        script.src = GAS_ENDPOINT + '?' + usp.toString();
+        script.onerror = () => {
+          clearTimeout(timer);
+          delete window[cbName];
+          reject(new Error('Network error'));
+        };
+        document.body.appendChild(script);
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 初始化
+    // ═══════════════════════════════════════════════════════════════
+    function init() {
+      document.getElementById('loading').hidden = true;
+
+      // 嘗試從 sessionStorage 恢復 pacuKey(避免反覆登入)
+      const saved = sessionStorage.getItem('pacu_key');
+      if (saved) {
+        pacuKey = saved;
+        loadSurgeryList();
+      } else {
+        showLogin();
+      }
+    }
+
+    function showLogin() {
+      document.getElementById('login-screen').hidden = false;
+      document.getElementById('pacu-login-btn').addEventListener('click', handleLogin);
+      document.getElementById('pacu-key-input').addEventListener('keypress', e => {
+        if (e.key === 'Enter') handleLogin();
+      });
+    }
+
+    async function handleLogin() {
+      const key = document.getElementById('pacu-key-input').value.trim();
+      if (!key) return;
+
+      const btn = document.getElementById('pacu-login-btn');
+      const errBox = document.getElementById('pacu-login-error');
+      btn.disabled = true; btn.textContent = '驗證中⋯⋯';
+      errBox.hidden = true;
+
+      try {
+        // 用 pacuGetTodaySurgeries 驗證(順便載入列表)
+        const result = await jsonpCall('pacuGetTodaySurgeries', { pacuKey: key });
+        pacuKey = key;
+        sessionStorage.setItem('pacu_key', key);
+        surgeries = result.surgeries || [];
+        document.getElementById('login-screen').hidden = true;
+        renderSurgeryList();
+        document.getElementById('surgery-list-screen').hidden = false;
+      } catch (e) {
+        errBox.textContent = e.message;
+        errBox.hidden = false;
+        btn.disabled = false; btn.textContent = '登入';
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 載入手術列表
+    // ═══════════════════════════════════════════════════════════════
+    async function loadSurgeryList() {
+      try {
+        const result = await jsonpCall('pacuGetTodaySurgeries', { pacuKey: pacuKey });
+        surgeries = result.surgeries || [];
+        renderSurgeryList();
+        document.getElementById('surgery-list-screen').hidden = false;
+      } catch (e) {
+        // 通行碼可能失效
+        sessionStorage.removeItem('pacu_key');
+        pacuKey = '';
+        showLogin();
+        document.getElementById('pacu-login-error').textContent = '通行碼失效或網路錯誤:' + e.message;
+        document.getElementById('pacu-login-error').hidden = false;
+      }
+    }
+
+    function renderSurgeryList() {
+      const container = document.getElementById('surgery-list-container');
+      const today = new Date();
+      const todayStr = today.toLocaleDateString('zh-TW', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('surgery-list-title').textContent = todayStr + ' — ' + surgeries.length + ' 筆待簽核';
+
+      if (surgeries.length === 0) {
+        container.innerHTML = '<div class="empty-state"><h3>🎉 今日所有手術都已 PACU 簽核完成</h3><p>沒有待處理的手術</p></div>';
+        return;
+      }
+
+      container.innerHTML = surgeries.map(s => `
+        <div class="surgery-card" data-sid="${escapeHtml(s.surgeryId)}">
+          <div>
+            <div class="patient-name">${escapeHtml(s.patientName)} <small style="font-size:13px; color:#666;">(${escapeHtml(s.pk || '新病人')})</small></div>
+            <div class="surgery-info">
+              <strong>${escapeHtml(s.surgeryName)}</strong>
+              ${s.attendingDoctor ? ' / ' + escapeHtml(s.attendingDoctor) : ''}
+              ${s.department ? ' (' + escapeHtml(s.department) + ')' : ''}
+            </div>
+            ${s.comorbiditiesSnapshot ?
+              `<div class="comorbidities">共病:${escapeHtml(s.comorbiditiesSnapshot)}</div>` : ''}
+            ${s.apfelSnapshot ?
+              `<div class="comorbidities" style="background:#fef3c7; color:#92400e;">Apfel: ${s.apfelSnapshot}/4</div>` : ''}
+          </div>
+          <div class="right-arrow">›</div>
+        </div>
+      `).join('');
+
+      container.querySelectorAll('.surgery-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const sid = card.dataset.sid;
+          selectSurgery(sid);
+        });
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 選擇手術 → 進入評估表單
+    // ═══════════════════════════════════════════════════════════════
+    function selectSurgery(surgeryId) {
+      currentSurgery = surgeries.find(s => s.surgeryId === surgeryId);
+      if (!currentSurgery) return;
+
+      document.getElementById('surgery-list-screen').hidden = true;
+      document.getElementById('pacu-form-screen').hidden = false;
+
+      // 病人標題
+      document.getElementById('form-patient-title').textContent = currentSurgery.patientName;
+      document.getElementById('form-surgery-summary').textContent =
+        `${currentSurgery.surgeryName} / ${currentSurgery.attendingDoctor || '?'} / ${currentSurgery.surgeryId}`;
+
+      // 病人 readout
+      const readout = document.getElementById('patient-readout');
+      readout.innerHTML = `
+        <div class="name">${escapeHtml(currentSurgery.patientName)}</div>
+        <dl>
+          <dt>術式:</dt><dd>${escapeHtml(currentSurgery.surgeryName)}</dd>
+          <dt>主治:</dt><dd>${escapeHtml(currentSurgery.attendingDoctor || '?')} (${escapeHtml(currentSurgery.department || '?')})</dd>
+          <dt>共病:</dt><dd>${escapeHtml(currentSurgery.comorbiditiesSnapshot || '無')}</dd>
+          <dt>Apfel:</dt><dd>${escapeHtml(String(currentSurgery.apfelSnapshot || '未填'))} / 4</dd>
+          <dt>疼痛追蹤:</dt><dd>${currentSurgery.painTrackingEnabled ? '✓ 已啟用(7 天)' : '未啟用'}</dd>
+        </dl>
+      `;
+
+      // 重置狀態
+      formState = {
+        anes: '', padssVS: null, padssActivity: null, padssPONV: null,
+        padssPain: null, padssBleeding: null, nrs: 0, ponv: '',
+        dischargeStatus: '', dischargeTime: '', signature: ''
+      };
+      setupFormHandlers();
+      setupSignatureCanvas();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 表單 handlers
+    // ═══════════════════════════════════════════════════════════════
+    function setupFormHandlers() {
+      // 麻醉方式
+      document.querySelectorAll('#anes-buttons .anes-btn').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('#anes-buttons .anes-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          formState.anes = btn.dataset.value;
+        };
+      });
+
+      // PADSS 評分
+      document.querySelectorAll('.padss-row').forEach(row => {
+        const key = row.dataset.padss;
+        row.querySelectorAll('.padss-btn').forEach(btn => {
+          btn.onclick = () => {
+            row.querySelectorAll('.padss-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            formState['padss' + key] = parseInt(btn.dataset.value, 10);
+            updatePadssTotal();
+          };
+        });
+      });
+
+      // NRS slider
+      const nrsSlider = document.getElementById('nrs-slider');
+      const nrsValue = document.getElementById('nrs-value');
+      nrsSlider.oninput = () => {
+        formState.nrs = parseInt(nrsSlider.value, 10);
+        nrsValue.textContent = formState.nrs;
+      };
+
+      // PONV
+      document.querySelectorAll('.yn-btn').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('.yn-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          formState.ponv = btn.dataset.value;
+        };
+      });
+
+      // 離院決議
+      document.querySelectorAll('#discharge-buttons .discharge-btn').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('#discharge-buttons .discharge-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          formState.dischargeStatus = btn.dataset.value;
+          // 顯示對應的後續欄位
+          document.getElementById('discharge-time-row').hidden = (btn.dataset.value !== '順利離院' && btn.dataset.value !== '延後離院');
+          document.getElementById('ward-number-row').hidden = (btn.dataset.value !== '改收住院');
+          document.getElementById('transfer-row').hidden = (btn.dataset.value !== '轉院');
+        };
+      });
+
+      // 離院時段
+      document.querySelectorAll('#discharge-time-buttons .anes-btn').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('#discharge-time-buttons .anes-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          formState.dischargeTime = btn.dataset.value;
+        };
+      });
+
+      // Submit
+      document.getElementById('pacu-form').onsubmit = handleSubmit;
+    }
+
+    function updatePadssTotal() {
+      const vals = [formState.padssVS, formState.padssActivity, formState.padssPONV,
+                    formState.padssPain, formState.padssBleeding];
+      const filled = vals.filter(v => v !== null);
+      const total = filled.reduce((a, b) => a + b, 0);
+      document.getElementById('padss-total').textContent = total;
+
+      const warning = document.getElementById('padss-warning');
+      if (filled.length < 5) {
+        warning.textContent = `尚有 ${5 - filled.length} 項未評分`;
+        warning.style.color = '#9ca3af';
+      } else if (total < 9) {
+        warning.textContent = `⚠️ 總分 < 9,建議「延後離院」繼續觀察`;
+        warning.style.color = '#c53030';
+      } else {
+        warning.textContent = `✓ 符合離院標準(總分 ≥ 9)`;
+        warning.style.color = '#047857';
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 簽名 canvas
+    // ═══════════════════════════════════════════════════════════════
+    function setupSignatureCanvas() {
+      const canvas = document.getElementById('signature-canvas');
+      const placeholder = document.getElementById('signature-placeholder');
+      const status = document.getElementById('signature-status');
+      const ctx = canvas.getContext('2d');
+
+      // 高 DPI 支援
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      canvas.style.height = rect.height + 'px';
+      ctx.scale(dpr, dpr);
+      ctx.strokeStyle = '#1f2937';
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      // 清白色底
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      let drawing = false;
+      let lastX = 0, lastY = 0;
+      let hasSignature = false;
+
+      function getPos(evt) {
+        const r = canvas.getBoundingClientRect();
+        let x, y;
+        if (evt.touches && evt.touches.length > 0) {
+          x = evt.touches[0].clientX - r.left;
+          y = evt.touches[0].clientY - r.top;
+        } else {
+          x = evt.clientX - r.left;
+          y = evt.clientY - r.top;
+        }
+        return { x: x, y: y };
+      }
+
+      function startDraw(e) {
+        e.preventDefault();
+        drawing = true;
+        const pos = getPos(e);
+        lastX = pos.x; lastY = pos.y;
+        if (!hasSignature) {
+          placeholder.style.display = 'none';
+          hasSignature = true;
+          status.textContent = '簽名中⋯⋯';
+        }
+      }
+
+      function draw(e) {
+        if (!drawing) return;
+        e.preventDefault();
+        const pos = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        lastX = pos.x; lastY = pos.y;
+      }
+
+      function endDraw(e) {
+        if (!drawing) return;
+        drawing = false;
+        // 儲存 base64(JPEG 0.5 品質保持小檔)
+        formState.signature = canvas.toDataURL('image/jpeg', 0.5);
+        status.textContent = '✓ 已簽名(' + Math.round(formState.signature.length / 1024) + ' KB)';
+        status.style.color = '#047857';
+      }
+
+      canvas.addEventListener('mousedown', startDraw);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', endDraw);
+      canvas.addEventListener('mouseleave', endDraw);
+      canvas.addEventListener('touchstart', startDraw);
+      canvas.addEventListener('touchmove', draw);
+      canvas.addEventListener('touchend', endDraw);
+
+      // 清除
+      document.getElementById('clear-signature').onclick = () => {
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        formState.signature = '';
+        hasSignature = false;
+        placeholder.style.display = '';
+        status.textContent = '尚未簽名';
+        status.style.color = '#666';
+      };
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 提交
+    // ═══════════════════════════════════════════════════════════════
+    async function handleSubmit(e) {
+      e.preventDefault();
+      const errBox = document.getElementById('form-error');
+      errBox.hidden = true;
+
+      try {
+        // 驗證
+        if (!formState.anes) throw new Error('請選擇麻醉方式');
+        const padssFields = ['padssVS', 'padssActivity', 'padssPONV', 'padssPain', 'padssBleeding'];
+        if (padssFields.some(k => formState[k] === null)) {
+          throw new Error('請完成所有 PADSS 評分(5 項)');
+        }
+        if (!formState.ponv) throw new Error('請填寫是否發生 PONV');
+        if (!formState.dischargeStatus) throw new Error('請選擇離院決議');
+
+        // 順利離院:必須有簽名
+        if (formState.dischargeStatus === '順利離院' && !formState.signature) {
+          throw new Error('順利離院必須請家屬簽名(可點「清除重簽」重新簽名)');
+        }
+        // 順利離院:必須選時段
+        if (formState.dischargeStatus === '順利離院' && !formState.dischargeTime) {
+          throw new Error('請選擇離院時段');
+        }
+        // 改收住院:必須填病房號
+        if (formState.dischargeStatus === '改收住院' && !document.getElementById('ward-number').value.trim()) {
+          throw new Error('請填寫病房號');
+        }
+        // 轉院:必須填目的
+        if (formState.dischargeStatus === '轉院' && !document.getElementById('transfer-to').value.trim()) {
+          throw new Error('請填寫轉院目的地');
+        }
+
+        const filler = document.getElementById('pacu-filler').value.trim();
+        if (!filler) throw new Error('請填寫 PACU 填寫者姓名 / 工號');
+
+        // 組 payload
+        const payload = {
+          pacuKey: pacuKey,
+          surgeryId: currentSurgery.surgeryId,
+          actualAnesthesia: formState.anes,
+          pacuBP: document.getElementById('pacu-bp').value.trim(),
+          pacuHR: document.getElementById('pacu-hr').value.trim(),
+          pacuSpO2: document.getElementById('pacu-spo2').value.trim(),
+          padssVS: formState.padssVS,
+          padssActivity: formState.padssActivity,
+          padssPONV: formState.padssPONV,
+          padssPain: formState.padssPain,
+          padssBleeding: formState.padssBleeding,
+          lastPainNRS: formState.nrs,
+          ponvOccurred: formState.ponv,
+          familySignature: formState.signature || '',
+          dischargeStatus: formState.dischargeStatus,
+          dischargeTimeBlock: formState.dischargeTime,
+          wardNumber: formState.dischargeStatus === '改收住院'
+            ? document.getElementById('ward-number').value.trim()
+            : formState.dischargeStatus === '轉院'
+              ? document.getElementById('transfer-to').value.trim()
+              : '',
+          pacuFiller: filler
+        };
+
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true; btn.textContent = '送出中⋯⋯';
+
+        const result = await jsonpCall('pacuSubmit', payload);
+        showSuccess(result);
+
+      } catch (err) {
+        errBox.textContent = '提交失敗:' + err.message;
+        errBox.hidden = false;
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('submit-btn').textContent = '提交 PACU 評估';
+        window.scrollTo({ top: errBox.offsetTop - 80, behavior: 'smooth' });
+      }
+    }
+
+    function showSuccess(result) {
+      document.getElementById('pacu-form-screen').hidden = true;
+      document.getElementById('success-screen').hidden = false;
+
+      document.getElementById('success-title').textContent =
+        result.dischargeStatus === '順利離院' ? '✓ 順利離院已完成' :
+        result.dischargeStatus === '延後離院' ? '⏰ 已標記延後離院' :
+        result.dischargeStatus === '改收住院' ? '🏥 已標記改收住院' : '🚑 已標記轉院';
+
+      document.getElementById('success-message').innerHTML = `
+        <strong>${escapeHtml(currentSurgery.patientName)}</strong><br>
+        PADSS 總分:${result.padssTotal} / 10
+      `;
+
+      const steps = document.getElementById('next-steps');
+      let html = '';
+      if (result.triggerSent && result.triggerContents.length > 0) {
+        html += `<p><strong>📚 已自動推送 ${result.triggerContents.length} 份術後衛教給病人:</strong></p>`;
+        html += `<ul class="trigger-content-list">`;
+        result.triggerContents.forEach(c => {
+          html += `<li>📄 <strong>${escapeHtml(c.code)}</strong> — ${escapeHtml(c.name)}</li>`;
+        });
+        html += `</ul>`;
+      } else if (result.dischargeStatus === '順利離院') {
+        html += `<p>✓ 衛教派送已嘗試(可能因「無相符衛教」或「已發送過」未送出)。</p>`;
+      } else {
+        html += `<p>此狀態下不自動發送術後衛教。</p>`;
+      }
+      html += `<p style="margin-top:14px; font-size:13px; color:#666;">下一個排程是 D1(術後 24hr 麻醉品質問卷)。</p>`;
+      steps.innerHTML = html;
+    }
+
+    // 繼續下一位
+    document.getElementById('continue-btn').addEventListener('click', () => {
+      document.getElementById('success-screen').hidden = true;
+      currentSurgery = null;
+      loadSurgeryList();
+    });
+
+    // 回列表
+    document.getElementById('back-btn').addEventListener('click', () => {
+      if (confirm('離開將遺失目前填寫的資料,確定要回手術列表?')) {
+        document.getElementById('pacu-form-screen').hidden = true;
+        document.getElementById('surgery-list-screen').hidden = false;
+      }
+    });
+
+    // 重新整理
+    document.getElementById('refresh-btn').addEventListener('click', loadSurgeryList);
+
+    // ═══════════════════════════════════════════════════════════════
+    // 工具
+    // ═══════════════════════════════════════════════════════════════
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // 啟動
+    init();
+  </script>
+
+</body>
+</html>

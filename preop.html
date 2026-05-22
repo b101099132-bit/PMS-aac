@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>術前建檔 — PMS-aac</title>
+  <link rel="stylesheet" href="_shared/eras-shared.css">
+  <style>
+    body { font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif; }
+
+    .preop-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+    .mode-banner {
+      padding: 14px 22px; color: white; font-weight: bold;
+      border-radius: 10px 10px 0 0; margin-bottom: 0; font-size: 15px;
+    }
+    .mode-banner-create  { background: #5b21b6; }
+    .mode-banner-patient { background: #2C5F73; }
+    .mode-banner-update  { background: #047857; }
+
+    .login-card {
+      max-width: 460px; margin: 60px auto; padding: 40px;
+      background: white; border-radius: 12px; box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    }
+    .login-card h2 { margin-top: 0; color: #2C5F73; }
+
+    .field-row {
+      display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 14px;
+    }
+    .field-row > div { flex: 1; min-width: 200px; }
+    .field-row label {
+      display: block; font-size: 14px; color: #555;
+      margin-bottom: 4px; font-weight: 500;
+    }
+    .field-row input, .field-row select, .field-row textarea {
+      width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;
+      font-size: 15px; box-sizing: border-box; font-family: inherit;
+    }
+    .field-row input:focus, .field-row select:focus, .field-row textarea:focus {
+      outline: none; border-color: #2C5F73; box-shadow: 0 0 0 3px rgba(44,95,115,0.1);
+    }
+
+    .question-card {
+      background: white; border-radius: 8px; padding: 22px;
+      margin-bottom: 16px; border: 1px solid #e5e7eb;
+    }
+    .question-card h2 {
+      margin: 0 0 14px 0; color: #2C5F73; font-size: 18px;
+      padding-bottom: 10px; border-bottom: 2px solid #e8f5f0;
+    }
+    .question-card .help {
+      color: #666; font-size: 13px; margin: 0 0 14px 0;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 8px; margin-top: 10px;
+    }
+    .checkbox-grid label {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;
+      cursor: pointer; transition: all 0.15s; font-size: 14px;
+    }
+    .checkbox-grid label:hover { background: #f0f7fa; border-color: #2C5F73; }
+    .checkbox-grid input[type=checkbox]:checked + span {
+      font-weight: bold; color: #2C5F73;
+    }
+    .checkbox-grid label:has(input:checked) {
+      background: #e8f5f0; border-color: #2C5F73;
+    }
+
+    .yn-group { margin: 8px 0 16px 0; }
+    .yn-group p { margin: 8px 0 4px 0; font-weight: 500; }
+    .yn-group label {
+      display: inline-block; margin-right: 14px; cursor: pointer;
+      padding: 6px 12px; border-radius: 4px;
+    }
+    .yn-group label:hover { background: #f0f7fa; }
+    .yn-group input[type=radio] { margin-right: 5px; }
+
+    .apfel-display {
+      padding: 14px; background: #e8f5f0; border-radius: 6px;
+      font-weight: bold; color: #2C5F73; margin-top: 14px;
+      text-align: center; font-size: 16px;
+    }
+    .apfel-display .score { font-size: 24px; }
+
+    .consent-card {
+      background: #fff8e6; border: 1px solid #f59e0b; border-radius: 8px;
+      padding: 16px; margin-bottom: 14px;
+    }
+    .consent-card h3 {
+      margin: 0 0 10px 0; color: #92400e; font-size: 15px;
+    }
+    .consent-text { font-size: 13px; line-height: 1.6; color: #555; }
+    .consent-text ul { padding-left: 20px; margin: 6px 0; }
+    .consent-checkbox {
+      margin-top: 12px; padding-top: 10px;
+      border-top: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .consent-checkbox label {
+      cursor: pointer; display: flex; align-items: flex-start; gap: 8px;
+    }
+    .consent-checkbox input { margin-top: 3px; }
+
+    .submit-btn {
+      width: 100%; padding: 16px; font-size: 17px; font-weight: bold;
+      background: #2C5F73; color: white; border: none; border-radius: 8px;
+      cursor: pointer; margin-top: 20px; transition: background 0.2s;
+    }
+    .submit-btn:hover { background: #1e4554; }
+    .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+    .surgery-info-display {
+      padding: 16px; background: #e8f5f0; border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    .surgery-info-display dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; }
+    .surgery-info-display dt { color: #555; font-size: 13px; }
+    .surgery-info-display dd {
+      margin: 0; font-weight: bold; color: #2C5F73; font-size: 14px;
+    }
+
+    .error-message {
+      background: #fee; color: #c53030; padding: 12px;
+      border-radius: 6px; margin: 12px 0; font-size: 14px;
+    }
+    .success-screen {
+      text-align: center; padding: 60px 20px;
+      background: white; border-radius: 12px; max-width: 600px;
+      margin: 40px auto; box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+    }
+    .success-screen .check {
+      font-size: 70px; display: block; margin-bottom: 14px;
+    }
+    .success-screen.ok .check { color: #047857; }
+    .success-screen.err .check { color: #c53030; }
+    .success-screen h1 { margin: 10px 0; }
+    .success-screen .next-steps {
+      text-align: left; padding: 20px;
+      background: #f0f7fa; border-radius: 8px; margin-top: 20px;
+      font-size: 14px;
+    }
+    .next-steps strong { color: #2C5F73; }
+
+    .qr-section {
+      text-align: center; padding: 30px;
+      background: #f8fafc; border-radius: 10px; margin-top: 20px;
+    }
+    .qr-section h3 { color: #2C5F73; }
+
+    #loading {
+      text-align: center; padding: 80px 20px; color: #666;
+    }
+
+    .required-mark { color: #c53030; }
+  </style>
+</head>
+<body>
+
+  <!-- Loading -->
+  <div id="loading">
+    <p>載入中⋯⋯</p>
+  </div>
+
+  <!-- Surgeon Login(mode=create 且無 surgeonKey 時)-->
+  <div id="surgeon-login" class="login-card" hidden>
+    <h2>🏥 外科醫師建檔</h2>
+    <p style="color:#666;">請輸入您的通行碼以開始為病人建檔</p>
+    <div class="field-row">
+      <div>
+        <label>通行碼</label>
+        <input type="password" id="surgeon-key-input" placeholder="例:DRchen001" autocomplete="off">
+      </div>
+    </div>
+    <button class="submit-btn" id="surgeon-login-btn">登入</button>
+    <div id="surgeon-login-error" class="error-message" hidden></div>
+  </div>
+
+  <!-- Main form -->
+  <div id="main" class="preop-container" hidden>
+
+    <div class="mode-banner" id="mode-banner">
+      <span id="mode-banner-text"></span>
+    </div>
+
+    <header class="form-hero" style="background:white; border-radius:0 0 10px 10px; padding:24px; margin-bottom:16px;">
+      <h1 id="form-title" style="margin:0 0 6px 0;">術前資料建檔</h1>
+      <p id="form-subtitle" style="color:#666; margin:0;">麻醉品質改善系統(PMS-aac)</p>
+    </header>
+
+    <form id="preop-form">
+
+      <!-- ═════ 手術資訊 ═════ -->
+      <section class="question-card" data-modes="create,patient,update" id="section-surgery">
+        <h2>手術資訊</h2>
+
+        <!-- Create mode: 可編輯 -->
+        <div data-modes="create">
+          <div class="field-row">
+            <div>
+              <label>術式 <span class="required-mark">*</span></label>
+              <select id="procedure-code" required>
+                <option value="">-- 請選擇 --</option>
+              </select>
+            </div>
+            <div>
+              <label>預定手術日(可後補)</label>
+              <input type="date" id="scheduled-date">
+            </div>
+          </div>
+          <div class="field-row">
+            <div>
+              <label>主訴 / 手術原因</label>
+              <input type="text" id="complaint" placeholder="例:右肩 RCT">
+            </div>
+            <div>
+              <label>預估手術時長(分鐘)</label>
+              <input type="number" id="estimated-duration" min="0" max="600" placeholder="例:60">
+            </div>
+          </div>
+        </div>
+
+        <!-- Patient / Update: 唯讀顯示 -->
+        <div data-modes="patient,update">
+          <div class="surgery-info-display" id="surgery-info-display">
+            <p style="color:#666; margin:0;">載入手術資訊⋯⋯</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═════ 病人辨識 ═════ -->
+      <section class="question-card" data-modes="create,patient,update" id="section-identity">
+        <h2>病人辨識資訊</h2>
+        <div class="field-row">
+          <div>
+            <label>姓名 <span class="required-mark">*</span></label>
+            <input type="text" id="patient-name" required maxlength="50">
+          </div>
+          <div>
+            <label>身分證末四碼 <span class="required-mark">*</span></label>
+            <input type="text" id="id-last4" pattern="[0-9]{4}" maxlength="4" required placeholder="4 位數字">
+          </div>
+        </div>
+
+        <!-- 病人模式才填生日 / 性別 -->
+        <div data-modes="patient,update">
+          <div class="field-row">
+            <div>
+              <label>性別 <span class="required-mark">*</span></label>
+              <select id="gender" required>
+                <option value="">--</option>
+                <option value="男">男</option>
+                <option value="女">女</option>
+                <option value="其他">其他</option>
+              </select>
+            </div>
+            <div>
+              <label>出生日期 <span class="required-mark">*</span></label>
+              <input type="date" id="birthdate" required>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═════ 聯絡資訊 ═════ -->
+      <section class="question-card" data-modes="patient,update" id="section-contact">
+        <h2>聯絡資訊</h2>
+        <div class="field-row">
+          <div>
+            <label>電話 <span class="required-mark">*</span></label>
+            <input type="tel" id="phone" required placeholder="0912-345-678">
+          </div>
+          <div>
+            <label>email</label>
+            <input type="email" id="email" placeholder="可選">
+          </div>
+        </div>
+        <div class="field-row">
+          <div>
+            <label>聯絡偏好</label>
+            <select id="contact-pref">
+              <option value="LINE">LINE(建議)</option>
+              <option value="Email">Email</option>
+              <option value="電話">電話</option>
+            </select>
+          </div>
+          <div></div>
+        </div>
+      </section>
+
+      <!-- ═════ 照顧者 ═════ -->
+      <section class="question-card" data-modes="patient,update" id="section-caregiver">
+        <h2>照顧者資訊</h2>
+        <p class="help">日間手術後您將離開醫院,需要一位主要照顧者陪同。</p>
+        <div class="field-row">
+          <div>
+            <label>照顧者姓名 <span class="required-mark">*</span></label>
+            <input type="text" id="caregiver-name" required maxlength="50">
+          </div>
+          <div>
+            <label>關係 <span class="required-mark">*</span></label>
+            <select id="caregiver-relation" required>
+              <option value="">--</option>
+              <option value="配偶">配偶</option>
+              <option value="子女">子女</option>
+              <option value="父母">父母</option>
+              <option value="兄弟姊妹">兄弟姊妹</option>
+              <option value="朋友">朋友</option>
+              <option value="其他">其他</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div>
+            <label>照顧者電話 <span class="required-mark">*</span></label>
+            <input type="tel" id="caregiver-phone" required>
+          </div>
+          <div>
+            <label>距醫院車程(分鐘)</label>
+            <input type="number" id="distance-minutes" min="0" max="300" placeholder="可選">
+          </div>
+        </div>
+      </section>
+
+      <!-- ═════ 醫療基本 ═════ -->
+      <section class="question-card" data-modes="patient,update" id="section-medical">
+        <h2>過敏 / 重大病史</h2>
+        <div class="field-row">
+          <div>
+            <label>過敏(藥物 / 食物 / 材料)</label>
+            <input type="text" id="allergy" placeholder="若無請填「無」">
+          </div>
+        </div>
+        <div class="field-row">
+          <div>
+            <label>其他重大病史(共病以外的補充)</label>
+            <textarea id="other-history" rows="3" placeholder="自由填寫"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═════ 9 共病 ═════ -->
+      <section class="question-card" data-modes="patient,update" id="section-comorbidities">
+        <h2>您目前是否有以下情況?</h2>
+        <p class="help">請依您目前的狀況勾選(可複選)。</p>
+        <div class="checkbox-grid">
+          <label><input type="checkbox" name="cm" value="HTN"><span>高血壓(HTN)</span></label>
+          <label><input type="checkbox" name="cm" value="DM"><span>糖尿病(DM)</span></label>
+          <label><input type="checkbox" name="cm" value="CVA"><span>中風病史(CVA)</span></label>
+          <label><input type="checkbox" name="cm" value="ESRD"><span>末期腎病 / 透析</span></label>
+          <label><input type="checkbox" name="cm" value="CKD"><span>慢性腎病(CKD)</span></label>
+          <label><input type="checkbox" name="cm" value="COPD"><span>慢性阻塞性肺病</span></label>
+          <label><input type="checkbox" name="cm" value="OSA"><span>睡眠呼吸中止</span></label>
+          <label><input type="checkbox" name="cm" value="AC"><span>正在服用抗凝血劑</span></label>
+          <label><input type="checkbox" name="cm" value="PONV"><span>過去有嚴重術後噁心嘔吐</span></label>
+        </div>
+      </section>
+
+      <!-- ═════ ASA + Apfel ═════ -->
+      <section class="question-card" data-modes="patient,update" id="section-risk">
+        <h2>麻醉風險評估</h2>
+
+        <p style="margin-top:0;"><strong>ASA 分級</strong>(請依麻醉醫師評估;若不確定請選 2)</p>
+        <div class="yn-group">
+          <label><input type="radio" name="asa" value="1">1 — 健康</label>
+          <label><input type="radio" name="asa" value="2" checked>2 — 輕度疾病</label>
+          <label><input type="radio" name="asa" value="3">3 — 中度疾病</label>
+          <label><input type="radio" name="asa" value="4">4 — 重度疾病</label>
+          <label><input type="radio" name="asa" value="5">5 — 危急</label>
+        </div>
+
+        <hr style="border:none; border-top:1px solid #e5e7eb; margin: 20px 0;">
+
+        <p><strong>Apfel PONV 風險評估</strong>(依下列 4 個自動計算;高分數需加強止吐預防)</p>
+        <div class="yn-group">
+          <p>1. 您是女性?</p>
+          <label><input type="radio" name="apfel-female" value="1">是</label>
+          <label><input type="radio" name="apfel-female" value="0">否</label>
+
+          <p>2. 您不抽菸?</p>
+          <label><input type="radio" name="apfel-nonsmoker" value="1">不抽</label>
+          <label><input type="radio" name="apfel-nonsmoker" value="0">有抽</label>
+
+          <p>3. 曾有術後嚴重噁心嘔吐 或 暈車病史?</p>
+          <label><input type="radio" name="apfel-history" value="1">是</label>
+          <label><input type="radio" name="apfel-history" value="0">否</label>
+
+          <p>4. 預期術後會用嗎啡類止痛藥?(若不確定請選「是」)</p>
+          <label><input type="radio" name="apfel-opioid" value="1">是</label>
+          <label><input type="radio" name="apfel-opioid" value="0">否</label>
+        </div>
+        <div class="apfel-display">
+          Apfel 分數:<span class="score" id="apfel-score">0</span> / 4
+          <span id="apfel-interp" style="font-weight:normal; font-size:13px; display:block; margin-top:4px;"></span>
+        </div>
+      </section>
+
+      <!-- ═════ 過去手術史 ═════ -->
+      <section class="question-card" data-modes="patient,update" id="section-past">
+        <h2>過去手術 / 麻醉經驗</h2>
+        <p class="help">回答下列問題有助於麻醉醫師為您量身規劃。若不確定請選「未知」。</p>
+
+        <div class="yn-group">
+          <p>1. 您曾接受過全身麻醉?</p>
+          <label><input type="radio" name="past-ga" value="是">是</label>
+          <label><input type="radio" name="past-ga" value="否">否</label>
+          <label><input type="radio" name="past-ga" value="未知">未知</label>
+
+          <p>2. 您曾經有過術後嚴重噁心嘔吐?</p>
+          <label><input type="radio" name="past-ponv" value="是">是</label>
+          <label><input type="radio" name="past-ponv" value="否">否</label>
+          <label><input type="radio" name="past-ponv" value="未知">未知</label>
+
+          <p>3. 您曾經有過術中覺醒(在麻醉中突然醒來)?</p>
+          <label><input type="radio" name="past-awareness" value="是">是</label>
+          <label><input type="radio" name="past-awareness" value="否">否</label>
+          <label><input type="radio" name="past-awareness" value="未知">未知</label>
+
+          <p>4. 您曾經有過術後嚴重疼痛(無法以一般止痛藥控制)?</p>
+          <label><input type="radio" name="past-pain" value="是">是</label>
+          <label><input type="radio" name="past-pain" value="否">否</label>
+          <label><input type="radio" name="past-pain" value="未知">未知</label>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label>其他補充(可選)</label>
+            <textarea id="past-notes" rows="3"
+              placeholder="如有任何想讓麻醉醫師知道的過去經驗,請填寫"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═════ 同意書 ═════ -->
+      <section class="question-card" data-modes="patient,update" id="section-consent">
+        <h2>同意聲明</h2>
+
+        <div class="consent-card">
+          <h3>📋 個人資料使用同意</h3>
+          <div class="consent-text">
+            <p>本系統將收集您的個人健康資訊(共病、過敏、手術紀錄、PONV 風險評估等),用於以下目的:</p>
+            <ul>
+              <li>麻醉前評估與個人化計畫</li>
+              <li>透過 LINE / Email 寄送您個人化的術前/術後衛教資料</li>
+              <li>術後 1、3、7 天的麻醉品質回饋問卷</li>
+              <li>麻醉品質改善的去識別化統計分析</li>
+            </ul>
+            <p>本院依個資法保護您的資料。資料保留期間 7 年,期滿後將刪除。</p>
+          </div>
+          <div class="consent-checkbox">
+            <label>
+              <input type="checkbox" id="consent-push" required>
+              <span><strong>我同意</strong>本院收集並使用上述個人資料於麻醉照護服務</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="consent-card">
+          <h3>👥 照顧者推播同意(選填)</h3>
+          <div class="consent-text">
+            <p>日間手術後,您將離開醫院並依賴主要照顧者協助恢復。本系統可同時將術後衛教資料推送給您的照顧者(以您填寫的照顧者 LINE 為對象),協助他/她了解如何照顧您。</p>
+            <p style="color:#92400e;"><strong>注意:</strong>照顧者僅會收到衛教資料,不會收到您的問卷連結。</p>
+          </div>
+          <div class="consent-checkbox">
+            <label>
+              <input type="checkbox" id="consent-caregiver">
+              <span>我同意本院將術後衛教資料同步推送給我的照顧者</span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═════ 填表者 ═════ -->
+      <section class="question-card" data-modes="patient,update" id="section-filler">
+        <h2>填表者</h2>
+        <div class="yn-group">
+          <label><input type="radio" name="filler-type" value="本人" checked>本人填寫</label>
+          <label><input type="radio" name="filler-type" value="家屬">家屬代填(病人 &lt; 18 歲或行動不便)</label>
+          <label><input type="radio" name="filler-type" value="護理師">護理師協助填寫</label>
+        </div>
+        <div class="field-row" id="family-info-row" hidden>
+          <div>
+            <label>家屬姓名 + 關係(代填時必填)</label>
+            <input type="text" id="family-info" placeholder="例:王太太 / 配偶">
+          </div>
+        </div>
+      </section>
+
+      <button type="submit" class="submit-btn" id="submit-btn">提交資料</button>
+      <div id="form-error" class="error-message" hidden></div>
+    </form>
+  </div>
+
+  <!-- Success screen -->
+  <div id="success-screen" class="success-screen ok" hidden>
+    <span class="check">✓</span>
+    <h1 id="success-title">提交成功</h1>
+    <p id="success-message"></p>
+    <div class="next-steps" id="next-steps"></div>
+  </div>
+
+  <!-- Error screen -->
+  <div id="error-screen" class="success-screen err" hidden>
+    <span class="check">⚠️</span>
+    <h1>無法載入</h1>
+    <p id="error-screen-message"></p>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════
+    // 設定
+    // ═══════════════════════════════════════════════════════════════
+    // ⚠️ 部署後請更新此 URL:Apps Script 部署 → 取得 web app URL
+    const GAS_ENDPOINT = 'YOUR_GAS_DEPLOYMENT_URL_HERE';
+
+    // 全域狀態
+    let ctx = {};                 // hash params
+    let mode = '';                // 'create' / 'patient' / 'update'
+    let procedures = [];          // 術式列表(create mode 用)
+    let existingPatient = null;   // 預填資料(update mode)
+    let surgeonKey = '';
+
+    // ═══════════════════════════════════════════════════════════════
+    // Hash 解析
+    // ═══════════════════════════════════════════════════════════════
+    function parseHash() {
+      const hash = window.location.hash.replace(/^#/, '');
+      const params = {};
+      if (!hash) return params;
+      hash.split('&').forEach(part => {
+        const eq = part.indexOf('=');
+        if (eq < 0) { params[decodeURIComponent(part)] = ''; return; }
+        const k = decodeURIComponent(part.substring(0, eq));
+        const v = decodeURIComponent(part.substring(eq + 1).replace(/\+/g, ' '));
+        params[k] = v;
+      });
+      return params;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // JSONP utility
+    // ═══════════════════════════════════════════════════════════════
+    function jsonpCall(action, params) {
+      return new Promise((resolve, reject) => {
+        const cbName = '__jsonp_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+        const timer = setTimeout(() => {
+          delete window[cbName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+          reject(new Error('Request timeout'));
+        }, 20000);
+
+        window[cbName] = function(data) {
+          clearTimeout(timer);
+          delete window[cbName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+          if (data && data.ok) resolve(data);
+          else reject(new Error((data && data.error) || 'Unknown error'));
+        };
+
+        const usp = new URLSearchParams();
+        usp.set('action', action);
+        usp.set('callback', cbName);
+        for (const k in params) {
+          if (params[k] !== undefined && params[k] !== null && params[k] !== '') {
+            usp.set(k, String(params[k]));
+          }
+        }
+
+        const script = document.createElement('script');
+        script.src = GAS_ENDPOINT + '?' + usp.toString();
+        script.onerror = () => {
+          clearTimeout(timer);
+          delete window[cbName];
+          reject(new Error('Network error'));
+        };
+        document.body.appendChild(script);
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 初始化
+    // ═══════════════════════════════════════════════════════════════
+    async function init() {
+      ctx = parseHash();
+      mode = ctx.mode || '';
+
+      // 若無 mode,從其他參數推斷
+      if (!mode) {
+        if (ctx.surgeonKey) mode = 'create';
+        else if (ctx.pid) mode = 'update';
+        else if (ctx.lineUid) mode = 'patient';
+        else {
+          return showError('連結缺少必要參數。請從外科醫師建檔入口或 LINE 連結進入。');
+        }
+      }
+
+      // 模式驗證
+      if (mode === 'patient' && !ctx.sid) {
+        return showError('LINE 連結缺少手術編號(sid)');
+      }
+      if (mode === 'update' && (!ctx.pid || !ctx.sid)) {
+        return showError('更新連結缺少必要參數(pid / sid)');
+      }
+
+      applyMode(mode);
+
+      // 隱藏 loading,進入對應 UI
+      document.getElementById('loading').hidden = true;
+
+      if (mode === 'create') {
+        if (ctx.surgeonKey) {
+          // 已帶通行碼
+          surgeonKey = ctx.surgeonKey;
+          await loadProcedures();
+          showMainForm();
+        } else {
+          // 顯示登入畫面
+          document.getElementById('surgeon-login').hidden = false;
+          document.getElementById('surgeon-login-btn').addEventListener('click', handleSurgeonLogin);
+          document.getElementById('surgeon-key-input').addEventListener('keypress', e => {
+            if (e.key === 'Enter') handleSurgeonLogin();
+          });
+        }
+      } else if (mode === 'patient') {
+        showMainForm();
+      } else if (mode === 'update') {
+        // 先抓既有資料預填
+        try {
+          const result = await jsonpCall('preopGetPatient', { pid: ctx.pid });
+          if (!result.found) return showError('找不到既有病人資料');
+          existingPatient = result.patient;
+          showMainForm();
+          prefillForm(existingPatient);
+        } catch (e) {
+          return showError('載入病人資料失敗:' + e.message);
+        }
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 套用模式(data-modes 控制顯示)
+    // ═══════════════════════════════════════════════════════════════
+    function applyMode(m) {
+      document.querySelectorAll('[data-modes]').forEach(el => {
+        const modes = el.dataset.modes.split(',').map(s => s.trim());
+        el.style.display = modes.includes(m) ? '' : 'none';
+      });
+
+      const banner = document.getElementById('mode-banner');
+      banner.className = 'mode-banner mode-banner-' + m;
+
+      const titles = {
+        create:  '🏥 外科醫師建檔模式 — ' + (ctx.surgeonName || '建立新手術預約'),
+        patient: '👤 初次填寫資料',
+        update:  '🔄 資料更新模式'
+      };
+      const subtitles = {
+        create:  '為新病人建立手術預約 → 提交後給病人加 LINE',
+        patient: '歡迎使用!請填寫您的基本資料,完成後本院會透過 LINE 寄送您的個人化衛教',
+        update:  '請確認以下資料,如有變化請更新'
+      };
+      document.getElementById('mode-banner-text').textContent = titles[m] || '';
+      document.getElementById('form-subtitle').textContent = subtitles[m] || '';
+
+      const formTitles = {
+        create:  '建立手術預約',
+        patient: '病人基本資料',
+        update:  '更新個人資料'
+      };
+      document.getElementById('form-title').textContent = formTitles[m] || '術前資料建檔';
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Surgeon 登入
+    // ═══════════════════════════════════════════════════════════════
+    async function handleSurgeonLogin() {
+      const key = document.getElementById('surgeon-key-input').value.trim();
+      if (!key) return;
+
+      const btn = document.getElementById('surgeon-login-btn');
+      btn.disabled = true; btn.textContent = '驗證中⋯⋯';
+      const errBox = document.getElementById('surgeon-login-error');
+      errBox.hidden = true;
+
+      try {
+        // 用 preopGetProcedures 順便驗證 — 拿到 list 就代表 endpoint 通
+        // (真正的 key 驗證在 preopCreate 提交時做)
+        await loadProcedures();
+        surgeonKey = key;
+        document.getElementById('surgeon-login').hidden = true;
+        showMainForm();
+      } catch (e) {
+        errBox.textContent = '無法連線到後端:' + e.message;
+        errBox.hidden = false;
+        btn.disabled = false; btn.textContent = '登入';
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 載入術式列表
+    // ═══════════════════════════════════════════════════════════════
+    async function loadProcedures() {
+      try {
+        const result = await jsonpCall('preopGetProcedures', {});
+        procedures = result.procedures || [];
+
+        const select = document.getElementById('procedure-code');
+        select.innerHTML = '<option value="">-- 請選擇 --</option>';
+        // 按科別 group
+        const byDept = {};
+        procedures.forEach(p => {
+          (p.depts || '其他').split(/[,、]/).forEach(d => {
+            const dept = d.trim();
+            if (!byDept[dept]) byDept[dept] = [];
+            byDept[dept].push(p);
+          });
+        });
+
+        Object.keys(byDept).forEach(dept => {
+          const optgroup = document.createElement('optgroup');
+          optgroup.label = dept;
+          byDept[dept].forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.code;
+            opt.textContent = p.name + (p.painLevel ? ` [${p.painLevel}痛]` : '');
+            optgroup.appendChild(opt);
+          });
+          select.appendChild(optgroup);
+        });
+      } catch (e) {
+        throw new Error('載入術式列表失敗:' + e.message);
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 顯示主表單
+    // ═══════════════════════════════════════════════════════════════
+    function showMainForm() {
+      document.getElementById('main').hidden = false;
+
+      // 顯示手術資訊(patient / update 模式)
+      if (mode === 'patient' || mode === 'update') {
+        renderSurgeryInfoDisplay();
+      }
+
+      // 設定 Apfel 自動計算
+      setupApfelCalc();
+
+      // 設定填表者切換
+      document.querySelectorAll('input[name="filler-type"]').forEach(r => {
+        r.addEventListener('change', () => {
+          const isFamily = document.querySelector('input[name="filler-type"]:checked').value !== '本人';
+          document.getElementById('family-info-row').hidden = !isFamily;
+        });
+      });
+
+      // 表單提交
+      document.getElementById('preop-form').addEventListener('submit', handleSubmit);
+    }
+
+    function renderSurgeryInfoDisplay() {
+      const el = document.getElementById('surgery-info-display');
+      if (!ctx.sid) {
+        el.innerHTML = '<p style="color:#c53030;">⚠️ 連結缺少手術編號</p>';
+        return;
+      }
+      el.innerHTML = `
+        <dl>
+          <dt>手術編號:</dt><dd>${ctx.sid}</dd>
+          ${ctx.proc ? `<dt>術式:</dt><dd>${ctx.proc}</dd>` : ''}
+          ${ctx.date ? `<dt>預定日:</dt><dd>${ctx.date}</dd>` : ''}
+        </dl>
+        <p style="font-size:12px; color:#666; margin-top:10px;">
+          ※ 手術資訊由外科醫師建檔;如有錯誤請聯絡您的醫師。
+        </p>
+      `;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Apfel 自動計算
+    // ═══════════════════════════════════════════════════════════════
+    function setupApfelCalc() {
+      const inputs = document.querySelectorAll(
+        'input[name="apfel-female"], input[name="apfel-nonsmoker"], ' +
+        'input[name="apfel-history"], input[name="apfel-opioid"]'
+      );
+      inputs.forEach(i => i.addEventListener('change', updateApfel));
+      // 初始化
+      updateApfel();
+    }
+
+    function updateApfel() {
+      const fields = ['apfel-female', 'apfel-nonsmoker', 'apfel-history', 'apfel-opioid'];
+      let score = 0;
+      fields.forEach(name => {
+        const checked = document.querySelector(`input[name="${name}"]:checked`);
+        if (checked) score += parseInt(checked.value, 10) || 0;
+      });
+      document.getElementById('apfel-score').textContent = score;
+
+      const interp =
+        score === 0 ? '低風險(< 10% PONV 發生率)' :
+        score === 1 ? '低風險(約 20% PONV)' :
+        score === 2 ? '中風險(約 40% PONV)— 建議單一止吐藥預防' :
+        score === 3 ? '高風險(約 60% PONV)— 建議雙重止吐藥' :
+                      '極高風險(約 80% PONV)— 建議多模式止吐預防 + TIVA';
+      document.getElementById('apfel-interp').textContent = interp;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 預填表單(update 模式)
+    // ═══════════════════════════════════════════════════════════════
+    function prefillForm(p) {
+      const set = (id, val) => {
+        const el = document.getElementById(id);
+        if (el && val !== undefined) el.value = val;
+      };
+      const setRadio = (name, val) => {
+        if (!val) return;
+        const r = document.querySelector(`input[name="${name}"][value="${val}"]`);
+        if (r) r.checked = true;
+      };
+      const setCheckbox = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.checked = (val === '是');
+      };
+
+      set('patient-name', p.name);
+      set('id-last4', p.idLast4);
+      set('gender', p.gender);
+      set('birthdate', p.birthdate);
+      set('phone', p.phone);
+      set('email', p.email);
+      set('contact-pref', p.contactPref);
+      set('caregiver-name', p.caregiverName);
+      set('caregiver-relation', p.caregiverRelation);
+      set('caregiver-phone', p.caregiverPhone);
+      set('distance-minutes', p.distanceMinutes);
+      set('allergy', p.allergy);
+      set('other-history', p.otherHistory);
+      set('past-notes', p.pastHistoryNotes);
+
+      // 9 共病
+      ['HTN','DM','CVA','ESRD','CKD','COPD','OSA','AC','PONV'].forEach(c => {
+        const cb = document.querySelector(`input[name="cm"][value="${c}"]`);
+        if (cb) cb.checked = (p['cm_' + c] === '是');
+      });
+
+      // ASA
+      setRadio('asa', String(p.asa || '2'));
+
+      // Apfel 4 個分項 — 由分數反推(粗略)
+      // 注意:這裡其實沒儲存原始 4 個答案,僅有總分。
+      // 預填時保留原 Apfel 顯示,病人可重新作答更新。
+      const apfelScore = parseInt(p.apfel || 0, 10);
+      // 預填一個合理的組合(僅供參考)
+      // 暫不自動勾選 4 個答案,讓病人重新確認
+      document.getElementById('apfel-score').textContent = apfelScore;
+
+      // 過去手術史
+      setRadio('past-ga', p.pastGA);
+      setRadio('past-ponv', p.pastPONV);
+      setRadio('past-awareness', p.pastAwareness);
+      setRadio('past-pain', p.pastSeverePain);
+
+      // 同意
+      setCheckbox('consent-push', p.consentPush);
+      setCheckbox('consent-caregiver', p.consentCaregiver);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 提交
+    // ═══════════════════════════════════════════════════════════════
+    async function handleSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const errBox = document.getElementById('form-error');
+      errBox.hidden = true;
+      btn.disabled = true; btn.textContent = '送出中⋯⋯';
+
+      try {
+        const payload = collectFormData();
+
+        if (mode === 'create') {
+          const result = await jsonpCall('preopCreate', payload);
+          showSuccess('create', result);
+        } else {
+          const result = await jsonpCall('preopSubmit', payload);
+          showSuccess(mode, result);
+        }
+      } catch (err) {
+        errBox.textContent = '提交失敗:' + err.message;
+        errBox.hidden = false;
+        btn.disabled = false; btn.textContent = '提交資料';
+        window.scrollTo({ top: errBox.offsetTop - 100, behavior: 'smooth' });
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 收集表單資料
+    // ═══════════════════════════════════════════════════════════════
+    function collectFormData() {
+      const data = { mode: mode };
+
+      // Create mode:只送手術 + 病人辨識
+      if (mode === 'create') {
+        data.surgeonKey = surgeonKey;
+        data.procedureCode = required('procedure-code', '請選擇術式');
+        data.scheduledDate = val('scheduled-date');
+        data.complaint = val('complaint');
+        data.estimatedDuration = val('estimated-duration');
+        data.patientName = required('patient-name', '請填寫病人姓名');
+        data.idLast4 = required('id-last4', '請填寫身分證末四碼');
+        if (!/^\d{4}$/.test(data.idLast4)) throw new Error('身分證末四碼必須是 4 位數字');
+        return data;
+      }
+
+      // Patient / Update:完整病人資料
+      data.pid = (existingPatient && existingPatient.pk) || ctx.pid || '';
+      data.sid = ctx.sid || '';
+      data.lineUid = ctx.lineUid || (existingPatient && existingPatient.lineUserId) || '';
+
+      data.patientName = required('patient-name', '請填寫姓名');
+      data.idLast4 = required('id-last4', '請填寫身分證末四碼');
+      if (!/^\d{4}$/.test(data.idLast4)) throw new Error('身分證末四碼必須是 4 位數字');
+      data.gender = required('gender', '請選擇性別');
+      data.birthdate = required('birthdate', '請填寫出生日期');
+      data.phone = required('phone', '請填寫電話');
+      data.email = val('email');
+      data.contactPref = val('contact-pref') || 'LINE';
+      data.caregiverName = required('caregiver-name', '請填寫照顧者姓名');
+      data.caregiverRelation = required('caregiver-relation', '請選擇照顧者關係');
+      data.caregiverPhone = required('caregiver-phone', '請填寫照顧者電話');
+      data.distanceMinutes = val('distance-minutes');
+      data.allergy = val('allergy');
+      data.otherHistory = val('other-history');
+
+      // 9 共病
+      ['HTN','DM','CVA','ESRD','CKD','COPD','OSA','AC','PONV'].forEach(c => {
+        const cb = document.querySelector(`input[name="cm"][value="${c}"]`);
+        data['cm_' + c] = (cb && cb.checked) ? '是' : '否';
+      });
+
+      // 風險評分
+      data.asa = (document.querySelector('input[name="asa"]:checked') || {}).value || '2';
+      data.apfel = document.getElementById('apfel-score').textContent || '0';
+
+      // 過去手術史
+      const pastFields = {
+        'past-ga': 'pastGA',
+        'past-ponv': 'pastPONV',
+        'past-awareness': 'pastAwareness',
+        'past-pain': 'pastSeverePain'
+      };
+      Object.keys(pastFields).forEach(name => {
+        const r = document.querySelector(`input[name="${name}"]:checked`);
+        data[pastFields[name]] = r ? r.value : '未知';
+      });
+      data.pastHistoryNotes = val('past-notes');
+
+      // 同意
+      data.consentPush = document.getElementById('consent-push').checked ? '是' : '否';
+      data.consentCaregiver = document.getElementById('consent-caregiver').checked ? '是' : '否';
+      if (data.consentPush !== '是') {
+        throw new Error('請勾選「同意個人資料使用」才能繼續');
+      }
+
+      // 填表者
+      const fillerEl = document.querySelector('input[name="filler-type"]:checked');
+      data.fillerType = fillerEl ? fillerEl.value : '本人';
+      data.familyInfo = val('family-info');
+      if (data.fillerType !== '本人' && !data.familyInfo) {
+        throw new Error('代填時請填寫家屬姓名 + 關係');
+      }
+
+      return data;
+
+      // helper
+      function val(id) {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : '';
+      }
+      function required(id, msg) {
+        const v = val(id);
+        if (!v) throw new Error(msg);
+        return v;
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Success screen
+    // ═══════════════════════════════════════════════════════════════
+    function showSuccess(submitMode, result) {
+      document.getElementById('main').hidden = true;
+      const screen = document.getElementById('success-screen');
+      const title = document.getElementById('success-title');
+      const msg = document.getElementById('success-message');
+      const steps = document.getElementById('next-steps');
+
+      if (submitMode === 'create') {
+        title.textContent = '✓ 手術已建檔';
+        msg.innerHTML = `<strong>術式:</strong>${result.procedureName}<br>
+          <strong>編號:</strong>${result.surgeryId}`;
+        if (result.existingPatient) {
+          steps.innerHTML = `
+            <p><strong>📌 這位是回頭客!</strong></p>
+            <p>系統已找到既有病人(PK = ${result.pk})。請傳以下連結給病人,讓他/她確認最新資料:</p>
+            <code style="display:block; background:white; padding:10px; word-break:break-all; font-size:12px;">
+              ${window.location.origin}${window.location.pathname}#mode=update&pid=${result.pk}&sid=${result.surgeryId}
+            </code>
+            <p style="margin-top:14px;">您可以將此連結透過 LINE 推播,或於下次門診時直接在診間請病人填寫。</p>
+          `;
+        } else {
+          steps.innerHTML = `
+            <p><strong>📲 下一步</strong></p>
+            <p>請病人加官方 LINE 帳號(@PMS-aac),加入後本院會自動推播以下連結請病人填基本資料:</p>
+            <code style="display:block; background:white; padding:10px; word-break:break-all; font-size:12px;">
+              ${window.location.origin}${window.location.pathname}#mode=patient&sid=${result.surgeryId}&lineUid=&lt;從 LINE Webhook 取得&gt;
+            </code>
+            <p style="font-size:13px; color:#666;">⚠️ 上面的 lineUid 由 LINE Bot 自動填入,您無需手動處理。</p>
+          `;
+        }
+      } else if (submitMode === 'patient' || submitMode === 'update') {
+        title.textContent = submitMode === 'update' ? '✓ 資料已更新' : '✓ 資料已建檔';
+        msg.innerHTML = `<strong>病人主鍵:</strong>${result.pk}`;
+        steps.innerHTML = `
+          <p><strong>✨ 接下來會發生什麼</strong></p>
+          <ul>
+            <li>麻醉團隊會在<strong>術前 7 天 / 3 天 / 1 天</strong>透過 LINE 推送您專屬的衛教資料</li>
+            <li>手術日後,我們會在 <strong>24 小時 / 72 小時 / 7 天</strong>請您填寫簡短回饋問卷</li>
+            <li>如有疑問,可隨時於 LINE 回覆或撥打本院電話</li>
+          </ul>
+          <p style="color:#047857;"><strong>祝您手術順利!</strong></p>
+        `;
+      }
+      screen.hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showError(message) {
+      document.getElementById('loading').hidden = true;
+      document.getElementById('error-screen-message').textContent = message;
+      document.getElementById('error-screen').hidden = false;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 啟動
+    // ═══════════════════════════════════════════════════════════════
+    init().catch(err => {
+      console.error(err);
+      showError('系統錯誤:' + err.message);
+    });
+  </script>
+
+</body>
+</html>
