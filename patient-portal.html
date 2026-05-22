@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>病人服務 — 查找手術 · PMS-aac</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #FAF7F2; --paper: #FFFFFF; --ink: #1A1A1A; --ink-soft: #5C5C5C; --ink-faint: #8A8580;
+  --teal: #1F5A5A; --teal-tint: #F5F9F9; --teal-soft: #E6EDED;
+  --gold: #A87B4D; --plum: #6B5876; --navy: #2C4866;
+  --sage: #5A7A52; --clay: #9C5B3D; --border: #E8E2D5; --border-strong: #D4CDB8;
+}
+body {
+  font-family: 'Noto Sans TC', system-ui, sans-serif;
+  background: var(--cream); color: var(--ink);
+  font-size: 15px; line-height: 1.6;
+  padding: 32px 16px 60px;
+}
+.container { max-width: 720px; margin: 0 auto; }
+header { text-align: center; margin-bottom: 32px; }
+.eyebrow { font-size: 11px; letter-spacing: 0.15em; color: var(--teal); text-transform: uppercase; margin-bottom: 8px; }
+h1 { font-family: 'Noto Serif TC', serif; font-size: 26px; font-weight: 600; color: var(--ink); }
+.subtitle { color: var(--ink-soft); font-size: 14px; margin-top: 8px; }
+
+.card { background: var(--paper); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+.card h2 { font-size: 17px; color: var(--teal); margin-bottom: 12px; font-weight: 600; }
+
+.input-row { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+.input-group { flex: 1; min-width: 160px; }
+label { display: block; font-size: 13px; color: var(--ink-soft); margin-bottom: 6px; }
+input[type=text], input[type=date] {
+  width: 100%; padding: 12px 14px;
+  border: 1.5px solid var(--border-strong); border-radius: 8px;
+  font-size: 16px; font-family: inherit; background: white;
+}
+input[type=text]:focus, input[type=date]:focus { outline: none; border-color: var(--teal); }
+
+.btn {
+  padding: 12px 20px; background: var(--teal); color: white;
+  border: none; border-radius: 8px; font-size: 15px; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+}
+.btn:hover { background: #18484A; }
+.btn:disabled { background: #ccc; cursor: not-allowed; }
+.btn-secondary { background: var(--paper); color: var(--teal); border: 1.5px solid var(--teal); }
+
+.results { margin-top: 16px; }
+.surgery-card {
+  background: var(--teal-tint); border: 1px solid var(--teal-soft);
+  border-radius: 10px; padding: 18px; margin-bottom: 12px;
+}
+.surgery-card .surg-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 8px; flex-wrap: wrap; gap: 4px;
+}
+.surgery-card .surg-name { font-size: 17px; font-weight: 600; color: var(--ink); }
+.surgery-card .surg-status {
+  font-size: 11px; padding: 3px 10px; border-radius: 10px;
+  background: white; color: var(--ink-soft); border: 1px solid var(--border);
+}
+.surgery-card .surg-status.status-待手術 { background: #fff7ed; color: var(--clay); border-color: #fed7aa; }
+.surgery-card .surg-status.status-已手術 { background: #ecfccb; color: var(--sage); border-color: #d9f99d; }
+.surgery-card .surg-meta { color: var(--ink-soft); font-size: 13px; margin-bottom: 14px; }
+.surgery-card .surg-meta span { margin-right: 16px; }
+
+.action-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+}
+.action-btn {
+  display: block; text-align: center; padding: 10px 8px;
+  background: white; border: 1px solid var(--border-strong); border-radius: 8px;
+  color: var(--ink); text-decoration: none; font-size: 13px;
+  transition: all 0.15s;
+}
+.action-btn:hover { border-color: var(--teal); background: var(--teal-tint); }
+.action-btn .icon { display: block; font-size: 18px; margin-bottom: 3px; }
+.action-btn.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+.error-msg {
+  background: #fee; color: #c53030; padding: 12px; border-radius: 6px; margin-top: 12px; font-size: 14px;
+}
+.empty-state { text-align: center; padding: 24px; color: var(--ink-faint); }
+
+.back-link { display: inline-block; margin-top: 16px; color: var(--teal); text-decoration: none; font-size: 14px; }
+.back-link:hover { text-decoration: underline; }
+
+.hint { font-size: 12px; color: var(--ink-faint); margin-top: 4px; line-height: 1.5; }
+.loading { text-align: center; padding: 30px; color: var(--ink-soft); }
+
+@media (max-width: 480px) {
+  .input-row { flex-direction: column; }
+  .action-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="eyebrow">Patient Service Portal</div>
+    <h1>病人服務 — 查找我的手術</h1>
+    <p class="subtitle">輸入末四碼即可找到手術紀錄,並選擇對應行動</p>
+  </header>
+
+  <!-- 搜尋區 -->
+  <div class="card">
+    <h2>🔍 搜尋手術</h2>
+    <div class="input-row">
+      <div class="input-group">
+        <label for="idLast4">身分證末四碼 <span style="color:#c53030;">*</span></label>
+        <input type="text" id="idLast4" maxlength="4" inputmode="numeric" pattern="[0-9]{4}" placeholder="4 位數字" autocomplete="off">
+      </div>
+      <div class="input-group">
+        <label for="birthdate">出生日期(可選,協助消歧義)</label>
+        <input type="date" id="birthdate">
+      </div>
+      <button class="btn" id="search-btn">查詢</button>
+    </div>
+    <div class="hint">💡 雙鑰匙設計:同末四碼可能多筆,搭配出生日期可精準定位</div>
+    <div id="error-box" class="error-msg" hidden></div>
+  </div>
+
+  <!-- 結果區 -->
+  <div id="results-container" class="card" hidden>
+    <h2>📋 查詢結果 <span id="results-count" style="font-weight:normal;font-size:14px;color:var(--ink-soft);"></span></h2>
+    <div id="results" class="results"></div>
+  </div>
+
+  <!-- 載入中 -->
+  <div id="loading" class="loading" hidden>查詢中⋯⋯</div>
+
+  <!-- 回首頁 -->
+  <a class="back-link" href="index.html">← 回首頁</a>
+
+</div>
+
+<script>
+const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyd7bIOosg_v1lyhkcJO2oi0EzaUdMYSkf7EVJQ7oetv8QY2zhlnyaO1XaGyLs8rphF/exec';
+
+// JSONP utility
+function jsonpCall(action, params) {
+  return new Promise((resolve, reject) => {
+    const cbName = '__jsonp_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+    const timer = setTimeout(() => {
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      reject(new Error('Request timeout'));
+    }, 15000);
+
+    window[cbName] = function(data) {
+      clearTimeout(timer);
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      if (data && data.ok) resolve(data);
+      else reject(new Error((data && data.error) || 'Unknown error'));
+    };
+
+    const usp = new URLSearchParams();
+    usp.set('action', action);
+    usp.set('callback', cbName);
+    for (const k in params) {
+      if (params[k] !== undefined && params[k] !== null && params[k] !== '') {
+        usp.set(k, String(params[k]));
+      }
+    }
+
+    const script = document.createElement('script');
+    script.src = GAS_ENDPOINT + '?' + usp.toString();
+    script.onerror = () => {
+      clearTimeout(timer);
+      delete window[cbName];
+      reject(new Error('Network error'));
+    };
+    document.body.appendChild(script);
+  });
+}
+
+async function handleSearch() {
+  const idLast4 = document.getElementById('idLast4').value.trim();
+  const birthdate = document.getElementById('birthdate').value;
+  const errorBox = document.getElementById('error-box');
+  const btn = document.getElementById('search-btn');
+  const loadingEl = document.getElementById('loading');
+  const resultsContainer = document.getElementById('results-container');
+
+  errorBox.hidden = true;
+  if (!/^\d{4}$/.test(idLast4)) {
+    errorBox.textContent = '請輸入 4 位數字末四碼';
+    errorBox.hidden = false;
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '查詢中⋯⋯';
+  loadingEl.hidden = false;
+  resultsContainer.hidden = true;
+
+  try {
+    const result = await jsonpCall('searchSurgeryByIdLast4', { idLast4, birthdate });
+    renderResults(result.results || []);
+  } catch (err) {
+    errorBox.textContent = '查詢失敗:' + err.message;
+    errorBox.hidden = false;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '查詢';
+    loadingEl.hidden = true;
+  }
+}
+
+function renderResults(results) {
+  const container = document.getElementById('results-container');
+  const counter = document.getElementById('results-count');
+  const resultsEl = document.getElementById('results');
+
+  container.hidden = false;
+  counter.textContent = `(${results.length} 筆)`;
+
+  if (results.length === 0) {
+    resultsEl.innerHTML = `
+      <div class="empty-state">
+        <p style="margin-bottom:8px;">找不到末四碼相符的紀錄</p>
+        <p style="font-size:13px;">可能原因:醫師尚未建檔 / 末四碼輸入錯誤 / 出生日期不符</p>
+      </div>`;
+    return;
+  }
+
+  resultsEl.innerHTML = results.map(r => buildSurgeryCard(r)).join('');
+}
+
+function buildSurgeryCard(r) {
+  const status = r.status || '(無狀態)';
+  const dateStr = r.actualDate || r.scheduledDate || '(未定)';
+  const dateLabel = r.actualDate ? '實際' : (r.scheduledDate ? '預定' : '');
+  const painTrackOn = r.painTrackingStatus === '啟用';
+  const hasSurgery = r.surgeryId !== '';
+
+  // Action buttons — 沒有 surgery 時部分按鈕不可用
+  const sid = encodeURIComponent(r.surgeryId);
+  const pk = encodeURIComponent(r.pk);
+
+  const actions = [
+    {
+      label: '術前資料',
+      icon: '📋',
+      href: hasSurgery ? `preop.html#mode=patient&sid=${sid}` : `preop.html#mode=update&pid=${pk}`,
+      enabled: true
+    },
+    {
+      label: '疼痛回報',
+      icon: '🩹',
+      href: hasSurgery ? `pain-track.html#sid=${sid}` : '#',
+      enabled: hasSurgery && painTrackOn
+    },
+    {
+      label: 'D+1 問卷',
+      icon: '📊',
+      href: hasSurgery ? `survey-d1.html#sid=${sid}&pid=${pk}` : '#',
+      enabled: hasSurgery
+    },
+    {
+      label: 'D+3 問卷',
+      icon: '📊',
+      href: hasSurgery ? `survey-d3.html#sid=${sid}&pid=${pk}` : '#',
+      enabled: hasSurgery
+    },
+    {
+      label: 'D+7 問卷',
+      icon: '📊',
+      href: hasSurgery ? `survey-d7.html#sid=${sid}&pid=${pk}` : '#',
+      enabled: hasSurgery
+    },
+    {
+      label: 'PACU 評估',
+      icon: '🏥',
+      href: 'pacu.html',
+      enabled: hasSurgery
+    }
+  ];
+
+  const actionsHtml = actions.map(a => `
+    <a class="action-btn${a.enabled ? '' : ' disabled'}" href="${a.href}" ${a.enabled ? '' : 'onclick="return false;"'}>
+      <span class="icon">${a.icon}</span>${a.label}
+    </a>
+  `).join('');
+
+  const meta = hasSurgery ? `
+    <div class="surg-meta">
+      <span>👤 ${escapeHtml(r.name)}</span>
+      <span>👨‍⚕️ ${escapeHtml(r.attendingDoctor || '?')}</span>
+      <span>📅 ${dateLabel} ${dateStr}</span>
+    </div>
+  ` : `
+    <div class="surg-meta">
+      <span>👤 ${escapeHtml(r.name)}</span>
+      <span style="color:var(--clay);">尚無手術紀錄 — 可進入「術前資料」更新基本資料</span>
+    </div>
+  `;
+
+  return `
+    <div class="surgery-card">
+      <div class="surg-header">
+        <div class="surg-name">${escapeHtml(r.surgeryName)}</div>
+        ${hasSurgery ? `<div class="surg-status status-${status}">${status}</div>` : ''}
+      </div>
+      ${meta}
+      <div class="action-grid">${actionsHtml}</div>
+    </div>
+  `;
+}
+
+function escapeHtml(s) {
+  return String(s || '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+// 綁定事件
+document.getElementById('search-btn').addEventListener('click', handleSearch);
+document.getElementById('idLast4').addEventListener('keypress', e => {
+  if (e.key === 'Enter') handleSearch();
+});
+document.getElementById('birthdate').addEventListener('keypress', e => {
+  if (e.key === 'Enter') handleSearch();
+});
+
+// 從 URL hash 帶入 idLast4(若有) — 例如 patient-portal.html#idLast4=9999
+const initialHash = window.location.hash.replace(/^#/, '');
+if (initialHash) {
+  const params = {};
+  initialHash.split('&').forEach(p => {
+    const [k, v] = p.split('=');
+    if (k) params[decodeURIComponent(k)] = decodeURIComponent(v || '');
+  });
+  if (params.idLast4) {
+    document.getElementById('idLast4').value = params.idLast4;
+    if (params.birthdate) document.getElementById('birthdate').value = params.birthdate;
+    if (/^\d{4}$/.test(params.idLast4)) handleSearch();
+  }
+}
+</script>
+
+</body>
+</html>
