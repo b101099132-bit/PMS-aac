@@ -223,7 +223,7 @@
         </div>
 
         <!-- Patient / Update: 唯讀顯示 -->
-        <div data-modes="patient,update">
+        <div data-modes="patient,update,self_register">
           <div class="surgery-info-display" id="surgery-info-display">
             <p style="color:#666; margin:0;">載入手術資訊⋯⋯</p>
           </div>
@@ -231,7 +231,7 @@
       </section>
 
       <!-- ═════ 病人辨識 ═════ -->
-      <section class="question-card" data-modes="create,patient,update" id="section-identity">
+      <section class="question-card" data-modes="create,patient,update,self_register" id="section-identity">
         <h2>病人辨識資訊</h2>
         <div class="field-row">
           <div>
@@ -245,7 +245,7 @@
         </div>
 
         <!-- 病人模式才填生日 / 性別 -->
-        <div data-modes="patient,update">
+        <div data-modes="patient,update,self_register">
           <div class="field-row">
             <div>
               <label>性別 <span class="required-mark">*</span></label>
@@ -265,7 +265,7 @@
       </section>
 
       <!-- ═════ 聯絡資訊 ═════ -->
-      <section class="question-card" data-modes="patient,update" id="section-contact">
+      <section class="question-card" data-modes="patient,update,self_register" id="section-contact">
         <h2>聯絡資訊</h2>
         <div class="field-row">
           <div>
@@ -291,7 +291,7 @@
       </section>
 
       <!-- ═════ 照顧者 ═════ -->
-      <section class="question-card" data-modes="patient,update" id="section-caregiver">
+      <section class="question-card" data-modes="patient,update,self_register" id="section-caregiver">
         <h2>照顧者資訊</h2>
         <p class="help">日間手術後您將離開醫院,需要一位主要照顧者陪同。</p>
         <div class="field-row">
@@ -325,7 +325,7 @@
       </section>
 
       <!-- ═════ 醫療基本 ═════ -->
-      <section class="question-card" data-modes="patient,update" id="section-medical">
+      <section class="question-card" data-modes="patient,update,self_register" id="section-medical">
         <h2>過敏 / 重大病史</h2>
         <div class="field-row">
           <div>
@@ -342,7 +342,7 @@
       </section>
 
       <!-- ═════ 9 共病 ═════ -->
-      <section class="question-card" data-modes="patient,update" id="section-comorbidities">
+      <section class="question-card" data-modes="patient,update,self_register" id="section-comorbidities">
         <h2>您目前是否有以下情況?</h2>
         <p class="help">請依您目前的狀況勾選(可複選)。</p>
         <div class="checkbox-grid">
@@ -359,7 +359,7 @@
       </section>
 
       <!-- ═════ ASA + Apfel ═════ -->
-      <section class="question-card" data-modes="patient,update" id="section-risk">
+      <section class="question-card" data-modes="patient,update,self_register" id="section-risk">
         <h2>麻醉風險評估</h2>
 
         <p style="margin-top:0;"><strong>ASA 分級</strong>(請依麻醉醫師評估;若不確定請選 2)</p>
@@ -398,7 +398,7 @@
       </section>
 
       <!-- ═════ 過去手術史 ═════ -->
-      <section class="question-card" data-modes="patient,update" id="section-past">
+      <section class="question-card" data-modes="patient,update,self_register" id="section-past">
         <h2>過去手術 / 麻醉經驗</h2>
         <p class="help">回答下列問題有助於麻醉醫師為您量身規劃。若不確定請選「未知」。</p>
 
@@ -434,7 +434,7 @@
       </section>
 
       <!-- ═════ 同意書 ═════ -->
-      <section class="question-card" data-modes="patient,update" id="section-consent">
+      <section class="question-card" data-modes="patient,update,self_register" id="section-consent">
         <h2>同意聲明</h2>
 
         <div class="consent-card">
@@ -473,7 +473,7 @@
       </section>
 
       <!-- ═════ 填表者 ═════ -->
-      <section class="question-card" data-modes="patient,update" id="section-filler">
+      <section class="question-card" data-modes="patient,update,self_register" id="section-filler">
         <h2>填表者</h2>
         <div class="yn-group">
           <label><input type="radio" name="filler-type" value="本人" checked>本人填寫</label>
@@ -634,6 +634,15 @@
         }
       } else if (mode === 'patient') {
         showMainForm();
+      } else if (mode === 'self_register') {
+        // ★ v2.2 階段 1.2:病人自助建檔模式
+        // 不需 sid / pid / surgeonKey,直接進入表單
+        showMainForm();
+        // 若 URL 帶 idLast4(從 patient-portal「找不到 → 自助建檔」過來),預填
+        if (ctx.idLast4) {
+          const idEl = document.getElementById('id-last4');
+          if (idEl) idEl.value = ctx.idLast4;
+        }
       } else if (mode === 'update') {
         // 先抓既有資料預填
         try {
@@ -661,22 +670,25 @@
       banner.className = 'mode-banner mode-banner-' + m;
 
       const titles = {
-        create:  '🏥 外科醫師建檔模式 — ' + (ctx.surgeonName || '建立新手術預約'),
-        patient: '👤 初次填寫資料',
-        update:  '🔄 資料更新模式'
+        create:        '🏥 外科醫師建檔模式 — ' + (ctx.surgeonName || '建立新手術預約'),
+        patient:       '👤 初次填寫資料',
+        update:        '🔄 資料更新模式',
+        self_register: '✨ 病人自助建檔'
       };
       const subtitles = {
-        create:  '為新病人建立手術預約 → 提交後給病人加 LINE',
-        patient: '歡迎使用!請填寫您的基本資料,完成後本院會透過 LINE 寄送您的個人化衛教',
-        update:  '請確認以下資料,如有變化請更新'
+        create:        '為新病人建立手術預約 → 提交後給病人加 LINE',
+        patient:       '歡迎使用!請填寫您的基本資料,完成後本院會透過 LINE 寄送您的個人化衛教',
+        update:        '請確認以下資料,如有變化請更新',
+        self_register: '無預約病人請填寫以下資料 → 系統會發給您一組識別碼,看診時提供給醫師'
       };
       document.getElementById('mode-banner-text').textContent = titles[m] || '';
       document.getElementById('form-subtitle').textContent = subtitles[m] || '';
 
       const formTitles = {
-        create:  '建立手術預約',
-        patient: '病人基本資料',
-        update:  '更新個人資料'
+        create:        '建立手術預約',
+        patient:       '病人基本資料',
+        update:        '更新個人資料',
+        self_register: '病人自助建檔'
       };
       document.getElementById('form-title').textContent = formTitles[m] || '術前資料建檔';
     }
@@ -895,6 +907,10 @@
         if (mode === 'create') {
           const result = await jsonpCall('preopCreate', payload);
           showSuccess('create', result);
+        } else if (mode === 'self_register') {
+          // ★ v2.2 階段 1.2:呼叫 selfRegister endpoint
+          const result = await jsonpCall('selfRegister', payload);
+          showSuccess('self_register', result);
         } else {
           const result = await jsonpCall('preopSubmit', payload);
           showSuccess(mode, result);
@@ -926,7 +942,9 @@
         return data;
       }
 
-      // Patient / Update:完整病人資料
+      // Patient / Update / Self_register:完整病人資料
+      const isSelfRegister = (mode === 'self_register');
+
       data.pid = (existingPatient && existingPatient.pk) || ctx.pid || '';
       data.sid = ctx.sid || '';
       data.lineUid = ctx.lineUid || (existingPatient && existingPatient.lineUserId) || '';
@@ -936,12 +954,32 @@
       if (!/^\d{4}$/.test(data.idLast4)) throw new Error('身分證末四碼必須是 4 位數字');
       data.gender = required('gender', '請選擇性別');
       data.birthdate = required('birthdate', '請填寫出生日期');
-      data.phone = required('phone', '請填寫電話');
-      data.email = val('email');
+
+      // ★ self_register:電話或 email 至少一項
+      // ★ patient/update:電話必填
+      if (isSelfRegister) {
+        data.phone = val('phone');
+        data.email = val('email');
+        if (!data.phone && !data.email) {
+          throw new Error('請至少填寫一種聯絡方式(電話或 email)');
+        }
+      } else {
+        data.phone = required('phone', '請填寫電話');
+        data.email = val('email');
+      }
       data.contactPref = val('contact-pref') || 'LINE';
-      data.caregiverName = required('caregiver-name', '請填寫照顧者姓名');
-      data.caregiverRelation = required('caregiver-relation', '請選擇照顧者關係');
-      data.caregiverPhone = required('caregiver-phone', '請填寫照顧者電話');
+
+      // ★ self_register:照顧者選填(看診後再補)
+      // ★ patient/update:照顧者必填
+      if (isSelfRegister) {
+        data.caregiverName = val('caregiver-name');
+        data.caregiverRelation = val('caregiver-relation');
+        data.caregiverPhone = val('caregiver-phone');
+      } else {
+        data.caregiverName = required('caregiver-name', '請填寫照顧者姓名');
+        data.caregiverRelation = required('caregiver-relation', '請選擇照顧者關係');
+        data.caregiverPhone = required('caregiver-phone', '請填寫照顧者電話');
+      }
       data.distanceMinutes = val('distance-minutes');
       data.allergy = val('allergy');
       data.otherHistory = val('other-history');
@@ -1042,6 +1080,25 @@
             <li>如有疑問,可隨時於 LINE 回覆或撥打本院電話</li>
           </ul>
           <p style="color:#047857;"><strong>祝您手術順利!</strong></p>
+        `;
+      } else if (submitMode === 'self_register') {
+        // ★ v2.2 階段 1.2:自助建檔成功
+        title.textContent = '✓ 建檔成功';
+        msg.innerHTML = `
+          <p style="font-size:15px; margin-bottom:10px;">您好,<strong>${result.patientName || ''}</strong>。已為您建立個人檔案。</p>
+          <p style="margin-bottom:6px;">📋 您的識別碼:</p>
+          <code style="display:block; background:white; padding:14px; font-size:18px; font-weight:600; text-align:center; letter-spacing:0.05em; color:#1F5A5A; border-radius:6px;">
+            ${result.pk}
+          </code>
+        `;
+        steps.innerHTML = `
+          <p><strong>📌 請記下您的識別碼</strong></p>
+          <ul>
+            <li>看診時請主動提供識別碼給醫師,以便確認個人資料</li>
+            <li>如有忘記,可用身分證末四碼 + 出生日期再次查詢</li>
+            <li>若已加入本院 LINE 官方帳號,系統會在綁定後自動串接</li>
+          </ul>
+          <p style="color:#047857; margin-top:10px;"><strong>感謝您的配合 🙏</strong></p>
         `;
       }
       screen.hidden = false;

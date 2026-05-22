@@ -223,10 +223,17 @@ function renderResults(results) {
   counter.textContent = `(${results.length} 筆)`;
 
   if (results.length === 0) {
+    const idLast4 = document.getElementById('idLast4').value.trim();
     resultsEl.innerHTML = `
       <div class="empty-state">
         <p style="margin-bottom:8px;">找不到末四碼相符的紀錄</p>
-        <p style="font-size:13px;">可能原因:醫師尚未建檔 / 末四碼輸入錯誤 / 出生日期不符</p>
+        <p style="font-size:13px; margin-bottom:18px;">可能原因:醫師尚未建檔 / 末四碼輸入錯誤 / 出生日期不符</p>
+        <a href="preop.html#mode=self_register&idLast4=${encodeURIComponent(idLast4)}"
+           class="btn"
+           style="display:inline-block; text-decoration:none; padding:12px 24px;">
+          ✨ 新病人?點此自助建檔
+        </a>
+        <p style="font-size:12px; color:var(--ink-faint); margin-top:12px;">建檔完成後會給您一組識別碼,請記下並提供給醫師</p>
       </div>`;
     return;
   }

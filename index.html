@@ -328,71 +328,51 @@ footer .clinic {
   </div>
 
   <div class="grid">
-    <a class="card" data-color="teal" href="preop.html" id="card-preop">
+    <a class="card" data-color="teal" href="preop.html#mode=create" id="card-preop">
       <div class="card-head">
-        <span class="card-tag">01 · 術前</span>
-        <span class="card-role">醫師 / 病人</span>
+        <span class="card-tag">01 · 術前建檔</span>
+        <span class="card-role">外科醫師</span>
       </div>
-      <div class="card-title">術前建檔 / 資料填寫</div>
-      <p class="card-desc">三模式合一:主治醫師建立手術紀錄、病人線上填寫基本資料 + 9 共病(HTN / DM / OSA / AC...)+ Apfel 嘔吐風險評分 + 照顧者聯絡資訊、護理師可代填。</p>
+      <div class="card-title">建立新手術紀錄</div>
+      <p class="card-desc">輸入主治醫師通行碼 → 選術式 → 填手術日期 / 同意項 / 補充事項 → 系統自動建立 surgery_id 並啟動術前衛教推送。</p>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a class="card" data-color="gold" href="patient-portal.html" id="card-portal">
+      <div class="card-head">
+        <span class="card-tag">02 · 病人服務</span>
+        <span class="card-role">病人 / 家屬 / 護理師</span>
+      </div>
+      <div class="card-title">查找手術 — 6 大行動入口</div>
+      <p class="card-desc">輸入末四碼 → 列出該病人所有手術 → 選擇行動:📋 術前資料填寫 · 🩹 疼痛回報 · 📊 D+1 / D+3 / D+7 問卷 · 🏥 PACU 評估。</p>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a class="card" data-color="plum" href="preop.html#mode=self_register" id="card-selfregister">
+      <div class="card-head">
+        <span class="card-tag">03 · 自助建檔</span>
+        <span class="card-role">新病人</span>
+      </div>
+      <div class="card-title">病人自助建檔(無預約)</div>
+      <p class="card-desc">無預約或第一次就診的病人 → 填基本資料 + 共病 + Apfel 嘔吐風險 + 過敏史 → 系統發給識別碼,看診時提供給醫師。</p>
       <div class="card-arrow">→</div>
     </a>
 
     <a class="card" data-color="clay" href="pacu.html" id="card-pacu" data-unique>
       <div class="card-badge">日間獨有</div>
       <div class="card-head">
-        <span class="card-tag">02 · PACU 離院</span>
+        <span class="card-tag">04 · PACU 評估</span>
         <span class="card-role">PACU 護理師</span>
       </div>
-      <div class="card-title">PACU 評估 / 離院決議</div>
-      <p class="card-desc">平板優先設計:Vital Signs + PADSS 五指標(VS / 活動 / PONV / 疼痛 / 出血)+ 多模式止痛紀錄 + 家屬簽名 canvas + 離院四段決議(順利 / 延後 / 改收住院 / 轉院)。</p>
-      <div class="card-arrow">→</div>
-    </a>
-
-    <a class="card" data-color="gold" href="pain-track.html" id="card-pain">
-      <div class="card-head">
-        <span class="card-tag">03 · 術後</span>
-        <span class="card-role">病人</span>
-      </div>
-      <div class="card-title">術後疼痛追蹤</div>
-      <p class="card-desc">5 秒填完的微表單,系統每日 4 次(08 / 12 / 16 / 20)自動推送 NRS 0-10 評分。連續 5 次回報「0」自動停止,病人可隨時主動結束追蹤。</p>
-      <div class="card-arrow">→</div>
-    </a>
-
-    <a class="card" data-color="plum" href="survey-d1.html" id="card-d1">
-      <div class="card-head">
-        <span class="card-tag">04 · D+1</span>
-        <span class="card-role">病人</span>
-      </div>
-      <div class="card-title">術後 24 小時麻醉品質問卷</div>
-      <p class="card-desc">術前溝通、麻醉甦醒、功能回復(含 csPONV)、疼痛 NRS、整體 NPS — 系統在術後 24 小時自動推送。</p>
-      <div class="card-arrow">→</div>
-    </a>
-
-    <a class="card" data-color="navy" href="survey-d3.html" id="card-d3">
-      <div class="card-head">
-        <span class="card-tag">05 · D+3</span>
-        <span class="card-role">病人</span>
-      </div>
-      <div class="card-title">術後 72 小時居家恢復回顧</div>
-      <p class="card-desc">追蹤居家恢復狀況:疼痛 / 噁心 / 進食 / 活動 / 睡眠,以及計畫外回診或急診就醫。</p>
-      <div class="card-arrow">→</div>
-    </a>
-
-    <a class="card" data-color="sage" href="survey-d7.html" id="card-d7">
-      <div class="card-head">
-        <span class="card-tag">06 · D+7</span>
-        <span class="card-role">病人</span>
-      </div>
-      <div class="card-title">術後 7 天整體 + 衛教評估</div>
-      <p class="card-desc">28 份衛教逐項評估(已看 / 未看 / N/A)、整體照護 NPS、推薦對象與改善建議。</p>
+      <div class="card-title">術後評估 / 離院決議</div>
+      <p class="card-desc">平板優先:PACU 通行碼 → 今日手術清單 → Vital Signs + PADSS 五指標 + 多模式止痛紀錄 + 家屬簽名 + 離院四段決議(順利 / 延後 / 改收住院 / 轉院)。</p>
       <div class="card-arrow">→</div>
     </a>
 
     <a class="card card-disabled" data-color="navy" href="#" id="card-dashboard" data-coming-soon>
       <div class="card-badge card-badge-soon">階段 4</div>
       <div class="card-head">
-        <span class="card-tag">07 · 統計</span>
+        <span class="card-tag">05 · 統計</span>
         <span class="card-role">管理</span>
       </div>
       <div class="card-title">統計儀表板</div>
@@ -403,7 +383,7 @@ footer .clinic {
     <a class="card card-disabled" data-color="sage" href="#" id="card-edu" data-coming-soon>
       <div class="card-badge card-badge-soon">階段 4</div>
       <div class="card-head">
-        <span class="card-tag">08 · 衛教</span>
+        <span class="card-tag">06 · 衛教</span>
         <span class="card-role">資源</span>
       </div>
       <div class="card-title">衛教資源目錄</div>
@@ -427,24 +407,26 @@ if (window.location.hash.startsWith('#k=')) {
 }
 
 // 更新所有需要通行碼的連結
-// v2.1:醫師端(preop)、PACU 端(pacu)需要通行碼
-// 病人端(pain-track / survey-d1/d3/d7)從 LINE 連結進入,帶 sid 參數,不需通行碼
-// dashboard / edu 為階段 4 待開發
+// v2.1:醫師端(preop)需要通行碼,自動帶到 #surgeonKey=
+// PACU 端(pacu)有自己的 sessionStorage 登入流程,不需從 hash 帶
+// 病人服務(patient-portal)不需通行碼
 function updateLinks() {
   const v = $('doctor_key').value.trim();
-  ['card-preop', 'card-pacu'].forEach(id => {
-    const card = $(id);
-    if (!card) return;
-    // 第一次執行時存下原始 URL,之後不再讀已被加 hash 的版本
-    let base = card.getAttribute('data-base');
-    if (!base) {
-      base = card.getAttribute('href').split('#')[0];
-      card.setAttribute('data-base', base);
+  const preopCard = $('card-preop');
+  if (preopCard) {
+    if (!preopCard.getAttribute('data-base')) {
+      preopCard.setAttribute('data-base', preopCard.getAttribute('href'));
     }
-    card.setAttribute('href', v ? `${base}#k=${encodeURIComponent(v)}` : base);
-  });
+    const base = preopCard.getAttribute('data-base');
+    // base 已含 #mode=create,把 surgeonKey 加在後面
+    preopCard.setAttribute('href', v
+      ? `${base}&surgeonKey=${encodeURIComponent(v)}`
+      : base);
+  }
   if (v) {
     history.replaceState(null, '', '#k=' + encodeURIComponent(v));
+  } else {
+    history.replaceState(null, '', '#');
   }
 }
 
