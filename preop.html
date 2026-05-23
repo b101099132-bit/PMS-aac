@@ -358,37 +358,26 @@
         </div>
       </section>
 
-      <!-- ═════ ASA + Apfel ═════ -->
+      <!-- ═════ Apfel PONV 風險評估 ═════ -->
       <section class="question-card" data-modes="patient,update,self_register" id="section-risk">
         <h2>麻醉風險評估</h2>
 
-        <p style="margin-top:0;"><strong>ASA 分級</strong>(請依麻醉醫師評估;若不確定請選 2)</p>
-        <div class="yn-group">
-          <label><input type="radio" name="asa" value="1">1 — 健康</label>
-          <label><input type="radio" name="asa" value="2" checked>2 — 輕度疾病</label>
-          <label><input type="radio" name="asa" value="3">3 — 中度疾病</label>
-          <label><input type="radio" name="asa" value="4">4 — 重度疾病</label>
-          <label><input type="radio" name="asa" value="5">5 — 危急</label>
-        </div>
-
-        <hr style="border:none; border-top:1px solid #e5e7eb; margin: 20px 0;">
-
         <p><strong>Apfel PONV 風險評估</strong>(依下列 4 個自動計算;高分數需加強止吐預防)</p>
         <div class="yn-group">
-          <p>1. 您是女性?</p>
-          <label><input type="radio" name="apfel-female" value="1">是</label>
-          <label><input type="radio" name="apfel-female" value="0">否</label>
+          <p>1. 您是女性? <span id="apfel-gender-hint" style="color:#9ca3af; font-size:13px;">(依上方辨識資訊自動帶入)</span></p>
+          <label><input type="radio" name="apfel-female" value="1" disabled>是</label>
+          <label><input type="radio" name="apfel-female" value="0" disabled>否</label>
 
           <p>2. 您不抽菸?</p>
           <label><input type="radio" name="apfel-nonsmoker" value="1">不抽</label>
           <label><input type="radio" name="apfel-nonsmoker" value="0">有抽</label>
 
-          <p>3. 曾有術後嚴重噁心嘔吐 或 暈車病史?</p>
+          <p>3. 以前手術是否有噁心嘔吐的感覺或容易暈車、暈眩?</p>
           <label><input type="radio" name="apfel-history" value="1">是</label>
           <label><input type="radio" name="apfel-history" value="0">否</label>
 
-          <p>4. 預期術後會用嗎啡類止痛藥?(若不確定請選「是」)</p>
-          <label><input type="radio" name="apfel-opioid" value="1">是</label>
+          <p>4. 術後使用嗎啡類止痛藥?</p>
+          <label><input type="radio" name="apfel-opioid" value="1" checked>是</label>
           <label><input type="radio" name="apfel-opioid" value="0">否</label>
         </div>
         <div class="apfel-display">
@@ -400,28 +389,28 @@
       <!-- ═════ 過去手術史 ═════ -->
       <section class="question-card" data-modes="patient,update,self_register" id="section-past">
         <h2>過去手術 / 麻醉經驗</h2>
-        <p class="help">回答下列問題有助於麻醉醫師為您量身規劃。若不確定請選「未知」。</p>
+        <p class="help">回答下列問題有助於麻醉醫師為您量身規劃。若不確定請選「不確定」。</p>
 
         <div class="yn-group">
           <p>1. 您曾接受過全身麻醉?</p>
           <label><input type="radio" name="past-ga" value="是">是</label>
           <label><input type="radio" name="past-ga" value="否">否</label>
-          <label><input type="radio" name="past-ga" value="未知">未知</label>
+          <label><input type="radio" name="past-ga" value="不確定">不確定</label>
 
           <p>2. 您曾經有過術後嚴重噁心嘔吐?</p>
           <label><input type="radio" name="past-ponv" value="是">是</label>
           <label><input type="radio" name="past-ponv" value="否">否</label>
-          <label><input type="radio" name="past-ponv" value="未知">未知</label>
+          <label><input type="radio" name="past-ponv" value="不確定">不確定</label>
 
           <p>3. 您曾經有過術中覺醒(在麻醉中突然醒來)?</p>
           <label><input type="radio" name="past-awareness" value="是">是</label>
           <label><input type="radio" name="past-awareness" value="否">否</label>
-          <label><input type="radio" name="past-awareness" value="未知">未知</label>
+          <label><input type="radio" name="past-awareness" value="不確定">不確定</label>
 
           <p>4. 您曾經有過術後嚴重疼痛(無法以一般止痛藥控制)?</p>
           <label><input type="radio" name="past-pain" value="是">是</label>
           <label><input type="radio" name="past-pain" value="否">否</label>
-          <label><input type="radio" name="past-pain" value="未知">未知</label>
+          <label><input type="radio" name="past-pain" value="不確定">不確定</label>
         </div>
 
         <div class="field-row">
@@ -458,15 +447,19 @@
         </div>
 
         <div class="consent-card">
-          <h3>👥 照顧者推播同意(選填)</h3>
+          <h3>📲 推播同意</h3>
           <div class="consent-text">
-            <p>日間手術後,您將離開醫院並依賴主要照顧者協助恢復。本系統可同時將術後衛教資料推送給您的照顧者(以您填寫的照顧者 LINE 為對象),協助他/她了解如何照顧您。</p>
-            <p style="color:#92400e;"><strong>注意:</strong>照顧者僅會收到衛教資料,不會收到您的問卷連結。</p>
+            <p>本系統會透過 LINE 將以下內容推送給您本人:</p>
+            <ul>
+              <li>術前 7 天 / 3 天 / 1 天個人化衛教資料</li>
+              <li>術後 24 小時 / 72 小時 / 7 天的麻醉品質回饋問卷</li>
+              <li>術後疼痛追蹤(每日早 / 午 / 下午 / 晚 4 次,共 7 天)</li>
+            </ul>
           </div>
           <div class="consent-checkbox">
             <label>
               <input type="checkbox" id="consent-caregiver">
-              <span>我同意本院將術後衛教資料同步推送給我的照顧者</span>
+              <span>我同意本院透過 LINE 推送上述衛教與問卷</span>
             </label>
           </div>
         </div>
@@ -804,11 +797,36 @@
     // ═══════════════════════════════════════════════════════════════
     function setupApfelCalc() {
       const inputs = document.querySelectorAll(
-        'input[name="apfel-female"], input[name="apfel-nonsmoker"], ' +
+        'input[name="apfel-nonsmoker"], ' +
         'input[name="apfel-history"], input[name="apfel-opioid"]'
       );
       inputs.forEach(i => i.addEventListener('change', updateApfel));
-      // 初始化
+
+      // ★ v2.2 階段 5:Apfel「您是女性?」自動連動辨識資訊的性別 select
+      const genderSelect = document.getElementById('gender');
+      const hint = document.getElementById('apfel-gender-hint');
+      if (genderSelect) {
+        const syncApfelGender = () => {
+          const g = genderSelect.value;
+          const female = document.querySelector('input[name="apfel-female"][value="1"]');
+          const male   = document.querySelector('input[name="apfel-female"][value="0"]');
+          if (g === '女') {
+            female.checked = true; male.checked = false;
+            if (hint) hint.textContent = '(已依辨識資訊自動帶入:女)';
+          } else if (g === '男') {
+            male.checked = true; female.checked = false;
+            if (hint) hint.textContent = '(已依辨識資訊自動帶入:男)';
+          } else {
+            female.checked = false; male.checked = false;
+            if (hint) hint.textContent = '(請先填寫上方辨識資訊的性別)';
+          }
+          updateApfel();
+        };
+        genderSelect.addEventListener('change', syncApfelGender);
+        // 初始載入時也同步一次(預填時)
+        syncApfelGender();
+      }
+
       updateApfel();
     }
 
@@ -822,11 +840,11 @@
       document.getElementById('apfel-score').textContent = score;
 
       const interp =
-        score === 0 ? '低風險(< 10% PONV 發生率)' :
-        score === 1 ? '低風險(約 20% PONV)' :
-        score === 2 ? '中風險(約 40% PONV)— 建議單一止吐藥預防' :
-        score === 3 ? '高風險(約 60% PONV)— 建議雙重止吐藥' :
-                      '極高風險(約 80% PONV)— 建議多模式止吐預防 + TIVA';
+        score === 0 ? 'PONV 發生率 < 10%' :
+        score === 1 ? '約 20% PONV 發生率,建議一到兩種止吐預防措施' :
+        score === 2 ? '約 40% PONV 發生率,建議至少兩種止吐預防措施' :
+        score === 3 ? '高風險,約 60% PONV 發生率,建議三種以上止吐預防措施' :
+                      '極高風險,約 80% PONV 發生率,建議四種以上止吐預防措施';
       document.getElementById('apfel-interp').textContent = interp;
     }
 
@@ -869,8 +887,7 @@
         if (cb) cb.checked = (p['cm_' + c] === '是');
       });
 
-      // ASA
-      setRadio('asa', String(p.asa || '2'));
+      // ★ v2.2 階段 5:ASA 分級已從表單移除,不再 set
 
       // Apfel 4 個分項 — 由分數反推(粗略)
       // 注意:這裡其實沒儲存原始 4 個答案,僅有總分。
@@ -991,7 +1008,8 @@
       });
 
       // 風險評分
-      data.asa = (document.querySelector('input[name="asa"]:checked') || {}).value || '2';
+      // ★ v2.2 階段 5:ASA 從前端表單移除,寫入預設 '2'(輕度疾病),由醫師後續評估時補充
+      data.asa = '2';
       data.apfel = document.getElementById('apfel-score').textContent || '0';
 
       // 過去手術史
@@ -1003,7 +1021,7 @@
       };
       Object.keys(pastFields).forEach(name => {
         const r = document.querySelector(`input[name="${name}"]:checked`);
-        data[pastFields[name]] = r ? r.value : '未知';
+        data[pastFields[name]] = r ? r.value : '不確定';
       });
       data.pastHistoryNotes = val('past-notes');
 
