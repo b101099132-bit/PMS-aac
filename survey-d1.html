@@ -1131,7 +1131,7 @@
     document.querySelectorAll('input[type="radio"]:checked').forEach(r => {
       data[r.name] = r.value;
     });
-    document.querySelectorAll('textarea').forEach(t => {
+    document.querySelectorAll('textarea, input[type="text"]').forEach(t => {
       const v = t.value.trim();
       if (v) data[t.name] = v;
     });
