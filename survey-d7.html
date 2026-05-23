@@ -443,7 +443,7 @@
   <header>
     <div class="eyebrow">麻醉科 · 術後第 7 天</div>
     <h1>整體照護回饋</h1>
-    <p class="subtitle">您於 <span id="ctx-date">手術日</span> 接受 <span id="ctx-surg">手術</span>,謝謝您撥 5 分鐘讓醫療團隊知道過去 7 天的整體感受</p>
+    <p class="subtitle"><span id="ctx-greeting"></span>您於 <span id="ctx-date">手術日</span> 接受 <span id="ctx-surg">手術</span>,謝謝您撥 5 分鐘讓醫療團隊知道過去 7 天的整體感受</p>
     <div class="divider"></div>
   </header>
 
@@ -867,6 +867,10 @@
   if (ctx.date) document.getElementById('ctx-date').textContent = ctx.date;
   if (ctx.surg && SURG_MAP[ctx.surg]) {
     document.getElementById('ctx-surg').textContent = SURG_MAP[ctx.surg];
+  }
+  // ★ v2.2 階段 5:若 URL 帶 name 參數,顯示個人化問候
+  if (ctx.name) {
+    document.getElementById('ctx-greeting').textContent = ctx.name + ' 您好,';
   }
 
   // 解析衛教 ID 列表

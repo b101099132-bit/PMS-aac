@@ -376,16 +376,16 @@
       <!-- 病人 readout -->
       <div class="patient-readout" id="patient-readout"></div>
 
-      <!-- 實際麻醉方式 -->
+      <!-- 實際麻醉方式(複選) -->
       <section class="form-section">
-        <h2>① 實際麻醉方式</h2>
+        <h2>① 實際麻醉方式 <span style="color:#666; font-size:13px; font-weight:normal;">(可複選 · 至少 1 項)</span></h2>
         <div class="anes-buttons" id="anes-buttons">
           <div class="anes-btn" data-value="全身麻醉(GA)">全身麻醉<br><small>GA</small></div>
           <div class="anes-btn" data-value="喉罩(LMA)">喉罩<br><small>LMA</small></div>
           <div class="anes-btn" data-value="區域阻斷">區域阻斷<br><small>Block</small></div>
           <div class="anes-btn" data-value="脊椎麻醉">脊椎麻醉<br><small>Spinal</small></div>
           <div class="anes-btn" data-value="硬膜外麻醉">硬膜外麻醉<br><small>Epidural</small></div>
-          <div class="anes-btn" data-value="監測麻醉(MAC)">監測麻醉<br><small>MAC</small></div>
+          <div class="anes-btn" data-value="腦波導引理想鎮靜 BIS-TIVA">腦波導引理想鎮靜<br><small>BIS-TIVA</small></div>
           <div class="anes-btn" data-value="其他">其他</div>
         </div>
       </section>
@@ -528,19 +528,6 @@
           </div>
         </div>
 
-        <!-- 順利離院 → 時段 -->
-        <div id="discharge-time-row" style="margin-top:14px;" hidden>
-          <label style="font-weight:bold; font-size:14px;">離院時段</label>
-          <div class="anes-buttons" id="discharge-time-buttons" style="margin-top:6px;">
-            <div class="anes-btn" data-value="早上(08-10)">早上(08-10)</div>
-            <div class="anes-btn" data-value="上午(10-12)">上午(10-12)</div>
-            <div class="anes-btn" data-value="中午(12-14)">中午(12-14)</div>
-            <div class="anes-btn" data-value="下午(14-16)">下午(14-16)</div>
-            <div class="anes-btn" data-value="傍晚(16-18)">傍晚(16-18)</div>
-            <div class="anes-btn" data-value="晚上(18-20)">晚上(18-20)</div>
-          </div>
-        </div>
-
         <!-- 改收住院 → 病房號 -->
         <div id="ward-number-row" style="margin-top:14px;" hidden>
           <label style="font-weight:bold; font-size:14px;">病房號</label>
@@ -592,16 +579,15 @@
     let surgeries = [];           // 今日待簽核手術
     let currentSurgery = null;    // 目前正在填的手術
     let formState = {
-      anes:        '',
+      anesList:    [],
       padssVS:     null,
       padssActivity: null,
       padssPONV:   null,
       padssPain:   null,
       padssBleeding: null,
-      nrs:         0,
+      nrs:         null,
       ponv:        '',
       dischargeStatus: '',
-      dischargeTime: '',
       signature:   ''
     };
 
@@ -823,9 +809,9 @@
 
       // 重置狀態
       formState = {
-        anes: '', padssVS: null, padssActivity: null, padssPONV: null,
-        padssPain: null, padssBleeding: null, nrs: 0, ponv: '',
-        dischargeStatus: '', dischargeTime: '', signature: ''
+        anesList: [], padssVS: null, padssActivity: null, padssPONV: null,
+        padssPain: null, padssBleeding: null, nrs: null, ponv: '',
+        dischargeStatus: '', signature: ''
       };
       setupFormHandlers();
       setupSignatureCanvas();
@@ -836,12 +822,13 @@
     // 表單 handlers
     // ═══════════════════════════════════════════════════════════════
     function setupFormHandlers() {
-      // 麻醉方式
+      // 麻醉方式(複選 — 點擊切換 selected)
       document.querySelectorAll('#anes-buttons .anes-btn').forEach(btn => {
         btn.onclick = () => {
-          document.querySelectorAll('#anes-buttons .anes-btn').forEach(b => b.classList.remove('selected'));
-          btn.classList.add('selected');
-          formState.anes = btn.dataset.value;
+          btn.classList.toggle('selected');
+          formState.anesList = Array.from(
+            document.querySelectorAll('#anes-buttons .anes-btn.selected')
+          ).map(b => b.dataset.value);
         };
       });
 
@@ -875,25 +862,30 @@
         };
       });
 
-      // 離院決議
+      // 離院決議(★ PADSS < 9 阻擋順利離院)
       document.querySelectorAll('#discharge-buttons .discharge-btn').forEach(btn => {
         btn.onclick = () => {
+          // PADSS 總分檢查 — 若選「順利離院」但 PADSS < 9,阻擋
+          if (btn.dataset.value === '順利離院') {
+            const padssVals = [formState.padssVS, formState.padssActivity, formState.padssPONV,
+                               formState.padssPain, formState.padssBleeding];
+            const filled = padssVals.filter(v => v !== null);
+            const padssTotal = filled.reduce((a, b) => a + b, 0);
+            if (filled.length < 5) {
+              alert('⚠️ 請先完成所有 PADSS 評分(5 項),再決定離院。');
+              return;
+            }
+            if (padssTotal < 9) {
+              alert('⚠️ PADSS 總分 ' + padssTotal + ' 分(< 9 分),不符合順利離院標準\n\n請改選「延後離院」、「改收住院」或「轉院」');
+              return;
+            }
+          }
           document.querySelectorAll('#discharge-buttons .discharge-btn').forEach(b => b.classList.remove('selected'));
           btn.classList.add('selected');
           formState.dischargeStatus = btn.dataset.value;
           // 顯示對應的後續欄位
-          document.getElementById('discharge-time-row').hidden = (btn.dataset.value !== '順利離院' && btn.dataset.value !== '延後離院');
           document.getElementById('ward-number-row').hidden = (btn.dataset.value !== '改收住院');
           document.getElementById('transfer-row').hidden = (btn.dataset.value !== '轉院');
-        };
-      });
-
-      // 離院時段
-      document.querySelectorAll('#discharge-time-buttons .anes-btn').forEach(btn => {
-        btn.onclick = () => {
-          document.querySelectorAll('#discharge-time-buttons .anes-btn').forEach(b => b.classList.remove('selected'));
-          btn.classList.add('selected');
-          formState.dischargeTime = btn.dataset.value;
         };
       });
 
@@ -1030,22 +1022,45 @@
       errBox.hidden = true;
 
       try {
-        // 驗證
-        if (!formState.anes) throw new Error('請選擇麻醉方式');
+        // ── 驗證(所有欄位皆必填)─────────────────
+        // ① 麻醉方式(至少 1 項)
+        if (!formState.anesList || formState.anesList.length === 0) {
+          throw new Error('請至少選擇 1 個麻醉方式');
+        }
+        // ② Vital Signs(BP / HR / SpO2 都必填)
+        const bp = document.getElementById('pacu-bp').value.trim();
+        const hr = document.getElementById('pacu-hr').value.trim();
+        const spo2 = document.getElementById('pacu-spo2').value.trim();
+        if (!bp) throw new Error('請填寫血壓(BP)');
+        if (!hr) throw new Error('請填寫心跳(HR)');
+        if (!spo2) throw new Error('請填寫血氧(SpO2)');
+
+        // ③ PADSS 5 項
         const padssFields = ['padssVS', 'padssActivity', 'padssPONV', 'padssPain', 'padssBleeding'];
         if (padssFields.some(k => formState[k] === null)) {
           throw new Error('請完成所有 PADSS 評分(5 項)');
         }
-        if (!formState.ponv) throw new Error('請填寫是否發生 PONV');
+
+        // ④ 最後 NRS
+        if (formState.nrs === null || formState.nrs === undefined) {
+          throw new Error('請填寫離院前最後 NRS 疼痛分數');
+        }
+
+        // ⑤ PONV 發生
+        if (!formState.ponv) throw new Error('請選擇是否發生 PONV');
+
+        // ⑥ 離院決議
         if (!formState.dischargeStatus) throw new Error('請選擇離院決議');
 
-        // 順利離院:必須有簽名
+        // 雙重保險:PADSS < 9 阻擋順利離院
+        const padssTotal = padssFields.reduce((sum, k) => sum + (formState[k] || 0), 0);
+        if (formState.dischargeStatus === '順利離院' && padssTotal < 9) {
+          throw new Error('PADSS 總分 ' + padssTotal + ' 分 < 9 分,不符合順利離院標準。請改選其他選項');
+        }
+
+        // ⑦ 順利離院:必須有簽名
         if (formState.dischargeStatus === '順利離院' && !formState.signature) {
           throw new Error('順利離院必須請家屬簽名(可點「清除重簽」重新簽名)');
-        }
-        // 順利離院:必須選時段
-        if (formState.dischargeStatus === '順利離院' && !formState.dischargeTime) {
-          throw new Error('請選擇離院時段');
         }
         // 改收住院:必須填病房號
         if (formState.dischargeStatus === '改收住院' && !document.getElementById('ward-number').value.trim()) {
@@ -1063,10 +1078,10 @@
         const payload = {
           pacuKey: pacuKey,
           surgeryId: currentSurgery.surgeryId,
-          actualAnesthesia: formState.anes,
-          pacuBP: document.getElementById('pacu-bp').value.trim(),
-          pacuHR: document.getElementById('pacu-hr').value.trim(),
-          pacuSpO2: document.getElementById('pacu-spo2').value.trim(),
+          actualAnesthesia: formState.anesList.join(', '),  // ★ 複選用 ", " 串接
+          pacuBP: bp,
+          pacuHR: hr,
+          pacuSpO2: spo2,
           padssVS: formState.padssVS,
           padssActivity: formState.padssActivity,
           padssPONV: formState.padssPONV,
@@ -1076,7 +1091,7 @@
           ponvOccurred: formState.ponv,
           familySignature: formState.signature || '',
           dischargeStatus: formState.dischargeStatus,
-          dischargeTimeBlock: formState.dischargeTime,
+          // ★ 移除 dischargeTimeBlock — 由 backend 從 timestamp 自動計算
           wardNumber: formState.dischargeStatus === '改收住院'
             ? document.getElementById('ward-number').value.trim()
             : formState.dischargeStatus === '轉院'

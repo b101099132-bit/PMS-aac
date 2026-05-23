@@ -1091,12 +1091,42 @@
             ${result.pk}
           </code>
         `;
-        steps.innerHTML = `
-          <p><strong>📌 請記下您的識別碼</strong></p>
+
+        // 加好友 QR code(若 backend 提供 lineOaUrl)
+        const lineOaUrl = result.lineOaUrl || '';
+        const qrBlock = lineOaUrl ? `
+          <div style="background:white; padding:18px; border-radius:10px; margin-top:14px; text-align:center; border:1px solid #E8E2D5;">
+            <p style="font-size:15px; font-weight:600; color:#1F5A5A; margin-bottom:10px;">
+              📱 請掃描 QR Code 加入官方 LINE
+            </p>
+            <p style="font-size:13px; color:#666; margin-bottom:14px;">
+              加入後系統會自動推送術前衛教 / 手術提醒 / 術後追蹤
+            </p>
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(lineOaUrl)}"
+              alt="LINE 加好友 QR Code"
+              style="display:block; margin:0 auto 10px; border:1px solid #E8E2D5; border-radius:6px;">
+            <a href="${lineOaUrl}" target="_blank" rel="noopener"
+               style="display:inline-block; padding:10px 20px; background:#06C755; color:white; text-decoration:none; border-radius:6px; font-weight:600; font-size:14px;">
+              手機開啟 LINE 直接加入
+            </a>
+            <p style="font-size:12px; color:#999; margin-top:10px;">
+              帳號名稱:安康日間手術麻醉團隊
+            </p>
+          </div>
+        ` : `
+          <div style="background:#fff3cd; padding:14px; border-radius:8px; margin-top:14px;">
+            <p style="font-size:14px;">📲 請加入官方 LINE「<strong>安康日間手術麻醉團隊</strong>」</p>
+            <p style="font-size:13px; color:#666;">加入後系統會自動推送衛教 / 追蹤</p>
+          </div>
+        `;
+
+        steps.innerHTML = qrBlock + `
+          <p style="margin-top:14px;"><strong>📌 請記下您的識別碼</strong></p>
           <ul>
             <li>看診時請主動提供識別碼給醫師,以便確認個人資料</li>
             <li>如有忘記,可用身分證末四碼 + 出生日期再次查詢</li>
-            <li>若已加入本院 LINE 官方帳號,系統會在綁定後自動串接</li>
+            <li>加入 LINE 後輸入末四碼即可完成綁定</li>
           </ul>
           <p style="color:#047857; margin-top:10px;"><strong>感謝您的配合 🙏</strong></p>
         `;
