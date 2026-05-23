@@ -440,6 +440,46 @@
     <div class="label" id="progress-label">已完成 0 / 14 題</div>
   </div>
 
+  <!-- ═════ 入口分流頁 ═════ -->
+  <div id="entry-stage" hidden style="max-width:600px; margin:60px auto; padding:30px; background:white; border-radius:12px; border:1px solid #E8E2D5;">
+    <div style="text-align:center; margin-bottom:24px;">
+      <div style="font-size:11px; letter-spacing:0.15em; color:#1F5A5A; margin-bottom:6px;">SURVEY · 整體照護回饋</div>
+      <h1 style="font-family:'Noto Serif TC',serif; font-size:24px; font-weight:600;">術後第 7 天問卷</h1>
+      <p style="color:#5C5C5C; font-size:14px; margin-top:6px;">請選擇您的填寫方式</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      <button type="button" id="enter-line-btn" style="padding:18px; background:white; border:2px solid #1F5A5A; color:#1F5A5A; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; font-family:inherit; text-align:left;">
+        <div style="font-size:16px;">📱 我從 LINE 連結進入</div>
+        <div style="font-size:13px; font-weight:400; color:#5C5C5C; margin-top:6px;">適用於已加入「安康日間手術麻醉團隊」LINE 並完成綁定的病人</div>
+      </button>
+      <button type="button" id="enter-anon-btn" style="padding:18px; background:#1F5A5A; border:2px solid #1F5A5A; color:white; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; font-family:inherit; text-align:left;">
+        <div style="font-size:16px;">📝 匿名填寫(未建檔)</div>
+        <div style="font-size:13px; font-weight:400; opacity:0.9; margin-top:6px;">無需身分綁定,直接填寫即可。資料用於麻醉品質改善統計</div>
+      </button>
+    </div>
+    <p style="margin-top:20px; font-size:12px; color:#8A8580; text-align:center;">
+      🔒 無論哪種方式,您的回答僅用於本院品質改善,不影響後續就醫權益
+    </p>
+  </div>
+
+  <!-- ═════ LINE 提示頁 ═════ -->
+  <div id="line-hint-stage" hidden style="max-width:600px; margin:60px auto; padding:30px; background:#FEF3C7; border-radius:12px; border:1px solid #FDE68A;">
+    <h2 style="font-family:'Noto Serif TC',serif; color:#92400E;">📱 請從 LINE 連結進入</h2>
+    <p style="margin-top:14px; font-size:14px; line-height:1.7;">請打開您的手機 LINE,在「<strong>安康日間手術麻醉團隊</strong>」官方帳號的對話視窗找到我們推送給您的問卷連結。</p>
+    <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
+      <button type="button" id="back-to-entry-btn" style="padding:10px 20px; background:white; border:1.5px solid #92400E; color:#92400E; border-radius:8px; cursor:pointer; font-family:inherit; font-size:14px;">← 返回</button>
+      <a href="patient-portal.html" style="padding:10px 20px; background:#1F5A5A; color:white; border-radius:8px; text-decoration:none; font-size:14px; font-weight:600;">我要用末四碼登入查詢</a>
+    </div>
+  </div>
+
+  <!-- ═════ 問卷主體 ═════ -->
+  <div id="survey-main" hidden>
+
+  <!-- 匿名模式 banner -->
+  <div id="anon-banner" hidden style="background:#FEF3C7; color:#92400E; padding:10px 14px; border-radius:8px; margin-bottom:16px; font-size:14px; text-align:center;">
+    📝 您正在以<strong>匿名模式</strong>填寫,資料不會與您的病歷綁定
+  </div>
+
   <header>
     <div class="eyebrow">麻醉科 · 術後第 7 天</div>
     <h1>整體照護回饋</h1>
@@ -768,6 +808,8 @@
 
   </form>
 
+  </div><!-- /survey-main -->
+
   <!-- 送出完成後顯示 -->
   <div class="form-thank-you" id="thank-you" style="display:none">
     <div class="icon">✓</div>
@@ -857,11 +899,38 @@
     });
     return params;
   }
-  const ctx = parseHash();
+  let ctx = parseHash();
 
-  // ★ 無 sid / pid → 導到 patient-portal 搜尋(從 index.html 直接點進來的情境)
-  if (!ctx.sid && !ctx.pid) {
-    window.location.replace("patient-portal.html");
+  // ★ v2.3 階段 5:三種訪問場景分流(同 survey-d1)
+  function startBoundMode() {
+    document.getElementById('entry-stage').hidden = true;
+    document.getElementById('line-hint-stage').hidden = true;
+    document.getElementById('survey-main').hidden = false;
+  }
+  function startAnonMode() {
+    ctx.pid = 'ANON-' + Date.now() + '-' + Math.floor(Math.random() * 10000);
+    ctx.sid = '';
+    ctx.anon = '1';
+    document.getElementById('entry-stage').hidden = true;
+    document.getElementById('line-hint-stage').hidden = true;
+    document.getElementById('survey-main').hidden = false;
+    document.getElementById('anon-banner').hidden = false;
+  }
+  document.getElementById('enter-line-btn').addEventListener('click', () => {
+    document.getElementById('entry-stage').hidden = true;
+    document.getElementById('line-hint-stage').hidden = false;
+  });
+  document.getElementById('enter-anon-btn').addEventListener('click', startAnonMode);
+  document.getElementById('back-to-entry-btn').addEventListener('click', () => {
+    document.getElementById('entry-stage').hidden = false;
+    document.getElementById('line-hint-stage').hidden = true;
+  });
+  if (ctx.sid || ctx.pid) {
+    startBoundMode();
+  } else if (ctx.anon === '1') {
+    startAnonMode();
+  } else {
+    document.getElementById('entry-stage').hidden = false;
   }
 
   if (ctx.date) document.getElementById('ctx-date').textContent = ctx.date;
