@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>儀表板 — PMS-aac</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #FAF7F2; --paper: #FFFFFF; --ink: #1A1A1A; --ink-soft: #5C5C5C; --ink-faint: #8A8580;
+  --teal: #1F5A5A; --teal-tint: #F5F9F9; --teal-soft: #E6EDED;
+  --gold: #A87B4D; --plum: #6B5876; --navy: #2C4866;
+  --sage: #5A7A52; --clay: #9C5B3D; --border: #E8E2D5; --border-strong: #D4CDB8;
+  --success: #047857; --warning: #b45309; --danger: #c53030;
+}
+body {
+  font-family: 'Noto Sans TC', system-ui, sans-serif;
+  background: var(--cream); color: var(--ink);
+  font-size: 14px; line-height: 1.55;
+  padding: 24px 16px 60px;
+}
+.container { max-width: 1100px; margin: 0 auto; }
+
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+.title-block .eyebrow { font-size: 11px; letter-spacing: 0.15em; color: var(--teal); text-transform: uppercase; }
+.title-block h1 { font-family: 'Noto Serif TC', serif; font-size: 26px; font-weight: 600; }
+.title-block .subtitle { color: var(--ink-soft); font-size: 13px; margin-top: 4px; }
+.refresh-btn { padding: 8px 16px; background: var(--paper); border: 1.5px solid var(--teal); color: var(--teal); border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 600; }
+.refresh-btn:hover { background: var(--teal); color: white; }
+
+.card { background: var(--paper); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+.card h2 { font-size: 16px; color: var(--teal); margin-bottom: 12px; font-weight: 600; }
+
+input[type=password], input[type=text] {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid var(--border-strong); border-radius: 8px;
+  font-size: 15px; font-family: inherit; background: white;
+}
+input:focus { outline: none; border-color: var(--teal); }
+
+.btn { padding: 10px 18px; background: var(--teal); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.btn:hover { background: #18484A; }
+.btn-block { width: 100%; padding: 13px; font-size: 15px; margin-top: 12px; }
+.error-msg { background: #fee; color: #c53030; padding: 10px; border-radius: 6px; margin-top: 10px; font-size: 13px; }
+
+/* KPI 卡片網格 */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.kpi-card {
+  background: var(--paper); border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px; text-align: center;
+}
+.kpi-card.highlight { background: var(--teal-tint); border-color: var(--teal-soft); }
+.kpi-label { font-size: 12px; color: var(--ink-soft); margin-bottom: 6px; letter-spacing: 0.03em; }
+.kpi-value { font-size: 28px; font-weight: 700; color: var(--teal); line-height: 1.1; }
+.kpi-value .unit { font-size: 14px; color: var(--ink-soft); font-weight: 400; margin-left: 2px; }
+.kpi-sub { font-size: 11px; color: var(--ink-faint); margin-top: 4px; }
+
+/* Search box */
+.search-box { display: flex; gap: 8px; align-items: stretch; }
+.search-box input { flex: 1; }
+.search-box select {
+  padding: 11px 14px;
+  border: 1.5px solid var(--border-strong); border-radius: 8px;
+  font-family: inherit; font-size: 14px; background: white;
+}
+
+/* Surgery list */
+.surgery-list { display: flex; flex-direction: column; gap: 8px; }
+.surgery-row {
+  background: var(--paper); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px 16px; cursor: pointer;
+  display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center;
+  transition: all 0.15s;
+}
+.surgery-row:hover { border-color: var(--teal); background: var(--teal-tint); }
+.surgery-row .sl-name { font-weight: 600; }
+.surgery-row .sl-meta { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+.surgery-row .sl-status { font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 500; }
+.status-待手術 { background: #FEF3C7; color: #92400E; }
+.status-進行中 { background: #DBEAFE; color: #1E40AF; }
+.status-已完成 { background: #D1FAE5; color: #065F46; }
+.status-取消   { background: #F3F4F6; color: #6B7280; }
+.surgery-row .sl-padss { font-size: 11px; color: var(--success); font-weight: 600; }
+.surgery-row .sl-padss.warn { color: var(--warning); }
+
+.empty-list { text-align: center; padding: 30px; color: var(--ink-faint); font-size: 13px; }
+
+/* Modal */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(26,26,26,0.55); display: flex;
+  align-items: flex-start; justify-content: center; padding: 30px 16px; z-index: 100;
+  overflow-y: auto;
+}
+.modal {
+  background: var(--paper); border-radius: 12px; max-width: 700px; width: 100%;
+  padding: 24px; position: relative;
+}
+.modal-close { position: absolute; top: 12px; right: 16px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--ink-faint); }
+.modal h2 { font-size: 18px; color: var(--teal); margin-bottom: 6px; }
+.modal h3 { font-size: 14px; color: var(--ink); margin-top: 18px; margin-bottom: 8px; font-weight: 600; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+.modal-sub { color: var(--ink-soft); font-size: 13px; margin-bottom: 8px; }
+
+.detail-grid { display: grid; grid-template-columns: 110px 1fr; gap: 6px 12px; font-size: 13px; }
+.detail-grid dt { color: var(--ink-soft); }
+.detail-grid dd { color: var(--ink); }
+
+.padss-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 4px; }
+.padss-table th, .padss-table td { padding: 6px 8px; text-align: center; border: 1px solid var(--border); }
+.padss-table th { background: var(--cream); font-weight: 600; }
+.padss-table .total { background: var(--teal-tint); font-weight: 700; color: var(--teal); }
+
+.questionnaire-status { display: flex; gap: 10px; margin-top: 6px; font-size: 13px; }
+.questionnaire-status .item { padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; }
+.questionnaire-status .item.done { background: var(--teal-tint); border-color: var(--teal); color: var(--teal); font-weight: 600; }
+
+.signature-box { background: var(--cream); padding: 10px; border-radius: 6px; text-align: center; margin-top: 6px; }
+.signature-box img { max-width: 100%; border: 1px solid var(--border); background: white; border-radius: 4px; }
+.signature-empty { color: var(--ink-faint); font-size: 13px; padding: 16px; }
+
+.pain-track-bar { display: flex; gap: 2px; flex-wrap: wrap; margin-top: 6px; }
+.pain-track-bar .slot {
+  width: 22px; height: 22px; border-radius: 3px; font-size: 11px;
+  display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;
+}
+.pain-empty { background: #E5E7EB; color: #9CA3AF !important; }
+.pain-0 { background: #16A34A; }
+.pain-1 { background: #65A30D; } .pain-2 { background: #84CC16; }
+.pain-3 { background: #CA8A04; } .pain-4 { background: #D97706; }
+.pain-5 { background: #EA580C; } .pain-6 { background: #DC2626; }
+.pain-7 { background: #C2410C; } .pain-8 { background: #B91C1C; }
+.pain-9 { background: #991B1B; } .pain-10 { background: #7F1D1D; }
+
+.send-log { font-size: 12px; color: var(--ink-soft); max-height: 200px; overflow-y: auto; padding: 6px 0; }
+.send-log .log-row { padding: 4px 0; border-bottom: 1px dashed var(--border); }
+.send-log .log-row .ph { color: var(--teal); font-weight: 600; }
+
+.loading { text-align: center; padding: 40px; color: var(--ink-soft); }
+
+.back-link { display: inline-block; margin-top: 16px; color: var(--teal); text-decoration: none; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="title-block">
+      <div class="eyebrow">Dashboard · 統計儀表板</div>
+      <h1>🏥 PMS-aac</h1>
+      <p class="subtitle">安康日間手術麻醉團隊 · 即時資料總覽</p>
+    </div>
+    <button class="refresh-btn" id="refresh-btn" hidden>↻ 重新整理</button>
+  </header>
+
+  <!-- ═════ 登入 ═════ -->
+  <div id="login-stage" class="card">
+    <h2>🔑 管理員通行碼</h2>
+    <input type="password" id="admin-key" placeholder="輸入 ADMIN_KEY" autocomplete="off">
+    <button class="btn btn-block" id="login-btn">登入</button>
+    <div id="login-error" class="error-msg" hidden></div>
+  </div>
+
+  <!-- ═════ 主畫面 ═════ -->
+  <div id="main-stage" hidden>
+
+    <!-- KPI 區 -->
+    <div class="card">
+      <h2>📊 即時 KPI</h2>
+      <div class="kpi-grid" id="kpi-grid">
+        <div class="loading">載入中…</div>
+      </div>
+    </div>
+
+    <!-- 搜尋區 -->
+    <div class="card">
+      <h2>🔍 搜尋手術 / 病人</h2>
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="末四碼 / 姓名 / PK / surgery_id">
+        <select id="scope-select">
+          <option value="today">今日</option>
+          <option value="all">全部</option>
+        </select>
+        <button class="btn" id="search-btn">查詢</button>
+      </div>
+    </div>
+
+    <!-- 手術列表 -->
+    <div class="card">
+      <h2 id="surgery-list-title">📅 今日手術</h2>
+      <div class="surgery-list" id="surgery-list">
+        <div class="loading">載入中…</div>
+      </div>
+    </div>
+
+    <a class="back-link" href="index.html">← 回首頁</a>
+  </div>
+
+  <!-- ═════ Surgery 詳情 Modal ═════ -->
+  <div class="modal-backdrop" id="modal-backdrop" hidden>
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modal-close">×</button>
+      <div id="modal-body">
+        <div class="loading">載入中…</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyd7bIOosg_v1lyhkcJO2oi0EzaUdMYSkf7EVJQ7oetv8QY2zhlnyaO1XaGyLs8rphF/exec';
+
+let adminKey = '';
+
+// ── JSONP ────────────────────────────────────────
+function jsonpCall(action, params) {
+  return new Promise((resolve, reject) => {
+    const cb = '__jsonp_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+    const timer = setTimeout(() => {
+      delete window[cb];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      reject(new Error('Request timeout'));
+    }, 20000);
+    window[cb] = function(data) {
+      clearTimeout(timer);
+      delete window[cb];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      if (data && data.ok) resolve(data);
+      else reject(new Error((data && data.error) || 'Unknown error'));
+    };
+    const usp = new URLSearchParams();
+    usp.set('action', action);
+    usp.set('callback', cb);
+    for (const k in params) {
+      if (params[k] !== undefined && params[k] !== null && params[k] !== '') {
+        usp.set(k, String(params[k]));
+      }
+    }
+    const script = document.createElement('script');
+    script.src = GAS_ENDPOINT + '?' + usp.toString();
+    script.onerror = () => { clearTimeout(timer); delete window[cb]; reject(new Error('Network error')); };
+    document.body.appendChild(script);
+  });
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+// ── Login ────────────────────────────────────────
+async function handleLogin() {
+  const key = document.getElementById('admin-key').value.trim();
+  const err = document.getElementById('login-error');
+  err.hidden = true;
+  if (!key) {
+    err.textContent = '請輸入通行碼';
+    err.hidden = false;
+    return;
+  }
+  // 驗證 by 試呼叫 KPI endpoint
+  try {
+    await jsonpCall('dashboardKPI', { adminKey: key });
+    adminKey = key;
+    sessionStorage.setItem('dashboard_key', key);
+    document.getElementById('login-stage').hidden = true;
+    document.getElementById('main-stage').hidden = false;
+    document.getElementById('refresh-btn').hidden = false;
+    loadAll();
+  } catch (e) {
+    err.textContent = '通行碼錯誤或無權限:' + e.message;
+    err.hidden = false;
+  }
+}
+
+// ── 載入 ────────────────────────────────────────
+async function loadAll() {
+  loadKPI();
+  loadSurgeryList();
+}
+
+async function loadKPI() {
+  const grid = document.getElementById('kpi-grid');
+  grid.innerHTML = '<div class="loading">載入中…</div>';
+  try {
+    const result = await jsonpCall('dashboardKPI', { adminKey });
+    const k = result.kpi;
+    grid.innerHTML = `
+      <div class="kpi-card highlight">
+        <div class="kpi-label">今日手術</div>
+        <div class="kpi-value">${k.todaySurgeries}<span class="unit">場</span></div>
+        <div class="kpi-sub">已完成 PACU ${k.todayPacuCompleted}</div>
+      </div>
+      <div class="kpi-card highlight">
+        <div class="kpi-label">本月手術</div>
+        <div class="kpi-value">${k.monthSurgeryCount}<span class="unit">場</span></div>
+        <div class="kpi-sub">累計 ${k.totalSurgeries} 場</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">累計病人</div>
+        <div class="kpi-value">${k.totalPatients}<span class="unit">人</span></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">本月 PADSS 平均</div>
+        <div class="kpi-value">${k.monthAvgPadss}<span class="unit">/10</span></div>
+        <div class="kpi-sub">${k.monthAvgPadss >= 9 ? '✓ 達標' : '⚠ 待加強'}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">本月順利離院率</div>
+        <div class="kpi-value">${k.monthDischargeRate}<span class="unit">%</span></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">本月 PONV 發生率</div>
+        <div class="kpi-value">${k.monthPonvRate}<span class="unit">%</span></div>
+        <div class="kpi-sub">${k.monthPonvRate <= 10 ? '✓ 優良' : k.monthPonvRate <= 25 ? '正常' : '⚠ 偏高'}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">本月 D1 問卷</div>
+        <div class="kpi-value">${k.monthD1FillRate}<span class="unit">%</span></div>
+        <div class="kpi-sub">填寫率</div>
+      </div>
+    `;
+  } catch (e) {
+    grid.innerHTML = `<div class="error-msg">載入失敗:${escapeHtml(e.message)}</div>`;
+  }
+}
+
+async function loadSurgeryList() {
+  const list = document.getElementById('surgery-list');
+  const titleEl = document.getElementById('surgery-list-title');
+  const scope = document.getElementById('scope-select').value;
+  const q = document.getElementById('search-input').value.trim();
+  titleEl.textContent = scope === 'today' ? '📅 今日手術' : (q ? `🔍 搜尋:${q}` : '📋 全部手術(最近 100 筆)');
+  list.innerHTML = '<div class="loading">載入中…</div>';
+  try {
+    const result = await jsonpCall('dashboardSurgeryList', { adminKey, q, scope });
+    if (!result.surgeries.length) {
+      list.innerHTML = '<div class="empty-list">無相符的手術紀錄</div>';
+      return;
+    }
+    list.innerHTML = result.surgeries.map(s => {
+      const padssDisplay = s.padssTotal > 0
+        ? `<span class="sl-padss ${s.padssTotal < 9 ? 'warn' : ''}">PADSS ${s.padssTotal}/10</span>`
+        : '';
+      const dischargeMark = s.dischargeStatus
+        ? (s.dischargeStatus === '順利離院' ? '✓ 順利離院' : '⚠ ' + s.dischargeStatus)
+        : '';
+      return `
+        <div class="surgery-row" data-sid="${s.surgeryId}">
+          <div>
+            <div class="sl-name">${escapeHtml(s.patientName)} <span style="color:var(--ink-faint); font-size:12px; font-weight:normal;">${escapeHtml(s.idLast4)}</span></div>
+            <div class="sl-meta">${escapeHtml(s.surgeryName || s.surgGroup || '—')} · ${escapeHtml(s.surgeon || '—')}</div>
+            <div class="sl-meta">${escapeHtml(s.actualDate || s.scheduledDate || '—')} · ${escapeHtml(s.surgeryId)}</div>
+          </div>
+          <div></div>
+          <div style="text-align:right;">
+            <span class="sl-status status-${escapeHtml(s.surgeryStatus || '待手術')}">${escapeHtml(s.surgeryStatus || '待手術')}</span>
+            <div style="margin-top:4px;">${padssDisplay}</div>
+            <div style="font-size:11px; color:var(--ink-soft); margin-top:2px;">${escapeHtml(dischargeMark)}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    list.querySelectorAll('.surgery-row').forEach(row => {
+      row.addEventListener('click', () => openSurgeryDetail(row.dataset.sid));
+    });
+  } catch (e) {
+    list.innerHTML = `<div class="error-msg">載入失敗:${escapeHtml(e.message)}</div>`;
+  }
+}
+
+// ── 詳情 Modal ────────────────────────────────────
+async function openSurgeryDetail(surgeryId) {
+  const backdrop = document.getElementById('modal-backdrop');
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '<div class="loading">載入中…</div>';
+  backdrop.hidden = false;
+  document.body.style.overflow = 'hidden';
+  try {
+    const result = await jsonpCall('dashboardSurgeryDetail', { adminKey, surgeryId });
+    body.innerHTML = renderDetail(result.surgery, result.patient, result.painRecords, result.sendRecords);
+  } catch (e) {
+    body.innerHTML = `<h2>載入失敗</h2><div class="error-msg">${escapeHtml(e.message)}</div>`;
+  }
+}
+
+function renderDetail(s, p, painRecs, sendRecs) {
+  // 病人區
+  const patientHtml = p ? `
+    <h3>👤 病人</h3>
+    <dl class="detail-grid">
+      <dt>姓名</dt><dd>${escapeHtml(p.name)} · ${escapeHtml(p.gender)} · ${escapeHtml(p.birthdate)}</dd>
+      <dt>末四碼</dt><dd>${escapeHtml(p.idLast4)}</dd>
+      <dt>PK</dt><dd>${escapeHtml(p.pk)}</dd>
+      <dt>共病</dt><dd>${p.comorbidities.length ? p.comorbidities.join(', ') : '無'}</dd>
+      <dt>ASA / Apfel</dt><dd>${escapeHtml(p.asa)} / ${escapeHtml(p.apfel)}</dd>
+      <dt>過敏</dt><dd>${escapeHtml(p.allergies || '無')}</dd>
+      <dt>LINE 綁定</dt><dd>${p.lineUserId ? '✓ ' + escapeHtml(p.lineDisplayName || '已綁定') : '✗ 未綁定'}</dd>
+    </dl>
+  ` : '<h3>👤 病人</h3><div class="signature-empty">找不到病人主檔</div>';
+
+  // 手術區
+  const surgeryHtml = `
+    <h3>📋 手術</h3>
+    <dl class="detail-grid">
+      <dt>術式</dt><dd>${escapeHtml(s.surgeryName)} (${escapeHtml(s.surgGroup)})</dd>
+      <dt>主訴</dt><dd>${escapeHtml(s.complaint || '—')}</dd>
+      <dt>主治</dt><dd>${escapeHtml(s.surgeon)} ${s.dept ? '· ' + escapeHtml(s.dept) : ''}</dd>
+      <dt>麻醉醫師</dt><dd>${escapeHtml(s.anesthesiologist || '—')}</dd>
+      <dt>預定日</dt><dd>${escapeHtml(s.scheduledDate || '—')}</dd>
+      <dt>實際日</dt><dd>${escapeHtml(s.actualDate || '—')}</dd>
+      <dt>狀態</dt><dd><span class="sl-status status-${escapeHtml(s.surgeryStatus)}">${escapeHtml(s.surgeryStatus)}</span></dd>
+    </dl>
+  `;
+
+  // PACU
+  const padssHasData = s.padss && (s.padss.total > 0 || s.padss.vs !== '');
+  const pacuHtml = padssHasData ? `
+    <h3>🏥 PACU 評估</h3>
+    <table class="padss-table">
+      <thead>
+        <tr>
+          <th>VS</th><th>活動</th><th>噁心嘔吐</th><th>疼痛</th><th>出血</th><th class="total">總分</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>${s.padss.vs}</td>
+          <td>${s.padss.activity}</td>
+          <td>${s.padss.ponv}</td>
+          <td>${s.padss.pain}</td>
+          <td>${s.padss.bleeding}</td>
+          <td class="total">${s.padss.total} / 10</td>
+        </tr>
+      </tbody>
+    </table>
+    <dl class="detail-grid" style="margin-top:10px;">
+      <dt>離院前 NRS</dt><dd>${s.lastNRS != null ? s.lastNRS : '—'}</dd>
+      <dt>BP / HR / SpO2</dt><dd>${escapeHtml(s.bp || '—')} / ${s.hr || '—'} / ${s.spo2 ? s.spo2 + '%' : '—'}</dd>
+      <dt>PACU PONV</dt><dd>${escapeHtml(s.ponvOccurred || '—')}</dd>
+      <dt>麻醉方式</dt><dd>${escapeHtml(s.actualAnesthesia || '—')}</dd>
+      <dt>填寫者</dt><dd>${escapeHtml(s.pacuFiller)} ${s.pacuFilledAt ? '@ ' + escapeHtml(s.pacuFilledAt) : ''}</dd>
+      <dt>離院</dt><dd>${escapeHtml(s.dischargeStatus)} ${s.dischargeSlot ? '· ' + escapeHtml(s.dischargeSlot) : ''}</dd>
+      ${s.wardOrTransfer ? `<dt>病房/轉院</dt><dd>${escapeHtml(s.wardOrTransfer)}</dd>` : ''}
+    </dl>
+  ` : '<h3>🏥 PACU 評估</h3><div class="signature-empty">尚未完成 PACU 評估</div>';
+
+  // 簽名
+  const sigHtml = s.familySignature
+    ? `<h3>✍️ 家屬簽名</h3>
+       <div class="signature-box"><img src="${s.familySignature}" alt="signature"></div>`
+    : '<h3>✍️ 家屬簽名</h3><div class="signature-empty">無簽名</div>';
+
+  // 問卷狀態
+  const qHtml = `
+    <h3>📊 問卷追蹤</h3>
+    <div class="questionnaire-status">
+      <div class="item ${s.d1Status === '已填' ? 'done' : ''}">D1 ${s.d1Status === '已填' ? '✓' : ''} ${escapeHtml(s.d1Status || '未填')}</div>
+      <div class="item ${s.d3Status === '已填' ? 'done' : ''}">D3 ${s.d3Status === '已填' ? '✓' : ''} ${escapeHtml(s.d3Status || '未填')}</div>
+      <div class="item ${s.d7Status === '已填' ? 'done' : ''}">D7 ${s.d7Status === '已填' ? '✓' : ''} ${escapeHtml(s.d7Status || '未填')}</div>
+    </div>
+  `;
+
+  // 疼痛軌跡(7 天 × 4 slot = 28 格)
+  let painHtml = '';
+  if (s.painTrackStatus === '啟用' || painRecs.length > 0) {
+    // 建 28 格,依 seq 填入
+    const slots = new Array(28).fill(null);
+    painRecs.forEach(r => {
+      const seq = parseInt(r.seq, 10);
+      if (seq >= 1 && seq <= 28) slots[seq - 1] = r.nrs;
+    });
+    const grid = slots.map((nrs, i) => {
+      if (nrs == null) return `<div class="slot pain-empty" title="seq ${i + 1} 未填">·</div>`;
+      const n = parseInt(nrs, 10);
+      return `<div class="slot pain-${n}" title="seq ${i + 1}: NRS ${n}">${n}</div>`;
+    }).join('');
+    painHtml = `
+      <h3>📈 疼痛追蹤(7 天 × 4 slot)</h3>
+      <div style="font-size:11px; color:var(--ink-faint); margin-bottom:4px;">
+        Day 1   Day 2   Day 3   Day 4   Day 5   Day 6   Day 7
+      </div>
+      <div class="pain-track-bar">${grid}</div>
+      <div style="font-size:11px; color:var(--ink-faint); margin-top:6px;">
+        狀態:${escapeHtml(s.painTrackStatus)} ${s.painTrackStopReason ? '· 停止原因:' + escapeHtml(s.painTrackStopReason) : ''}
+      </div>
+    `;
+  }
+
+  // 推送紀錄
+  const sendHtml = sendRecs.length > 0 ? `
+    <h3>📤 衛教推送紀錄(最近 ${sendRecs.length} 筆)</h3>
+    <div class="send-log">
+      ${sendRecs.map(sr => `
+        <div class="log-row">
+          <span class="ph">${escapeHtml(sr.phase)}</span>
+          · ${escapeHtml(sr.timestamp)} · ${escapeHtml(sr.content)} · ${escapeHtml(sr.status)}
+        </div>
+      `).join('')}
+    </div>
+  ` : '';
+
+  return `
+    <h2>${escapeHtml(s.surgeryId)}</h2>
+    <p class="modal-sub">${escapeHtml(s.surgeryName)} · ${escapeHtml(s.scheduledDate || s.actualDate || '—')}</p>
+    ${patientHtml}
+    ${surgeryHtml}
+    ${pacuHtml}
+    ${sigHtml}
+    ${qHtml}
+    ${painHtml}
+    ${sendHtml}
+  `;
+}
+
+function closeModal() {
+  document.getElementById('modal-backdrop').hidden = true;
+  document.body.style.overflow = '';
+}
+
+// ── 事件 ────────────────────────────────────────
+document.getElementById('login-btn').addEventListener('click', handleLogin);
+document.getElementById('admin-key').addEventListener('keypress', e => {
+  if (e.key === 'Enter') handleLogin();
+});
+document.getElementById('refresh-btn').addEventListener('click', loadAll);
+document.getElementById('search-btn').addEventListener('click', loadSurgeryList);
+document.getElementById('search-input').addEventListener('keypress', e => {
+  if (e.key === 'Enter') loadSurgeryList();
+});
+document.getElementById('scope-select').addEventListener('change', loadSurgeryList);
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-backdrop').addEventListener('click', e => {
+  if (e.target.id === 'modal-backdrop') closeModal();
+});
+
+// ── 自動恢復 session ────────────────────────────
+const savedKey = sessionStorage.getItem('dashboard_key');
+if (savedKey) {
+  adminKey = savedKey;
+  document.getElementById('admin-key').value = savedKey;
+  document.getElementById('login-stage').hidden = true;
+  document.getElementById('main-stage').hidden = false;
+  document.getElementById('refresh-btn').hidden = false;
+  loadAll();
+}
+</script>
+</body>
+</html>
