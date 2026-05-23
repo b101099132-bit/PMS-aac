@@ -648,23 +648,31 @@
     // ═══════════════════════════════════════════════════════════════
     // POST 提交(給 PACU 等大 payload 用,避免 JSONP URL 8KB 上限)
     //
+    // ⚠️ 必須用 URLSearchParams 而非 FormData
+    //   - URLSearchParams → Content-Type: application/x-www-form-urlencoded
+    //     → Apps Script e.parameter 可正常解析
+    //   - FormData → Content-Type: multipart/form-data
+    //     → Apps Script e.parameter 為空 ❌
+    //
     // 跨域 POST 用 no-cors 模式,可送出但讀不到回應,
     // 所以本函式直接「假設成功」並回傳 payload。
     // Apps Script 內部正常寫入 Sheet,有錯也會記到 Debug 記錄。
     // ═══════════════════════════════════════════════════════════════
     async function postSubmit(action, payload) {
-      const formData = new FormData();
-      formData.append('action', action);
+      const params = new URLSearchParams();
+      params.append('action', action);
       for (const k in payload) {
         if (payload[k] !== undefined && payload[k] !== null) {
-          formData.append(k, String(payload[k]));
+          params.append(k, String(payload[k]));
         }
       }
       try {
         await fetch(GAS_ENDPOINT, {
           method: 'POST',
-          body: formData,
+          body: params,
           mode: 'no-cors'
+          // 不需明示 Content-Type:URLSearchParams 會自動設為
+          // application/x-www-form-urlencoded;charset=UTF-8
         });
         // no-cors 讀不到回應,假設成功
         // 後端有錯會記到 Debug 記錄分頁
