@@ -646,6 +646,41 @@
     }
 
     // ═══════════════════════════════════════════════════════════════
+    // POST 提交(給 PACU 等大 payload 用,避免 JSONP URL 8KB 上限)
+    //
+    // 跨域 POST 用 no-cors 模式,可送出但讀不到回應,
+    // 所以本函式直接「假設成功」並回傳 payload。
+    // Apps Script 內部正常寫入 Sheet,有錯也會記到 Debug 記錄。
+    // ═══════════════════════════════════════════════════════════════
+    async function postSubmit(action, payload) {
+      const formData = new FormData();
+      formData.append('action', action);
+      for (const k in payload) {
+        if (payload[k] !== undefined && payload[k] !== null) {
+          formData.append(k, String(payload[k]));
+        }
+      }
+      try {
+        await fetch(GAS_ENDPOINT, {
+          method: 'POST',
+          body: formData,
+          mode: 'no-cors'
+        });
+        // no-cors 讀不到回應,假設成功
+        // 後端有錯會記到 Debug 記錄分頁
+        return {
+          ok: true,
+          submittedVia: 'POST',
+          surgeryId: payload.surgeryId,
+          dischargeStatus: payload.dischargeStatus,
+          padssTotal: payload.padssTotal
+        };
+      } catch (err) {
+        throw new Error('Network error: ' + err.message);
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
     // 初始化
     // ═══════════════════════════════════════════════════════════════
     function init() {
@@ -945,8 +980,15 @@
       function endDraw(e) {
         if (!drawing) return;
         drawing = false;
-        // 儲存 base64(JPEG 0.5 品質保持小檔)
-        formState.signature = canvas.toDataURL('image/jpeg', 0.5);
+        // ★ v2.2 修:大幅壓縮簽名 — 縮到 400×120 + JPEG 0.4(避免 JSONP URL 過長)
+        const smallCanvas = document.createElement('canvas');
+        smallCanvas.width = 400;
+        smallCanvas.height = 120;
+        const smallCtx = smallCanvas.getContext('2d');
+        smallCtx.fillStyle = 'white';
+        smallCtx.fillRect(0, 0, 400, 120);
+        smallCtx.drawImage(canvas, 0, 0, 400, 120);
+        formState.signature = smallCanvas.toDataURL('image/jpeg', 0.4);
         status.textContent = '✓ 已簽名(' + Math.round(formState.signature.length / 1024) + ' KB)';
         status.style.color = '#047857';
       }
@@ -1038,7 +1080,9 @@
         const btn = document.getElementById('submit-btn');
         btn.disabled = true; btn.textContent = '送出中⋯⋯';
 
-        const result = await jsonpCall('pacuSubmit', payload);
+        // ★ v2.2 修:PACU 提交改走 fetch POST(避免 JSONP URL 過長)
+        // 因為 cross-origin no-cors,讀不到回應,所以「假設成功」
+        const result = await postSubmit('pacuSubmit', payload);
         showSuccess(result);
 
       } catch (err) {
