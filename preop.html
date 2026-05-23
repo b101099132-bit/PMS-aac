@@ -358,9 +358,10 @@
         </div>
       </section>
 
-      <!-- ═════ Apfel PONV 風險評估 ═════ -->
+      <!-- ═════ 術後噁心嘔吐風險評估(Apfel)═════ -->
       <section class="question-card" data-modes="patient,update,self_register" id="section-risk">
-        <h2>麻醉風險評估</h2>
+        <h2>術後噁心嘔吐風險評估</h2>
+        <p class="help" style="margin-top:-6px;">PONV(Post-Operative Nausea and Vomiting)即<strong>術後噁心嘔吐</strong>,本評估有助於麻醉醫師為您量身規劃止吐預防。</p>
 
         <p><strong>Apfel PONV 風險評估</strong>(依下列 4 個自動計算;高分數需加強止吐預防)</p>
         <div class="yn-group">
@@ -427,7 +428,7 @@
         <h2>同意聲明</h2>
 
         <div class="consent-card">
-          <h3>📋 個人資料使用同意</h3>
+          <h3>📋 個人資料使用同意 <span class="required-mark">*</span></h3>
           <div class="consent-text">
             <p>本系統將收集您的個人健康資訊(共病、過敏、手術紀錄、PONV 風險評估等),用於以下目的:</p>
             <ul>
@@ -447,7 +448,7 @@
         </div>
 
         <div class="consent-card">
-          <h3>📲 推播同意</h3>
+          <h3>📲 推播同意 <span class="required-mark">*</span></h3>
           <div class="consent-text">
             <p>本系統會透過 LINE 將以下內容推送給您本人:</p>
             <ul>
@@ -459,7 +460,7 @@
           <div class="consent-checkbox">
             <label>
               <input type="checkbox" id="consent-caregiver">
-              <span>我同意本院透過 LINE 推送上述衛教與問卷</span>
+              <span><strong>我同意</strong>本院透過 LINE 推送上述衛教與問卷</span>
             </label>
           </div>
         </div>
@@ -1025,11 +1026,14 @@
       });
       data.pastHistoryNotes = val('past-notes');
 
-      // 同意
+      // 同意(★ v2.2 階段 5:兩項都必填)
       data.consentPush = document.getElementById('consent-push').checked ? '是' : '否';
       data.consentCaregiver = document.getElementById('consent-caregiver').checked ? '是' : '否';
       if (data.consentPush !== '是') {
         throw new Error('請勾選「同意個人資料使用」才能繼續');
+      }
+      if (data.consentCaregiver !== '是') {
+        throw new Error('請勾選「同意 LINE 推播」才能繼續(否則系統無法推送衛教與問卷)');
       }
 
       // 填表者
