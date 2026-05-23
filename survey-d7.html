@@ -475,11 +475,6 @@
   <!-- ═════ 問卷主體 ═════ -->
   <div id="survey-main" hidden>
 
-  <!-- 匿名模式 banner -->
-  <div id="anon-banner" hidden style="background:#FEF3C7; color:#92400E; padding:10px 14px; border-radius:8px; margin-bottom:16px; font-size:14px; text-align:center;">
-    📝 您正在以<strong>匿名模式</strong>填寫,資料不會與您的病歷綁定
-  </div>
-
   <header>
     <div class="eyebrow">麻醉科 · 術後第 7 天</div>
     <h1>整體照護回饋</h1>
@@ -914,7 +909,6 @@
     document.getElementById('entry-stage').hidden = true;
     document.getElementById('line-hint-stage').hidden = true;
     document.getElementById('survey-main').hidden = false;
-    document.getElementById('anon-banner').hidden = false;
   }
   document.getElementById('enter-line-btn').addEventListener('click', () => {
     document.getElementById('entry-stage').hidden = true;
