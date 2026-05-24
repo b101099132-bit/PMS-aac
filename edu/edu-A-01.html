@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>精準麻醉 · 藥物與監測 — 安康日間衛教 A-01</title>
+<meta name="description" content="本中心的精準麻醉策略 — Propofol 全靜脈麻醉(TIVA)、BIS/DSA 腦波導引、Byfavo(Remimazolam)三項技術如何協同,讓您獲得「剛剛好」的麻醉。">
+<meta name="article:modified_time" content="2026-05-24">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- 共用 CSS -->
+<link rel="stylesheet" href="_shared/eras-shared.css">
+
+<style>
+/* A-01 本頁專用 — 深度 pillar 內部三段結構(原理 / 貢獻 / 您會感受到)*/
+.pillar-card .p-section {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+}
+.pillar-card .p-section:first-of-type {
+  margin-top: 8px;
+  padding-top: 0;
+  border-top: 0;
+}
+.pillar-card .p-section .p-label {
+  font-family: var(--font-serif);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  font-weight: 600;
+  color: var(--ink-faint);
+  margin-bottom: 6px;
+  display: block;
+}
+.pillar-card.p1 .p-section .p-label { color: var(--teal); }
+.pillar-card.p2 .p-section .p-label { color: var(--gold); }
+.pillar-card.p3 .p-section .p-label { color: var(--sage); }
+
+.pillar-card .p-section p {
+  font-size: 13.8px;
+  color: var(--ink-soft);
+  line-height: 1.78;
+  margin-bottom: 6px;
+}
+.pillar-card .p-section p:last-child { margin-bottom: 0; }
+
+/* 三者協同小圖 */
+.synergy-box {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin-bottom: var(--section-gap);
+  text-align: center;
+}
+.synergy-box .s-title {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+  color: var(--teal);
+  margin-bottom: 16px;
+}
+.synergy-trio {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 14px;
+  font-family: var(--font-serif);
+}
+.synergy-trio .s-node {
+  background: var(--paper);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.synergy-trio .s-node.n1 { border-color: var(--teal); color: var(--teal); background: var(--teal-tint); }
+.synergy-trio .s-node.n2 { border-color: var(--gold); color: var(--gold); background: var(--gold-tint); }
+.synergy-trio .s-node.n3 { border-color: var(--sage); color: var(--sage); background: rgba(90,122,82,0.08); }
+.synergy-trio .s-arrow {
+  font-size: 18px;
+  color: var(--ink-faint);
+  font-weight: 700;
+}
+.synergy-box p.s-explain {
+  font-size: 13.2px;
+  color: var(--ink-soft);
+  line-height: 1.8;
+  text-align: left;
+  margin: 0;
+}
+
+@media (max-width: 520px) {
+  .synergy-trio {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .synergy-trio .s-arrow {
+    transform: rotate(90deg);
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ============ Hero ============ -->
+  <header>
+    <div class="eyebrow">安康日間衛教 · A-01 · 術前 5 天 · 深度衛教</div>
+    <h1>精準麻醉<br>藥物與監測</h1>
+    <p class="subtitle">給「剛剛好」的麻醉 — 不過深、不過淺<br>Propofol TIVA · BIS / DSA · Byfavo · 三者協同的設計</p>
+    <div class="divider"></div>
+    <div class="meta">⏱ 閱讀約 5 分鐘 · 👥 適用對象:對麻醉技術細節有興趣者</div>
+  </header>
+
+  <!-- ============ Lead ============ -->
+  <div class="lead">
+    <strong>過去:給「足夠的藥」讓您睡著 — 現在:給「剛剛好的藥」讓您醒得好</strong>
+    <p>麻醉這件事,過去 30 年的進步,核心都圍繞一個問題:「<span class="em">怎麼樣才算剛剛好?</span>」</p>
+    <p>太淺,有極小機率發生「術中知覺」(意識回來但身體不能動);太深,長者容易發生術後譫妄,藥物代謝負擔也大。傳統做法是<span class="em">依麻醉醫師的經驗 + 病人的反應</span>來調整 — 仍然有效,但有極限。</p>
+    <p>本中心整合<span class="em-gold">三項技術</span>來突破這個極限:<span class="em">用靜脈點滴給的 Propofol 取代吸入氣體</span>、<span class="em">用腦波監測讓「剛剛好」變成可看見的數字</span>、<span class="em">用新一代 Byfavo 進一步降低總用藥量</span>。三者疊在一起,就是您聽到的「<span class="em">精準麻醉</span>」。</p>
+  </div>
+
+  <!-- ============ Section 1 · 3 個 pillar deep ============ -->
+  <section>
+    <h2 class="section-title">三項技術 · 各自解決一個問題</h2>
+    <p class="section-sub">每張卡片有 3 個層次:原理 / ERAS 貢獻 / 您會感受到的差別</p>
+
+    <div class="pillars-grid">
+
+      <!-- ========== Pillar 1 · Propofol TIVA ========== -->
+      <article class="pillar-card p1">
+        <span class="p-num">技術 01 · 全靜脈麻醉</span>
+        <h4>Propofol TIVA — 點滴給藥取代吸入氣體</h4>
+        <span class="p-en">Total Intravenous Anesthesia · since 1986</span>
+
+        <div class="p-section">
+          <span class="p-label">原理 · 是什麼</span>
+          <p>傳統的「氣管麻醉」是讓您<span class="em">吸入揮發性氣體</span>(Sevoflurane、Desflurane)達到麻醉。本中心改用 <span class="em">Propofol(俗稱「牛奶針」)</span> — 一種<span class="em">由點滴持續注入</span>的短效靜脈麻醉藥。整個過程,您的肺只呼吸氧氣,不吸任何麻醉氣體。</p>
+        </div>
+
+        <div class="p-section">
+          <span class="p-label">ERAS 貢獻 · 為何選擇 TIVA</span>
+          <p><strong>1.</strong> 術後噁心嘔吐(PONV)約降低一半 — 國際多項統合分析證實,Propofol 本身具有<span class="em">直接的止吐作用</span>,使用 TIVA 的病人 PONV 發生率明顯低於吸入式麻醉。<br><strong>2.</strong> 醒得舒適 — 大腦對 Propofol 的清除快、過程平順,病人形容「<span class="em">像睡了一個午覺</span>」,而非「<span class="em">被拔起來</span>」的昏沉感。<br><strong>3.</strong> 心血管穩定 — 對血壓的波動小,適合多數慢性病人。<br><strong>4.</strong> 環境友善 — 沒有揮發性氣體排放(這是手術房節能減碳的新議題)。</p>
+        </div>
+
+        <div class="p-section">
+          <span class="p-label">您會感受到</span>
+          <p>進手術室後,麻醉醫師會在您的手背點滴推入 Propofol,您會在 <span class="em">10-30 秒內失去意識</span>(過程像是「<span class="em">慢慢飄走</span>」)。醒來時,大多數人的描述是<span class="em">不口乾、不噁心、不昏沉、頭腦清楚</span> — 這與您過去聽過的「全身麻醉很難醒」的印象完全不同。</p>
+        </div>
+      </article>
+
+      <!-- ========== Pillar 2 · BIS / DSA ========== -->
+      <article class="pillar-card p2">
+        <span class="p-num">技術 02 · 腦波導引麻醉</span>
+        <h4>BIS / DSA — 把「剛剛好」變成看得見的數字</h4>
+        <span class="p-en">EEG-guided Depth of Anesthesia Monitoring</span>
+
+        <div class="p-section">
+          <span class="p-label">原理 · 是什麼</span>
+          <p>在您的<span class="em">前額貼上一片感測貼</span>(像 OK 繃,完全無痛),持續讀取大腦的腦波訊號。儀器將腦波處理成 <span class="em">0–100 的數字(BIS)</span>或<span class="em">頻譜密度圖(DSA)</span> — 麻醉醫師可以即時看到您的大腦處於哪個狀態。</p>
+          <p style="color:var(--ink-faint);font-size:13px;">類比:<span class="em">就像汽車儀表板</span> — 您不會只憑「踩油門的感覺」開車,因為儀表板能精確告訴您時速。麻醉也應該如此。</p>
+        </div>
+
+        <div class="p-section">
+          <span class="p-label">ERAS 貢獻 · 為何要監測</span>
+          <p><strong>1.</strong> 避免過深 — 數值 < 40 代表麻醉過深,長期暴露可能<span class="em">增加術後譫妄</span>(尤其長者),也讓藥物代謝負擔變大。<br><strong>2.</strong> 避免過淺 — 數值 > 60 代表麻醉太淺,有極小但真實的「<span class="em">術中知覺</span>」風險。<br><strong>3.</strong> 個別化用藥 — 每個人對麻醉藥的反應不同。BIS 讓藥量「<span class="em">適合您這個人</span>」,而非「<span class="em">適合 70 公斤的標準成人</span>」。<br><strong>4.</strong> 與 TIVA 完美搭配 — TIVA 的劑量沒有「吸入氣體濃度」這個外在參考,BIS 提供了客觀指標。</p>
+        </div>
+
+        <div class="p-section">
+          <span class="p-label">您會感受到</span>
+          <p>您不會感覺到 BIS 在工作(它只是貼在額頭)。但您會在<span class="em">醒來的速度</span>感覺到差別 — 過去靠經驗的麻醉常常「<span class="em">留一點安全 buffer</span>」(意思是給多一點藥比較安心)。有了 BIS,我們知道「剛剛好」在哪,<span class="em">不必為了保險而多給</span>。對長者而言,這也意味著譫妄風險降低。</p>
+        </div>
+      </article>
+
+      <!-- ========== Pillar 3 · Byfavo / Remimazolam ========== -->
+      <article class="pillar-card p3">
+        <span class="p-num">技術 03 · 新一代短效鎮靜</span>
+        <h4>Byfavo(Remimazolam) — 不經肝腎的協同夥伴</h4>
+        <span class="p-en">Remimazolam · FDA approved 2020</span>
+
+        <div class="p-section">
+          <span class="p-label">原理 · 是什麼</span>
+          <p>Byfavo 是 <span class="em">2020 年才獲美國 FDA 核准</span>的新一代短效苯二氮平類藥物(學名 Remimazolam)。它與 Propofol 的作用機轉相近,但有一個關鍵差異:<span class="em-gold">它由血漿中的酯酶代謝,不經肝腎</span> — 換句話說,藥效消退靠的是「血液中酵素的水解」,而不是「肝臟解毒」或「腎臟排除」。</p>
+        </div>
+
+        <div class="p-section">
+          <span class="p-label">ERAS 貢獻 · 為何加入這個藥</span>
+          <p><strong>1.</strong> 對長者、肝腎稍差者特別友善 — 過去這族群的麻醉藥需要「<span class="em">減量並等更久</span>」,Byfavo 不受這個限制。<br><strong>2.</strong> 與 Propofol 協同 — 兩個藥一起用,<span class="em">兩者的總劑量都降低</span>(藥理學稱為「加成效應」)。一份近年的統合分析(Zhu 2024, 13 個 RCT, 1305 病人)顯示,Remimazolam 組的<span class="em">低血壓、心跳變慢、注射疼痛</span>均明顯少於單用 Propofol 組,而恢復品質(QoR-15)持平甚至略優。<br><strong>3.</strong> 心血管穩定 — 對血壓的衝擊比 Propofol 更溫和。<br><strong>4.</strong> 無注射痛 — 不像 Propofol 偶爾有注射處灼熱感。</p>
+        </div>
+
+        <div class="p-section">
+          <span class="p-label">您會感受到</span>
+          <p>若您屬於<span class="em">高齡、有腎功能問題、過去麻醉經驗不佳</span>的族群,本中心會優先考慮在您的麻醉中加入 Byfavo。實際使用上,您不會「感覺到」它與 Propofol 的區別 — 您只會發現麻醉誘導時<span class="em">點滴注射處不會灼熱</span>、術中血壓更穩、術後更快達到清醒對話。</p>
+        </div>
+
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ Section 2 · 三者協同 ============ -->
+  <section>
+    <h2 class="section-title">三者如何協同</h2>
+    <p class="section-sub">不是疊加 — 是分工合作</p>
+
+    <div class="synergy-box">
+      <div class="s-title">精準麻醉的三角架構</div>
+      <div class="synergy-trio">
+        <div class="s-node n1">Propofol TIVA<br><span style="font-size:11px;color:var(--ink-faint);font-weight:400;">麻醉骨幹</span></div>
+        <div class="s-arrow">+</div>
+        <div class="s-node n2">BIS / DSA<br><span style="font-size:11px;color:var(--ink-faint);font-weight:400;">客觀儀表板</span></div>
+        <div class="s-arrow">+</div>
+        <div class="s-node n3">Byfavo<br><span style="font-size:11px;color:var(--ink-faint);font-weight:400;">減量幫手</span></div>
+      </div>
+      <p class="s-explain">這三項技術不是各做各的,而是「<span class="em">一個人主述、一個人監督、一個人協助</span>」的協作:<br><br><strong>· Propofol</strong> 是主要的麻醉藥(骨幹) — 它讓您進入並維持麻醉狀態。<br><strong>· BIS / DSA</strong> 是客觀指標(儀表板) — 它告訴麻醉醫師「現在的藥量,對您是不是剛剛好」。<br><strong>· Byfavo</strong> 是減量幫手 — 它與 Propofol 協同,讓兩者的劑量都降低,進而<span class="em">縮短甦醒時間、降低副作用</span>。<br><br>三者合在一起,就是您可以在<span class="em">手術結束後 10-20 分鐘內</span>清楚對話的核心原因。</p>
+    </div>
+  </section>
+
+  <!-- ============ Section 3 · 與其他技術的關係 ============ -->
+  <section>
+    <h2 class="section-title">與其他麻醉技術的關係</h2>
+    <p class="section-sub">藥物與監測是核心,但不是全部</p>
+
+    <div class="dr-note">
+      <strong>本中心的麻醉設計</strong> · A-01 涵蓋「<span class="em">藥物與監測</span>」這一面向。實際上,您的麻醉還包含<span class="em">呼吸道管理</span>(A-02:HFNC / LMA / Sugammadex)、<span class="em">區域阻斷止痛</span>(A-03:超音波導引神經阻斷)、<span class="em">體溫管理</span>(A-04:熱風毯)。完整的 ERAS 是<span class="em">這些面向的總和</span>,單獨任何一項都無法達成「當天回家」的目標。請務必接著閱讀其他幾份。
+    </div>
+  </section>
+
+  <!-- ============ Reading Map ============ -->
+  <div class="reading-map">
+    <h4>麻醉技術閱讀路徑</h4>
+    <div class="sub">回到 A-00 看整體地圖,或繼續閱讀其他 3 份深度衛教。</div>
+    <ol>
+      <li>A-00 · 麻醉差異化綜合篇(整體 menu)</li>
+      <li class="current">A-01 · 精準麻醉 · 藥物與監測(您正在讀)</li>
+      <li>A-02 · 您的呼吸道 · 從非侵入到可逆</li>
+      <li>A-03 · 超音波導引神經阻斷 · 精準止痛的核心</li>
+      <li>A-04 · 體溫管理 · 被忽略但關鍵的細節</li>
+    </ol>
+  </div>
+
+  <!-- ============ Closing ============ -->
+  <div class="closing">
+    <p>最好的麻醉,是您「<span class="em">感覺不到</span>」我們在精細地做這些事 — 您只感覺到:<span class="em-gold">睡得安穩、醒得舒服、不會噁心、可以準備回家</span>。背後是 3 項技術、6 個監測點、N 個微調決定的疊加。</p>
+    <p>您不需要記住 Propofol、BIS、Byfavo 這些名字 — 您只需要知道:<span class="em">每一個決定都是為您量身的</span>。本中心的麻醉醫師會在術前訪視時,依您的年齡、體重、慢性病、過去麻醉經驗,告訴您這次將如何組合這幾項技術。</p>
+
+    <div class="signature">安康日間手術麻醉團隊 · 安莘 健康</div>
+    <div class="signature-note">莘 · 承耕莘脈 / 安康 · 首末相連</div>
+  </div>
+
+  <!-- ============ References ============ -->
+  <div class="references">
+    <div class="ref-title">參考資料</div>
+    <ol>
+      <li>Zhu C, Xie R, Qin F, Wang N, Tang H. Comparison of the recovery quality between remimazolam and propofol after general anesthesia: systematic review and meta-analysis of randomized controlled trials. <em>PeerJ.</em> 2024;12:e17930.</li>
+      <li>Kamal FA, Fernet LY, Da Silva NK, et al. Comparing Perioperative Outcomes of Total Intravenous Anesthesia (TIVA) With Volatile Anesthesia in Patients With Obesity: A Systematic Review. <em>Cureus.</em> 2024;16(2):e54094.</li>
+      <li>Evered LA, Goldstein PA. Reducing Perioperative Neurocognitive Disorders (PND) Through Depth of Anesthesia Monitoring: A Critical Review. <em>Int J Gen Med.</em> 2021;14:153–162.</li>
+      <li>Gan TJ, Jin Z, Ayad S, et al. Fifth Consensus Guidelines for the Management of Postoperative Nausea and Vomiting: Executive Summary. <em>Anesth Analg.</em> 2025;Published online November 14, 2025. doi:10.1213/ANE.0000000000007816.</li>
+      <li>Cukierman DS, Cata JP, Gan TJ. Enhanced recovery protocols for ambulatory surgery. <em>Best Pract Res Clin Anaesthesiol.</em> 2023;37(3):285–303.</li>
+    </ol>
+  </div>
+
+  <!-- ============ Footer ============ -->
+  <footer>
+    <div class="clinic">安康日間手術麻醉中心 · 病人衛教資料</div>
+    <div class="disclaimer">本單張為一般性衛教資訊。實際使用 Propofol、BIS、Byfavo 的組合,將依您的術式、年齡、共病、體型由您的麻醉醫師於術前訪視時個別評估決定。對任何技術有疑問,歡迎於麻醉門診、術前訪視時提出,或透過 LINE 回覆我們。</div>
+  </footer>
+
+</div>
+</body>
+</html>

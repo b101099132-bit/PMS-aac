@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超音波導引神經阻斷 · 精準止痛的核心 — 安康日間衛教 A-03</title>
+<meta name="description" content="本中心多模式止痛的核心技術 — 超音波導引神經阻斷(Ultrasound-Guided Regional Block)。看著神經放藥、鴉片用量減半、疼痛降低、PONV 連帶下降、早期離院。">
+<meta name="article:modified_time" content="2026-05-24">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- 共用 CSS -->
+<link rel="stylesheet" href="_shared/eras-shared.css">
+
+<style>
+/* A-03 本頁專用 — GPS vs 紙地圖類比卡 */
+.era-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.era-card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+}
+.era-card.past {
+  border-top: 2px solid var(--ink-faint);
+}
+.era-card.now {
+  border-top: 2px solid var(--teal);
+  background: var(--teal-tint);
+}
+.era-card .era-label {
+  font-family: var(--font-serif);
+  font-size: 10.5px;
+  letter-spacing: 0.3em;
+  font-weight: 600;
+  color: var(--ink-faint);
+  margin-bottom: 10px;
+  display: block;
+}
+.era-card.now .era-label { color: var(--teal); }
+.era-card h5 {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+.era-card p {
+  font-size: 13.2px;
+  color: var(--ink-soft);
+  line-height: 1.78;
+  margin: 0 0 8px;
+}
+.era-card p:last-child { margin: 0; }
+.era-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+}
+.era-card ul li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 12.8px;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+  line-height: 1.7;
+}
+.era-card.past ul li::before {
+  content: "·";
+  position: absolute;
+  left: 4px; top: -2px;
+  color: var(--ink-faint);
+  font-weight: 700;
+  font-size: 16px;
+}
+.era-card.now ul li::before {
+  content: "✓";
+  position: absolute;
+  left: 0; top: 0;
+  color: var(--teal);
+  font-weight: 700;
+}
+
+/* 適用對照表(沿用 A-02 的 .fit-table 但本頁略調)*/
+.fit-table {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: var(--section-gap);
+}
+.fit-table h4 {
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--teal);
+  margin: 0 0 14px;
+  letter-spacing: 0.05em;
+}
+.fit-row {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 14px;
+  padding: 11px 0;
+  border-top: 1px dashed var(--border);
+}
+.fit-row:first-of-type { border-top: 0; padding-top: 0; }
+.fit-row .fit-cat {
+  font-family: var(--font-serif);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--teal);
+  line-height: 1.5;
+}
+.fit-row .fit-desc {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.75;
+}
+.fit-row .fit-desc strong { color: var(--ink); font-weight: 600; }
+.fit-row .fit-desc .b-tag {
+  display: inline-block;
+  background: var(--teal-tint);
+  border: 1px solid var(--teal-soft);
+  border-radius: 12px;
+  padding: 1px 9px;
+  font-size: 11px;
+  color: var(--teal);
+  margin: 2px 4px 2px 0;
+  font-family: var(--font-serif);
+  letter-spacing: 0.03em;
+}
+
+@media (max-width: 520px) {
+  .era-compare { grid-template-columns: 1fr; }
+  .fit-row { grid-template-columns: 100px 1fr; gap: 10px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ============ Hero ============ -->
+  <header>
+    <div class="eyebrow">安康日間衛教 · A-03 · 術前 5 天 · 深度衛教</div>
+    <h1>超音波導引<br>神經阻斷</h1>
+    <p class="subtitle">看著神經放藥 — 多模式止痛裡最強的單一介入<br>本中心日間手術止痛的核心策略</p>
+    <div class="divider"></div>
+    <div class="meta">⏱ 閱讀約 5 分鐘 · 👥 適用對象:接受骨科上肢手術者特別重要 · 對止痛技術細節有興趣者</div>
+  </header>
+
+  <!-- ============ Lead ============ -->
+  <div class="lead">
+    <strong>「為什麼您不會痛?」這個問題的答案,在過去用全身鴉片,現在主要在「區域阻斷」</strong>
+    <p>過去手術後的止痛,主要靠<span class="em">嗎啡類藥物</span>(學名:鴉片類)。它強效,但代價也大 — 噁心、嘔吐、便秘、嗜睡、呼吸抑制、便祕、長期使用甚至成癮。這些副作用,本身就是日間手術病人「<span class="em">當天無法回家</span>」的常見原因。</p>
+    <p>本中心的止痛策略,核心是<span class="em-gold">區域阻斷(Regional Block)</span> — <span class="em">在負責手術部位的神經幹周圍精準注射局部麻醉藥</span>,讓該區域單獨失去痛覺,而身體其他部位完全正常。配合口服的 Acetaminophen、NSAID、術中 Dexamethasone,形成 <span class="em">多模式止痛</span> — 鴉片用量大幅減少甚至為零。</p>
+    <p>「區域阻斷」本身不是新技術。<span class="em">真正改變遊戲規則的,是「超音波導引」</span> — 它讓這個技術的精準度、安全性、成功率都跳了一個世代。對於本中心的多數<span class="em">骨科上肢手術病人</span>,USG 神經阻斷將是您整個止痛策略的核心。</p>
+  </div>
+
+  <!-- ============ Section 1 · GPS vs 紙地圖 ============ -->
+  <section>
+    <h2 class="section-title">兩個世代的差別</h2>
+    <p class="section-sub">同樣是「找神經放藥」 — 過去用感覺,現在用眼睛</p>
+
+    <div class="era-compare">
+
+      <div class="era-card past">
+        <span class="era-label">過去 · 紙地圖時代</span>
+        <h5>體表標誌 + 神經刺激器</h5>
+        <p>麻醉醫師依<span class="em">解剖學知識</span>找出大概位置,刺入針頭。為確認針尖到位,過去使用<span class="em">電刺激</span>(看肌肉抽動)或<span class="em">病人主訴「麻電感」</span>來判斷。</p>
+        <ul>
+          <li>看不到神經、看不到血管</li>
+          <li>看不到針尖位置</li>
+          <li>失敗率較高,需多次嘗試</li>
+          <li>誤穿血管 / 神經損傷風險較高</li>
+          <li>需要較大劑量「以防萬一」</li>
+        </ul>
+      </div>
+
+      <div class="era-card now">
+        <span class="era-label">現在 · GPS 即時影像</span>
+        <h5>超音波即時看著放藥</h5>
+        <p>在手術台旁的<span class="em">超音波探頭</span>,即時把皮下的<span class="em">神經、血管、肌膜、針尖</span>全部顯示在螢幕上。麻醉醫師<span class="em">看著螢幕</span>把針推進、看著藥液<span class="em">擴散包圍神經</span>。</p>
+        <ul>
+          <li>清楚看到目標神經</li>
+          <li>避開血管與其他重要結構</li>
+          <li>針尖位置全程可見</li>
+          <li>用更精準的劑量達成效果</li>
+          <li>起效更快、成功率更高</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <p style="font-size:13.5px;color:var(--ink-soft);line-height:1.85;">這個改變不是 marketing 用語 — 是過去 15 年國際麻醉學界的<span class="em">標準典範轉移</span>。在許多先進國家,USG 已是<span class="em">區域阻斷的標準操作</span>,而非「進階選項」。本中心對每一位適合區域阻斷的病人,都採用 USG 導引,沒有例外。</p>
+  </section>
+
+  <!-- ============ Section 2 · 對 ERAS 的 4 大貢獻 ============ -->
+  <section>
+    <h2 class="section-title">區域阻斷對 ERAS 的 4 大貢獻</h2>
+    <p class="section-sub">為什麼這是「日間手術 + 不痛 + 當天回家」可以成立的關鍵</p>
+
+    <div class="pillars-grid">
+
+      <article class="pillar-card p1">
+        <span class="p-num">貢獻 01</span>
+        <h4>鴉片類藥物用量 · 大幅減少</h4>
+        <span class="p-en">Opioid-sparing effect</span>
+        <p>近年 RCT 與統合分析一致顯示,合適的 USG 區域阻斷可讓圍術期<span class="em">鴉片總用量降低 30–60%</span>。本中心的多數骨科上肢病人,在阻斷起效的時段內<span class="em">完全不需要鴉片</span> — 即使術後 24 小時都可能維持「零鴉片」狀態。這對日間手術病人意義重大,因為鴉片的副作用(嗜睡、噁心、呼吸抑制)正是延後離院的最常見原因。</p>
+      </article>
+
+      <article class="pillar-card p2">
+        <span class="p-num">貢獻 02</span>
+        <h4>術後疼痛分數 · 明顯降低</h4>
+        <span class="p-en">Lower NRS pain scores</span>
+        <p>近年針對長者的統合分析(Wang 2025, 25 RCT)顯示,USG 神經阻斷在<span class="em">感覺阻斷成功率、起效時間、阻斷持續時間</span>都顯著優於傳統做法。在術後 24 小時內,病人的<span class="em">疼痛分數(NRS)平均比僅用全身鴉片的對照組降低 2–3 分</span>。具體感覺是:醒來時、回家路上、第一晚睡覺,<span class="em">手術部位都不痛或只有輕微脹感</span> — 而不是「術後最痛 8-9 分」的傳統印象。</p>
+      </article>
+
+      <article class="pillar-card p3">
+        <span class="p-num">貢獻 03</span>
+        <h4>PONV 連帶下降</h4>
+        <span class="p-en">Lower PONV incidence</span>
+        <p>術後噁心嘔吐(PONV)的<span class="em">最大單一誘因</span>是鴉片類藥物。當區域阻斷讓您少用甚至不用鴉片,<span class="em">PONV 發生率連帶大幅降低</span>。國際 PONV 第 5 版共識指引(Gan 2025)明確將「<span class="em">少鴉片麻醉設計</span>」列為 PONV 預防的核心策略 — 而區域阻斷是達成這個設計最有效的工具。</p>
+      </article>
+
+      <article class="pillar-card p4">
+        <span class="p-num">貢獻 04</span>
+        <h4>早期下床 · 早期離院</h4>
+        <span class="p-en">Earlier ambulation & discharge</span>
+        <p>2024 年大型 cohort study(57,000 例 ambulatory 手術)顯示,接受 USG 神經阻斷者的<span class="em">PACU 停留時間明顯縮短</span>。原因:鴉片少 → 嗜睡少、PONV 少、疼痛低 → PADSS 評分達標更快。對於日間手術病人,這直接意味著<span class="em">您能更早從 PACU 回到家中熟悉的環境</span>恢復。</p>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ Section 3 · 您的阻斷會做哪一個 ============ -->
+  <section>
+    <h2 class="section-title">您的阻斷會做哪一個?</h2>
+    <p class="section-sub">本中心常見手術對應的區域阻斷類型 · 一般性對應 · 實際以麻醉醫師評估為準</p>
+
+    <div class="fit-table">
+      <h4>常見術式 × 區域阻斷類型</h4>
+
+      <div class="fit-row">
+        <span class="fit-cat">肩關節鏡<br>(RCT 修補)</span>
+        <span class="fit-desc"><strong>主流選擇:</strong>臂神經叢阻斷<span class="b-tag">Interscalene block</span>。在頸部側面注射,讓整隻手臂(包含肩部)失去痛覺 12–24 小時。配合全麻完成手術,病人術後幾乎沒有肩部劇痛的傳統印象。</span>
+      </div>
+
+      <div class="fit-row">
+        <span class="fit-cat">橈骨遠端<br>骨折手術</span>
+        <span class="fit-desc"><strong>主流選擇:</strong>鎖骨上 / 腋部阻斷<span class="b-tag">Supraclavicular</span><span class="b-tag">Axillary</span>。在鎖骨上方或腋下注射,讓<span class="em">前臂與手部</span>失去痛覺。可選擇配合全麻或脊椎阻斷(若有特殊狀況)。</span>
+      </div>
+
+      <div class="fit-row">
+        <span class="fit-cat">腕隧道 /<br>扳機指</span>
+        <span class="fit-desc"><strong>主流選擇:</strong>腋部 / 局部阻斷<span class="b-tag">Axillary</span><span class="b-tag">Local</span>。範圍較小的小手部手術,有時只需局部浸潤或腕部阻斷 + 輕度鎮靜即可完成,病人意識清楚、不需全麻。</span>
+      </div>
+
+      <div class="fit-row">
+        <span class="fit-cat">椎體成形術<br>(脊椎)</span>
+        <span class="fit-desc">主要用<span class="em">局部麻醉 + 輕度鎮靜</span>。脊椎手術部位的麻醉以局部浸潤為主,USG 神經阻斷的角色相對較小。您會在過程中清醒、可與醫師對話。</span>
+      </div>
+
+      <div class="fit-row">
+        <span class="fit-cat">泌尿內視鏡<br>(TURBT / 碎石)</span>
+        <span class="fit-desc">主要用<span class="em">脊椎麻醉(Spinal Anesthesia)</span>而非周邊神經阻斷 — 將局部麻醉藥注入脊椎管中,讓下半身失去感覺。脊椎麻醉與本份介紹的 USG 周邊神經阻斷屬於不同類別,但理念相通:<span class="em">「在神經附近放藥」優於「讓全身都睡」</span>。</span>
+      </div>
+    </div>
+
+    <div class="dr-note">
+      <strong>個別差異提醒</strong> · 上述為一般性對應,實際選擇會考量您的<span class="em">體型、抗凝血用藥、過去阻斷經驗、神經病變、頸部活動度</span>等因素。<span class="em">您的麻醉醫師會於術前訪視時告訴您將做哪一種阻斷</span>,並回答您的疑慮。
+    </div>
+  </section>
+
+  <!-- ============ Section 4 · 退藥時程預期 ============ -->
+  <section>
+    <h2 class="section-title">麻藥退去的時程 · 您能預期的感受</h2>
+    <p class="section-sub">這對您回家後的安心很重要 — 知道接下來會發生什麼</p>
+
+    <div class="timeline">
+
+      <div class="timeline-item allow">
+        <div class="timeline-dot"></div>
+        <div class="tl-time">第 1 階段 · 術後 0–8 小時</div>
+        <div class="tl-what">完全麻木 · 最舒服的時段</div>
+        <div class="tl-detail">阻斷藥效完全作用,手術部位<strong>完全沒有痛覺、也沒有運動能力</strong>(例如手臂可能舉不起來、無法做拳)。<strong>這是預期的反應,不是手術出了問題</strong>。請依照衛教保護手臂、避免不小心撞擊或拉扯。</div>
+      </div>
+
+      <div class="timeline-item allow">
+        <div class="timeline-dot"></div>
+        <div class="tl-time">第 2 階段 · 術後 8–14 小時</div>
+        <div class="tl-what">麻木 + 微微的「奇怪感」</div>
+        <div class="tl-detail">藥效開始<strong>慢慢退去的初期</strong>。您可能感覺到:刺痛、像針扎、發麻、像剛剛睡到的手在恢復血液循環的那種感覺。<strong>仍不會劇烈疼痛</strong>。此時請<strong>開始規律服用 Acetaminophen + NSAID</strong>(依出院醫囑),不要等到痛才吃。</div>
+      </div>
+
+      <div class="timeline-item stop">
+        <div class="timeline-dot"></div>
+        <div class="tl-time">第 3 階段 · 術後 14–24 小時</div>
+        <div class="tl-what">阻斷退完 · 原本的疼痛感「回來」</div>
+        <div class="tl-detail">阻斷完全代謝,<strong>手術造成的疼痛開始顯現</strong>。這個時間點是<strong>需要多模式止痛接手的關鍵時刻</strong>。如果您已經依時服用口服止痛藥,此時的疼痛應該在 NRS 1–4 分(輕度)以內。<strong>若超過 NRS 4 分,請主動回報</strong> — 我們會在 24 小時 LINE follow-up 詢問。</div>
+      </div>
+
+      <div class="timeline-item focus">
+        <div class="timeline-dot"></div>
+        <div class="tl-time">第 4 階段 · 術後 > 24 小時</div>
+        <div class="tl-what">進入「自我管理疼痛」階段</div>
+        <div class="tl-detail">多模式口服止痛接手主要角色。<strong>多數人 24–72 小時內逐漸減低疼痛</strong>,可以開始輕度活動。若您屬於對術後疼痛較敏感的族群,本中心會於術前評估後<strong>提供更完整的居家止痛處方</strong>。</div>
+      </div>
+
+    </div>
+
+    <div class="dr-note">
+      <strong>關於「為什麼半夜會突然開始痛」</strong> · 很多病人對此感到困惑甚至焦慮。<span class="em">這是麻藥按時退去的正常生理現象</span>,不是手術失敗。<span class="em">所以我們會反覆強調「規律服用口服止痛藥、不要等到痛才吃」</span> — 讓口服藥在麻藥退去之前就已經在體內達到濃度。詳細的疼痛分級處理請參考術後您會收到的 PAIN-B 衛教。
+    </div>
+  </section>
+
+  <!-- ============ Reading Map ============ -->
+  <div class="reading-map">
+    <h4>麻醉技術閱讀路徑</h4>
+    <div class="sub">A-03 涵蓋「止痛」這一面向 — 是本中心 ERAS 影響最大的單一介入。完整精準麻醉再閱讀其他 3 份。</div>
+    <ol>
+      <li>A-00 · 麻醉差異化綜合篇(整體 menu)</li>
+      <li>A-01 · 精準麻醉 · 藥物與監測(Propofol TIVA / BIS / Byfavo)</li>
+      <li>A-02 · 您的呼吸道 · 從非侵入到可逆(HFNC / LMA / Sugammadex)</li>
+      <li class="current">A-03 · 超音波導引神經阻斷 · 精準止痛的核心(您正在讀)</li>
+      <li>A-04 · 體溫管理 · 被忽略但關鍵的細節</li>
+    </ol>
+    <div class="sub" style="margin-top:14px;">術後若仍有疼痛問題,本中心會依您的<span style="color:var(--teal);">NRS 疼痛分數</span>推送 PAIN-B-MILD / MOD / HIGH 對應衛教。</div>
+  </div>
+
+  <!-- ============ Closing ============ -->
+  <div class="closing">
+    <p>區域阻斷的本質,是<span class="em">把麻醉藥「送到該去的地方」</span>,而不是「讓全身都睡」。一針幾毫升的局部麻醉藥,經過精準的超音波定位,就能讓您手術後的 12 至 24 小時<span class="em-gold">幾乎不痛、不需鴉片、不噁心、能早點回家</span>。這就是現代麻醉學在過去 20 年最重大的進步之一。</p>
+    <p>您不需要記得「臂神經叢」、「鎖骨上阻斷」這些技術名字 — 您只需要知道:<span class="em">麻醉醫師會選擇最適合您手術部位的神經,精準下藥,讓您醒來時不痛</span>。下一份 A-04 將介紹「體溫管理」 — 看似簡單但被忽略的關鍵細節。</p>
+
+    <div class="signature">安康日間手術麻醉團隊 · 安莘 健康</div>
+    <div class="signature-note">莘 · 承耕莘脈 / 安康 · 首末相連</div>
+  </div>
+
+  <!-- ============ References ============ -->
+  <div class="references">
+    <div class="ref-title">參考資料</div>
+    <ol>
+      <li>Wang R, Ju J, Pang X. Efficacy and safety of ultrasound-guided nerve blocks in elderly surgical patients: a meta-analysis. <em>Front Med (Lausanne).</em> 2025;12:1580172. doi:10.3389/fmed.2025.1580172.</li>
+      <li>Cukierman DS, Cata JP, Gan TJ. Enhanced recovery protocols for ambulatory surgery. <em>Best Pract Res Clin Anaesthesiol.</em> 2023;37(3):285–303.</li>
+      <li>Gan TJ, Jin Z, Ayad S, et al. Fifth Consensus Guidelines for the Management of Postoperative Nausea and Vomiting: Executive Summary. <em>Anesth Analg.</em> 2025;Published online November 14, 2025. doi:10.1213/ANE.0000000000007816.</li>
+      <li>Harbell MW, Kolodzie K, Behrends M, et al. Extraplexus versus intraplexus ultrasound-guided interscalene brachial plexus block for ambulatory arthroscopic shoulder surgery: A randomized controlled trial. <em>PLOS One.</em> 2021;16(2):e0246792.</li>
+      <li>Shook JK, Hutson TE, Singer EA, Ghodoussipour SB. Optimizing Pharmacotherapy During Implementation of Enhanced Recovery After Surgery (ERAS) in Ambulatory Urologic Oncology Surgery: Narrative Review. <em>Cancers.</em> 2025;17(4):614.</li>
+    </ol>
+  </div>
+
+  <!-- ============ Footer ============ -->
+  <footer>
+    <div class="clinic">安康日間手術麻醉中心 · 病人衛教資料</div>
+    <div class="disclaimer">本單張為一般性衛教資訊。實際採用的區域阻斷類型,將依您的術式、體型、抗凝血用藥、過去經驗,由您的麻醉醫師於術前訪視時個別評估決定。對任何技術有疑問,歡迎於麻醉門診、術前訪視時提出。</div>
+  </footer>
+
+</div>
+</body>
+</html>

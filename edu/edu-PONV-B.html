@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>您現在可能正不舒服 — 安康日間衛教 PONV-B</title>
+<meta name="description" content="術後噁心嘔吐(PONV / PDNV)居家自我照護:同理 + 即時可做的 4 件事(飲食、體位、環境、用藥)+ 24 小時自我恢復預期。">
+<meta name="article:modified_time" content="2026-05-24">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- 共用 CSS -->
+<link rel="stylesheet" href="_shared/eras-shared.css">
+
+<style>
+/* PONV-B 本頁專用:同理頂部、Apfel 風險清單、舒緩配色 */
+
+/* 同理開頭塊 — 暖色、不像衛教標題的衛教 */
+.empathy-top {
+  background: linear-gradient(180deg, var(--gold-tint) 0%, var(--paper) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: var(--section-gap);
+  text-align: center;
+}
+.empathy-top .e-line {
+  font-family: var(--font-serif);
+  font-size: 17.5px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 10px;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+}
+.empathy-top p {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.85;
+  margin: 0;
+}
+
+/* Apfel 風險清單 — 不用條列,而是用方塊圖,讓「您可能符合 X 項」 視覺化 */
+.risk-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 14px 0 20px;
+}
+.risk-item {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--plum);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 13.3px;
+  color: var(--ink);
+  line-height: 1.65;
+}
+.risk-item strong {
+  display: block;
+  font-family: var(--font-serif);
+  color: var(--plum);
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+.risk-item .sub {
+  display: block;
+  font-size: 12.3px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+  line-height: 1.65;
+}
+
+/* 我們已經為您做的 — 用 inline label 區塊 */
+.we-did {
+  background: var(--teal-tint);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  margin: 16px 0 var(--section-gap);
+  border-left: 2px solid var(--teal);
+}
+.we-did h5 {
+  font-family: var(--font-serif);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--teal);
+  margin: 0 0 8px;
+  letter-spacing: 0.05em;
+}
+.we-did p {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.78;
+  margin: 0 0 6px;
+}
+.we-did .agents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.we-did .agent {
+  background: var(--paper);
+  border: 1px solid var(--teal-soft);
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  color: var(--teal);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+/* 4 件事 pillar grid 增強(本頁用 2x2 而非堆疊)*/
+.action-pillars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: var(--section-gap);
+}
+.action-pillars .pillar-card { margin: 0; }
+
+@media (max-width: 520px) {
+  .risk-grid { grid-template-columns: 1fr; }
+  .action-pillars { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ============ Hero ============ -->
+  <header>
+    <div class="eyebrow">安康日間衛教 · PONV-B · 術後居家管理</div>
+    <h1>您現在可能正不舒服<br>我們知道</h1>
+    <p class="subtitle">術後噁心或嘔吐(PONV) — 大多數會在 24 小時內自行緩解<br>這份衛教告訴您:現在能做什麼、什麼時候會好、什麼情況需要主動告訴我們</p>
+    <div class="divider"></div>
+    <div class="meta">⏱ 閱讀約 4 分鐘 · 👥 適用對象:術後出現噁心或嘔吐的病人</div>
+  </header>
+
+  <!-- ============ Empathy Top — 顛覆傳統「先講原因」順序 ============ -->
+  <div class="empathy-top">
+    <div class="e-line">您應該不是想看一份長衛教,所以重點先給您</div>
+    <p>多數人的術後噁心嘔吐<span class="em">在 24 小時內會自然緩解</span>。<br>您不需要忍受 — 您可以處理。<br>請先<span class="em">坐起 30 度、深呼吸幾分鐘</span>,然後往下讀。</p>
+  </div>
+
+  <!-- ============ Lead ============ -->
+  <div class="lead">
+    <strong>術後噁心嘔吐(PONV / PDNV)是怎麼回事?</strong>
+    <p><span class="em">PONV(術後噁心嘔吐)</span>是麻醉與手術後最常見的不適之一,影響約 30% 的成人手術病人;高風險族群可能高達 80%。當您已經離院、回到家後仍出現噁心或嘔吐,醫學上稱為 <span class="em-gold">PDNV(離院後噁心嘔吐)</span> — 對日間手術的病人格外重要。</p>
+    <p>這<span class="em">不是您的錯,也不是手術出了問題</span>。麻醉藥的代謝、手術引發的內臟刺激、術中的止痛藥、空腹的胃,都會觸發大腦中的「嘔吐中樞」。本中心已經在術中為您使用<span class="em">多模式止吐</span>來預防,但仍有一部分病人會在術後出現。<span class="em">這不代表預防失敗</span> — 這代表您屬於對麻醉較敏感的族群,我們會繼續陪您度過。</p>
+  </div>
+
+  <!-- ============ Section 1 · Apfel 風險 + 我們已經做的 ============ -->
+  <section>
+    <h2 class="section-title">為什麼是您?</h2>
+    <p class="section-sub">不是運氣不好 — 是有跡可循的</p>
+
+    <p style="font-size:14.2px;color:var(--ink-soft);line-height:1.85;margin-bottom:10px;">國際 PONV 風險評估工具(<span class="em-gold">Apfel score</span>)會用 5 個因子預測您出現 PDNV 的可能性。<span class="em">符合越多項,風險越高</span>。請看看您可能符合幾項:</p>
+
+    <div class="risk-grid">
+      <div class="risk-item">
+        <strong>因子 01</strong>
+        女性
+        <span class="sub">女性荷爾蒙與大腦嘔吐中樞的關聯,讓女性風險約為男性的 2 倍</span>
+      </div>
+      <div class="risk-item">
+        <strong>因子 02</strong>
+        曾有 PONV 或暈車暈船史
+        <span class="sub">您的大腦對「平衡 + 化學刺激」較敏感</span>
+      </div>
+      <div class="risk-item">
+        <strong>因子 03</strong>
+        年齡小於 50 歲
+        <span class="sub">越年輕,大腦對嘔吐刺激的反應越強</span>
+      </div>
+      <div class="risk-item">
+        <strong>因子 04</strong>
+        PACU 內曾使用鴉片類止痛藥
+        <span class="sub">鴉片類藥物會直接刺激嘔吐中樞 — 這也是本中心為何強調「非鴉片為主」的多模式止痛</span>
+      </div>
+      <div class="risk-item" style="grid-column: 1 / -1;">
+        <strong>因子 05</strong>
+        在 PACU 已經出現噁心
+        <span class="sub">若離院前曾出現噁心,離院後再次出現的機率明顯升高 — 這就是您現在的處境</span>
+      </div>
+    </div>
+
+    <div class="we-did">
+      <h5>本中心在術中已經為您做的</h5>
+      <p>依據國際 PONV 第 5 版共識指引(2025),凡符合 1 項以上 Apfel 風險的病人,皆建議使用<span class="em">多模式止吐預防</span> — 也就是用 2-3 種不同作用機轉的止吐藥組合,而非只用一種。本中心對<span class="em">所有日間手術病人</span>,都會視風險強度給予下列組合:</p>
+      <div class="agents">
+        <span class="agent">Dexamethasone(類固醇)</span>
+        <span class="agent">Ondansetron(5-HT₃ 阻斷劑)</span>
+        <span class="agent">Propofol-based TIVA(全靜脈麻醉)</span>
+        <span class="agent">避免揮發性麻醉氣體</span>
+        <span class="agent">避免鴉片類止痛</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Section 2 · 立即可做的 4 件事 ============ -->
+  <section>
+    <h2 class="section-title">立即可做的 4 件事</h2>
+    <p class="section-sub">這 4 項都被研究證實有效 · 不需要吃藥也能做</p>
+
+    <div class="action-pillars">
+
+      <article class="pillar-card p1">
+        <span class="p-num">行動 01 · 飲食</span>
+        <h4>小口 · 慢慢 · 清淡</h4>
+        <p>先<span class="em">禁食 1–2 小時</span>讓胃休息。之後從 <span class="em">每次 1 小口(約 10–20 mL)的常溫白開水</span>開始,間隔 5–10 分鐘嘗試一次。耐受後再進溫米湯、稀粥、白吐司。<span class="em">避免油膩、甜膩、辛辣、咖啡因、酒精</span>。</p>
+      </article>
+
+      <article class="pillar-card p2">
+        <span class="p-num">行動 02 · 體位</span>
+        <h4>坐起 30° · 不要平躺</h4>
+        <p>請<span class="em">坐起或半坐臥</span>(床頭抬高約 30 度),用枕頭支撐背與頭。<span class="em">避免突然轉頭、翻身、起身</span> — 內耳的平衡器官受刺激會加重噁心。需要起身時請「<span class="em">先坐 1 分鐘,再站 1 分鐘,再走</span>」。</p>
+      </article>
+
+      <article class="pillar-card p3">
+        <span class="p-num">行動 03 · 環境</span>
+        <h4>涼 · 安靜 · 無強味</h4>
+        <p><span class="em">關掉強光、打開窗戶</span>讓室內降溫通風。<span class="em">遠離油煙、香水、香氛、菸味</span> — 這些嗅覺刺激會直接觸發嘔吐中樞。可請家人準備一條<span class="em">冷敷毛巾敷在額頭或後頸</span>。</p>
+      </article>
+
+      <article class="pillar-card p4">
+        <span class="p-num">行動 04 · 呼吸與 P6 穴</span>
+        <h4>深呼吸 · 按手腕</h4>
+        <p>緩慢深呼吸(吸 4 秒、停 2 秒、吐 6 秒)能降低噁心強度。也可嘗試<span class="em">按壓「P6 內關穴」</span> — 位於手腕橫紋下三指寬、兩條筋之間的位置,用拇指持續按壓 2–3 分鐘 — 這是 PONV 共識指引認可的非藥物方法。</p>
+      </article>
+
+    </div>
+
+    <div class="dr-note">
+      <strong>關於止吐藥</strong> · 若離院時麻醉醫師有開立<span class="em">居家止吐藥</span>(常見如 Ondansetron 含片或口溶錠),請<span class="em">依處方時機服用</span>。若您不確定有沒有領到、或不知道何時該吃,請於下次 follow-up 時告訴我們,不要自行服用親友剩下的藥物。
+    </div>
+  </section>
+
+  <!-- ============ Section 3 · 自我恢復時程 ============ -->
+  <section>
+    <h2 class="section-title">接下來 24 小時 · 預期的恢復節奏</h2>
+    <p class="section-sub">多數人的 PDNV 在 24 小時內完全緩解 · 您可以對照看自己在哪一段</p>
+
+    <div class="timeline">
+
+      <div class="timeline-item stop">
+        <div class="timeline-dot"></div>
+        <div class="tl-time">第 1 階段 · 0–2 小時</div>
+        <div class="tl-what">最不舒服的時段</div>
+        <div class="tl-detail">噁心感最明顯,可能伴隨乾嘔或嘔吐 1–2 次。<strong>請完全禁食</strong>,僅在嘴乾時用<strong>小棉棒沾水濕潤嘴唇</strong>。保持坐起,深呼吸。</div>
+      </div>
+
+      <div class="timeline-item allow">
+        <div class="timeline-dot"></div>
+        <div class="tl-time">第 2 階段 · 2–6 小時</div>
+        <div class="tl-what">嘗試小口喝水</div>
+        <div class="tl-detail">每 5–10 分鐘嘗試<strong>1 小口常溫白開水或無糖運動飲料</strong>。能順利喝 3–4 口不吐,就是好轉的信號。仍避免進食固體。</div>
+      </div>
+
+      <div class="timeline-item allow">
+        <div class="timeline-dot"></div>
+        <div class="tl-time">第 3 階段 · 6–12 小時</div>
+        <div class="tl-what">嘗試清淡流質</div>
+        <div class="tl-detail">能穩定喝水後,嘗試<strong>溫米湯、清雞湯、稀粥</strong>。<strong>分量寧少勿多</strong> — 半碗開始,間隔 1–2 小時再吃下一次。此時也是<strong>恢復服用慢性病藥</strong>的時機(請以最少量的水配藥)。</div>
+      </div>
+
+      <div class="timeline-item allow">
+        <div class="timeline-dot"></div>
+        <div class="tl-time">第 4 階段 · 12–24 小時</div>
+        <div class="tl-what">恢復到平日飲食的 50%</div>
+        <div class="tl-detail">能順利喝湯吃粥後,可加入<strong>蛋花、豆腐、蒸魚、蒸蛋</strong>。回到平日飲食量的 50% 即可,<strong>不要為了「補回來」而硬塞</strong>。避免油膩、甜膩、辛辣至少 48 小時。</div>
+      </div>
+
+      <div class="timeline-item focus">
+        <div class="timeline-dot"></div>
+        <div class="tl-time">第 5 階段 · 24 小時後</div>
+        <div class="tl-what">多數人完全緩解</div>
+        <div class="tl-detail">90% 以上的 PDNV 在 24 小時內完全緩解。您應該能<strong>正常飲食、正常服藥、正常走動</strong>。本中心會在<strong>術後 24 小時透過 LINE 主動詢問</strong>您的恢復狀況。</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ Section 4 · 主動告訴我們的情況 ============ -->
+  <section>
+    <h2 class="section-title">這些情況 · 請主動告訴我們</h2>
+    <p class="section-sub">不是緊急 — 但是我們希望知道,以利調整後續照護</p>
+
+    <div class="cautious-note">
+      <h4>請於下次 LINE follow-up 時主動回報</h4>
+      <p>本中心會在<span class="em">術後 24 / 48 / 72 小時</span>主動透過 LINE 詢問您的恢復狀況。但如果您出現以下情況,<span class="em">不必等我們問</span> — 請主動傳訊息告訴我們,讓您的麻醉團隊知道:</p>
+      <ul>
+        <li><strong>嘔吐超過 6 小時仍未緩解</strong>(連水都吐出來)</li>
+        <li><strong>完全無法喝水超過 8 小時</strong>(包含小口都無法)</li>
+        <li><strong>無法吞服處方藥</strong>(包含止痛藥、慢性病藥)</li>
+        <li><strong>出現脫水跡象</strong> — 口腔黏膜乾、頭暈、心跳明顯加快、24 小時內沒有排尿、尿色明顯加深</li>
+        <li><strong>體溫升高(≥ 38°C)</strong>合併嘔吐</li>
+        <li>嘔吐物中<span class="em">含血絲、咖啡渣樣物質或膽汁綠色</span></li>
+        <li>合併新發的<span class="em">劇烈腹痛或胸痛</span></li>
+      </ul>
+      <div class="nb"><strong>請記得</strong> · 上述情況不是「您不能解決」 — 而是「我們希望及早介入」。<span class="em">傳訊息給我們不會打擾,反而是我們最需要的</span>。我們有口服或外用的<span class="em">第二線止吐方案</span>可以調整。</div>
+    </div>
+  </section>
+
+  <!-- ============ Reading Map ============ -->
+  <div class="reading-map">
+    <h4>術後您可能還會用到</h4>
+    <div class="sub">PONV 緩解之後,如果您仍有疼痛問題,本中心會依您的疼痛強度推送對應衛教。請耐心讓身體一步步恢復。</div>
+    <ol>
+      <li class="current">PONV-B · 術後噁心嘔吐管理(您正在讀)</li>
+      <li>依您的疼痛 NRS 分數(0–10),推送對應 PAIN-B 衛教</li>
+      <li>依您的手術類型,推送術後居家照護衛教(S-UPPER-B / S-SPINE-B / S-GU-B)</li>
+      <li>24 / 48 / 72 小時 follow-up — 持續追蹤直到您完全恢復</li>
+    </ol>
+  </div>
+
+  <!-- ============ Closing ============ -->
+  <div class="closing">
+    <p>噁心是身體在告訴您「<span class="em">慢一點</span>」 — 請聽它的話。今天不要趕著吃完三餐、不要急著喝完水、不要逼自己「應該要好」。<span class="em">您的身體正在處理麻醉與手術帶來的所有變化</span>,給它幾個小時,它會自己回穩。</p>
+    <p>本中心會在 LINE 上等您。<span class="em">任何時間,有任何不對勁的感覺,請傳訊息告訴我們</span> — 即使您不確定「這算不算問題」也歡迎告訴我們。讓我們一起,把這段不舒服走到底。</p>
+
+    <div class="signature">安康日間手術麻醉團隊 · 安莘 健康</div>
+    <div class="signature-note">莘 · 承耕莘脈 / 安康 · 首末相連</div>
+  </div>
+
+  <!-- ============ References ============ -->
+  <div class="references">
+    <div class="ref-title">參考資料</div>
+    <ol>
+      <li>Gan TJ, Jin Z, Ayad S, et al. Fifth Consensus Guidelines for the Management of Postoperative Nausea and Vomiting: Executive Summary. <em>Anesth Analg.</em> 2025;Published online November 14, 2025. doi:10.1213/ANE.0000000000007816.</li>
+      <li>Cukierman DS, Cata JP, Gan TJ. Enhanced recovery protocols for ambulatory surgery. <em>Best Pract Res Clin Anaesthesiol.</em> 2023;37(3):285–303.</li>
+      <li>Shook JK, Hutson TE, Singer EA, Ghodoussipour SB. Optimizing Pharmacotherapy During Implementation of Enhanced Recovery After Surgery (ERAS) in Ambulatory Urologic Oncology Surgery: Narrative Review. <em>Cancers.</em> 2025;17(4):614.</li>
+      <li>Rohi A, Olofsson MET, Jakobsson JG. Ambulatory anesthesia and discharge: an update around guidelines and trends. <em>Curr Opin Anaesthesiol.</em> 2022;35(6):691–697.</li>
+    </ol>
+  </div>
+
+  <!-- ============ Footer ============ -->
+  <footer>
+    <div class="clinic">安康日間手術麻醉中心 · 病人衛教資料</div>
+    <div class="disclaimer">本單張為一般性衛教資訊。所有止吐藥、慢性病藥的調整,均依您的麻醉醫師或主治醫師個別指示為準。本中心會在術後 24 / 48 / 72 小時透過 LINE 主動追蹤您的恢復狀況,有任何疑問都歡迎於 LINE 上回覆我們。</div>
+  </footer>
+
+</div>
+</body>
+</html>

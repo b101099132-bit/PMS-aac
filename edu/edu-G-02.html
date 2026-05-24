@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>還剩 3 天 · 4 件事要確認 — 安康日間衛教 G-02</title>
+<meta name="description" content="術前 3 天的準備清單:用藥整理、飲食與生活、物品 checklist、流程與照顧者確認。不是學新知識,是把該勾的事一一勾完。">
+<meta name="article:modified_time" content="2026-05-24">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- 共用 CSS -->
+<link rel="stylesheet" href="_shared/eras-shared.css">
+
+<style>
+/* G-02 本頁專用 — 4-chip header(類似 G-03 的 three-tasks 但 4-up)*/
+.four-tasks {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 18px 0 4px;
+}
+.four-tasks .task-chip {
+  background: var(--cream);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: 12px 8px;
+  text-align: center;
+}
+.four-tasks .task-chip .t-num {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gold);
+  display: block;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.four-tasks .task-chip .t-label {
+  font-size: 11.5px;
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+/* 物品 checklist 分組 — 三段(必帶/視情況/不要帶)*/
+.pack-section {
+  margin-bottom: 22px;
+}
+.pack-section:last-of-type { margin-bottom: 0; }
+.pack-section .pack-label {
+  font-family: var(--font-serif);
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  font-weight: 600;
+  color: var(--teal);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed var(--border);
+}
+.pack-section.cond .pack-label { color: var(--gold); }
+.pack-section.skip .pack-label { color: var(--ink-faint); }
+
+.pack-section ul.checklist-clean {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.pack-section ul.checklist-clean li {
+  position: relative;
+  padding-left: 24px;
+  margin-bottom: 9px;
+  font-size: 13.8px;
+  color: var(--ink);
+  line-height: 1.7;
+}
+.pack-section ul.checklist-clean li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 5px;
+  width: 13px; height: 13px;
+  border: 1.5px solid var(--gold);
+  border-radius: 2px;
+}
+.pack-section.skip ul.checklist-clean li::before {
+  border-color: var(--ink-faint);
+  background: var(--ink-faint);
+}
+.pack-section.skip ul.checklist-clean li {
+  color: var(--ink-soft);
+  text-decoration: line-through;
+  text-decoration-color: var(--ink-faint);
+  text-decoration-thickness: 1px;
+}
+.pack-section ul.checklist-clean li .sub {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.65;
+  margin-top: 2px;
+}
+.pack-section.skip ul.checklist-clean li .sub { text-decoration: none; }
+
+/* 整個物品區塊包一個容器 */
+.pack-container {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 22px 24px;
+  margin-bottom: var(--section-gap);
+}
+
+@media (max-width: 520px) {
+  .four-tasks { grid-template-columns: repeat(2, 1fr); }
+  .pack-container { padding: 18px 20px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ============ Hero ============ -->
+  <header>
+    <div class="eyebrow">安康日間衛教 · G-02 · 術前 3 天</div>
+    <h1>還剩 3 天<br>4 件事要勾完</h1>
+    <p class="subtitle">不是再學新知識 — 是把該確認的事,一件一件勾掉<br>用藥、飲食、物品、照顧者</p>
+    <div class="divider"></div>
+    <div class="meta">⏱ 閱讀約 4 分鐘 · 👥 適用對象:所有日間手術病人</div>
+  </header>
+
+  <!-- ============ Lead ============ -->
+  <div class="lead">
+    <strong>術前 3 天 — 從「概念」進入「準備」</strong>
+    <p>上一週,您透過 G-01 認識了日間手術與 ERAS 的設計理念。手術前 3 天到 1 天,我們不會再增加您的<span class="em">認知負擔</span> — 接下來的衛教,目標都是<span class="em">把該確認的事一一勾完</span>。</p>
+
+    <div class="four-tasks">
+      <div class="task-chip"><span class="t-num">01</span><span class="t-label">用藥<br>整理</span></div>
+      <div class="task-chip"><span class="t-num">02</span><span class="t-label">飲食<br>與生活</span></div>
+      <div class="task-chip"><span class="t-num">03</span><span class="t-label">物品<br>checklist</span></div>
+      <div class="task-chip"><span class="t-num">04</span><span class="t-label">流程<br>與陪同</span></div>
+    </div>
+
+    <p style="margin-top:18px;">這 4 件事,每一件都<span class="em">具體可執行</span>。建議您現在就拿起手機備忘錄或筆記本,跟著本份衛教一邊讀、一邊勾。<span class="em">完成的事,大腦就可以不用再記掛</span>,術前的焦慮會自然下降。</p>
+  </div>
+
+  <!-- ============ Section 1 · 用藥整理 ============ -->
+  <section>
+    <h2 class="section-title">01 · 用藥整理</h2>
+    <p class="section-sub">為什麼要 3 天前開始整理?因為部分藥物需要提前停 · 越早整理越安全</p>
+
+    <div class="strategy-list">
+
+      <div class="strategy-card">
+        <span class="s-num">原則 01</span>
+        <h4>把您「所有」的藥列出來</h4>
+        <p>包含<span class="em">處方藥、自費藥、保健食品、中藥、外用藥膏、眼藥水</span>。最簡單的做法:把藥袋與罐子排在桌上,<span class="em">拍一張全景照存在手機</span>。麻醉醫師看到藥袋上的字尾與顏色,就能快速判斷種類。</p>
+      </div>
+
+      <div class="strategy-card">
+        <span class="s-num">原則 02</span>
+        <h4>不要自行停藥</h4>
+        <p>許多病人擔心「藥會不會影響麻醉」,自行停掉慢性藥。<span class="em">這比繼續服藥更危險</span> — 突然停用<span class="em">高血壓、心律、抗癲癇、類固醇</span>等藥可能引發反彈症狀。請保持原本的服用,等麻醉醫師告訴您哪些要調整。</p>
+      </div>
+
+      <div class="strategy-card">
+        <span class="s-num">原則 03</span>
+        <h4>幾類藥要「主動告知」</h4>
+        <p>如果您有以下情況,請主動於麻醉門診或術前訪視時告知,我們會給您<span class="em">專屬的個別衛教</span>:</p>
+        <p><strong>糖尿病用藥</strong>(口服藥 + 胰島素) · 您會收到 <span class="em-gold">C-DM-A</span> 詳細指引<br><strong>抗凝血 / 抗血小板藥</strong>(Warfarin、新型抗凝血劑、Aspirin、Clopidogrel 等) · <span class="em-gold">C-AC-A</span><br><strong>睡眠呼吸中止 + 使用 CPAP</strong> · <span class="em-gold">C-OSA-A</span><br><strong>GLP-1 減重藥</strong>(Ozempic、Wegovy、Mounjaro 等) · 通常需提前一週停藥</p>
+      </div>
+
+      <div class="strategy-card">
+        <span class="s-num">原則 04</span>
+        <h4>有疑慮就問 · 不要自己猜</h4>
+        <p>整理過程中遇到不確定的藥物,<span class="em">請透過 LINE 直接傳藥袋照片給我們</span>,或留意您下次麻醉門診的時間。讓專業判斷取代「網路搜尋」 — 您的個別狀況,不是別人的網路經驗能取代的。</p>
+      </div>
+
+    </div>
+
+    <div class="dr-note">
+      <strong>個別差異提醒</strong> · 上述為一般性原則。<span class="em">每位病人的疾病組合、藥物清單都不一樣</span>,實際的停藥時機與調整方式,以您的麻醉醫師於術前訪視時的指示為準。
+    </div>
+  </section>
+
+  <!-- ============ Section 2 · 飲食與生活 ============ -->
+  <section>
+    <h2 class="section-title">02 · 飲食與生活</h2>
+    <p class="section-sub">您不需要「為手術改變生活」 — 維持規律,就是最好的準備</p>
+
+    <div class="pillars-grid">
+
+      <article class="pillar-card p1">
+        <span class="p-num">01 · 蛋白質</span>
+        <h4>每餐都吃到一份蛋白質</h4>
+        <span class="p-en">Adequate protein intake</span>
+        <p>蛋白質是<span class="em">傷口癒合與肌肉維持</span>的原料。手術會讓身體進入短暫的「分解狀態」,術前若蛋白質儲備不足,術後恢復會更慢。</p>
+        <p>請<span class="em">每餐都吃到至少一份蛋白質</span>:雞蛋、魚、雞胸、瘦肉、豆腐、豆漿、無糖優酪乳。對長者或胃口較小的人,可分次少量但每餐都有。</p>
+      </article>
+
+      <article class="pillar-card p2">
+        <span class="p-num">02 · 戒菸 + 戒酒</span>
+        <h4>能停多久 · 都有幫助</h4>
+        <span class="p-en">Smoking & alcohol cessation</span>
+        <p>研究顯示,<span class="em">術前戒菸 4 週能明顯降低</span>術後傷口感染與肺部併發症;即使只能停 <span class="em">3–7 天</span>,也能改善麻醉中的氣道分泌與術後咳嗽。<span class="em">電子菸、加熱菸</span>同樣建議停。</p>
+        <p>酒精類飲品(包含啤酒、紅酒、燒酒、藥酒)建議<span class="em">術前 3 天起完全停止</span>。酒精會影響麻醉藥代謝、增加術中血壓波動。</p>
+      </article>
+
+      <article class="pillar-card p3">
+        <span class="p-num">03 · 維持規律</span>
+        <h4>不刻意進補,也不過度節食</h4>
+        <span class="p-en">Stay routine, stay yourself</span>
+        <p>不需要為了手術突然開始「補身體」 — <span class="em">突然大量進補反而會加重消化負擔</span>。也不要因為焦慮而少吃 — 體力下降反而不利恢復。</p>
+        <p>保持平日的<span class="em">作息、活動、飲食量</span>。手術不是一場考試,您的身體已經被「平日生活」訓練到適合接受這次手術了。</p>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ Section 3 · 攜帶物品 ============ -->
+  <section>
+    <h2 class="section-title">03 · 攜帶物品 checklist</h2>
+    <p class="section-sub">建議今晚就把這些備齊 · 放在玄關旁的袋子裡</p>
+
+    <div class="pack-container">
+
+      <div class="pack-section">
+        <div class="pack-label">必帶 · 證件與證明</div>
+        <ul class="checklist-clean">
+          <li>健保卡 + 身分證</li>
+          <li>住院押金與費用(請洽院方告知金額)</li>
+          <li>麻醉同意書與手術同意書(若已於門診簽署,當日仍會再次確認)</li>
+        </ul>
+      </div>
+
+      <div class="pack-section">
+        <div class="pack-label">必帶 · 醫療相關</div>
+        <ul class="checklist-clean">
+          <li>慢性病藥物(實物或藥袋照片)<span class="sub">用一個夾鏈袋裝好,當天進手術前請交給護理人員</span></li>
+          <li>過敏紀錄(藥物、食物、麻醉)<span class="sub">即使曾經告知過,當天仍會再次確認</span></li>
+          <li>個人聯絡資料 + 緊急聯絡人姓名電話</li>
+        </ul>
+      </div>
+
+      <div class="pack-section">
+        <div class="pack-label">必帶 · 個人物品</div>
+        <ul class="checklist-clean">
+          <li>寬鬆好穿脫的衣物<span class="sub">尤其骨科上肢手術者 — 請穿前開式或寬鬆袖口的上衣</span></li>
+          <li>好穿脫的鞋(布鞋、休閒鞋)<span class="sub">避免拖鞋 — 術後步態不穩時較危險</span></li>
+          <li>眼鏡、助聽器、活動假牙(若有)<span class="sub">本中心使用「三件套」原則 — 這些可幫助您在 PACU 早期清醒、降低譫妄</span></li>
+          <li>手機 + 充電器 + 行動電源</li>
+        </ul>
+      </div>
+
+      <div class="pack-section cond">
+        <div class="pack-label">視情況攜帶</div>
+        <ul class="checklist-clean">
+          <li>CPAP / BiPAP 機器<span class="sub">睡眠呼吸中止症(OSA)病人請務必帶 — 將於 PACU 與夜間使用</span></li>
+          <li>血糖機 + 試紙(糖尿病病人)</li>
+          <li>輕便外套或圍巾<span class="sub">手術室與恢復室室溫較低</span></li>
+          <li>1–2 本小書、雜誌或耳機<span class="sub">術前等候時間可能較長</span></li>
+        </ul>
+      </div>
+
+      <div class="pack-section skip">
+        <div class="pack-label">建議不要帶</div>
+        <ul class="checklist-clean">
+          <li>貴重物品(金飾、名錶、大量現金)<span class="sub">麻醉後您無法看管自身物品</span></li>
+          <li>隱形眼鏡<span class="sub">請改戴眼鏡 — 麻醉中眼瞼閉合可能導致角膜刮傷</span></li>
+          <li>指甲油、彩繪美甲(指尖)<span class="sub">會影響血氧監測 — 至少留出一根手指自然色</span></li>
+          <li>濃妝 / 假睫毛<span class="sub">會影響麻醉中的眼睛保護</span></li>
+          <li>香水<span class="sub">術後容易加重噁心</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ Section 4 · 流程與照顧者 ============ -->
+  <section>
+    <h2 class="section-title">04 · 流程與照顧者確認</h2>
+    <p class="section-sub">這 5 件事 · 請今天就跟家人「面對面」說好</p>
+
+    <div class="action-list">
+      <h4>需要與照顧者一起確認</h4>
+      <ul>
+        <li>
+          <strong>誰陪您到院?誰陪您回家?</strong>
+          <span class="detail">日間手術當天<span class="em">必須有家人或朋友陪同回家</span>。請今天就跟對方面對面確認:報到時間、地點、交通方式。最好同一人從入院陪到出院,以利交班資訊一致。</span>
+        </li>
+        <li>
+          <strong>交通方式:不可自己開車或騎車</strong>
+          <span class="detail">麻醉後 <span class="em">24 小時內判斷力、反應力會下降</span>,不可自行駕駛任何交通工具(包含腳踏車)。請事先安排家人接送、計程車、或叫車服務。</span>
+        </li>
+        <li>
+          <strong>第一晚有人在家</strong>
+          <span class="detail">手術當晚<span class="em">家中至少有一位成人能協助您</span>(取藥、扶起、留意異常)。即使您覺得「我應該沒事」,也請安排這一晚的陪伴 — 麻醉的延遲反應有時要幾小時後才出現。</span>
+        </li>
+        <li>
+          <strong>工作 / 家庭事務的暫停</strong>
+          <span class="detail">手術當天與隔日,請<span class="em">不要安排任何重要決策、不要簽署重要文件、不要主持會議</span>。本中心建議所有日間手術病人預留<span class="em">至少 2 個工作天</span>的恢復時間。</span>
+        </li>
+        <li>
+          <strong>確認院方通知的「報到時間」</strong>
+          <span class="detail">院方會於術前 1–2 天通知您具體的<span class="em">報到時間</span>(通常比手術時間早 2 小時左右)。請確認手機、LINE 通知正常運作 — 若到術前 1 天傍晚仍未收到通知,請主動聯絡日間手術中心。</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ Reading Map ============ -->
+  <div class="reading-map">
+    <h4>您的閱讀路徑</h4>
+    <div class="sub">G-02 是「<span style="color:var(--teal);font-weight:600;">準備</span>」階段。下一份 G-03 是「<span style="color:var(--teal);font-weight:600;">執行</span>」階段(術前 1 天) — 內容包含禁食時鐘、當天流程、不能來的情況。</div>
+    <ol>
+      <li>G-01 · 認識日間手術與 ERAS(術前 7 天 · 已讀)</li>
+      <li class="current">G-02 · 還剩 3 天 · 4 件事要勾完(您正在讀)</li>
+      <li>G-03 · 明天就是您的手術日(術前 1 天 · 將自動送達)</li>
+      <li>依您的手術類型,接收術前手術族群衛教</li>
+      <li>依您的共病(DM / 抗凝血 / OSA),補充對應指引</li>
+    </ol>
+  </div>
+
+  <!-- ============ Closing ============ -->
+  <div class="closing">
+    <p>準備充足的人,不會無端焦慮。<span class="em">焦慮往往來自「我是不是漏了什麼」</span> — 而 checklist 的價值,就是讓「漏了什麼」這個念頭可以被消除。今天勾完這 4 件事,您今晚就能<span class="em">放心地過一個正常的夜晚</span>。</p>
+    <p>下一份衛教(G-03)會在<span class="em">術前 1 天</span>自動送達。在那之前,請保持平日作息,維持您每天的活動量。若有任何疑問,隨時透過 LINE 回覆告訴我們,或於麻醉門診、術前訪視時提出。</p>
+
+    <div class="signature">安康日間手術麻醉團隊 · 安莘 健康</div>
+    <div class="signature-note">莘 · 承耕莘脈 / 安康 · 首末相連</div>
+  </div>
+
+  <!-- ============ References ============ -->
+  <div class="references">
+    <div class="ref-title">參考資料</div>
+    <ol>
+      <li>Cukierman DS, Cata JP, Gan TJ. Enhanced recovery protocols for ambulatory surgery. <em>Best Pract Res Clin Anaesthesiol.</em> 2023;37(3):285–303.</li>
+      <li>Vu JV. Smoking Cessation for Preoperative Optimization. <em>Clin Colon Rectal Surg.</em> 2023;36(3):175–183.</li>
+      <li>Witard OC, Mahmassani ZS, Lockwood JR, et al. Protein-based perioperative nutrition interventions for improving muscle mass and functional outcomes following orthopaedic surgery. <em>Exp Physiol.</em> 2025.</li>
+      <li>Rohi A, Olofsson MET, Jakobsson JG. Ambulatory anesthesia and discharge: an update around guidelines and trends. <em>Curr Opin Anaesthesiol.</em> 2022;35(6):691–697.</li>
+    </ol>
+  </div>
+
+  <!-- ============ Footer ============ -->
+  <footer>
+    <div class="clinic">安康日間手術麻醉中心 · 病人衛教資料</div>
+    <div class="disclaimer">本單張為一般性衛教資訊,實際用藥調整、停藥時機、飲食建議均依您的麻醉醫師個別評估為準。對任何內容有疑問,歡迎於麻醉門診、術前訪視時提出討論,或透過 LINE 回覆我們。</div>
+  </footer>
+
+</div>
+</body>
+</html>
