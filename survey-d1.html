@@ -434,6 +434,41 @@
 }
 
 /* ════════════════════════════════════════════════════════════════════
+   ★ 文字輸入框全域樣式 — 修正 input/textarea 卡在 label-sub 後的問題
+   讓所有 input[type=text] 和 textarea 獨佔一行、撐滿欄寬、字體放大
+   ════════════════════════════════════════════════════════════════════ */
+.field input[type="text"],
+.field textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 15.5px;
+  line-height: 1.6;
+  padding: 11px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  margin-top: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+.field input[type="text"]:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(31, 90, 90, 0.15);
+}
+.field input[type="text"]::placeholder,
+.field textarea::placeholder {
+  color: var(--ink-faint);
+}
+.field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* ════════════════════════════════════════════════════════════════════
    A3 自費項目專屬 grid(6 個選項,3-col × 2-row,label 包 input)
    不能直接給 .likert 加 grid — 會把 input + label 拆成獨立 cell
    ════════════════════════════════════════════════════════════════════ */
