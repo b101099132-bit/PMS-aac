@@ -430,6 +430,71 @@
   .nrs-row { gap: 2px; }
   .nrs-row label { font-size: 13px; }
   .likert label { padding: 8px 3px; font-size: 12.5px; }
+  .a3-grid label { font-size: 12.5px; min-height: 44px; padding: 8px 4px; }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   A3 自費項目專屬 grid(6 個選項,3-col × 2-row,label 包 input)
+   不能直接給 .likert 加 grid — 會把 input + label 拆成獨立 cell
+   ════════════════════════════════════════════════════════════════════ */
+.a3-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+.a3-grid label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 6px;
+  min-height: 48px;
+  background: var(--paper);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--ink);
+  transition: all 0.12s ease;
+  user-select: none;
+}
+.a3-grid label:hover {
+  border-color: var(--teal);
+  background: var(--teal-tint);
+}
+.a3-grid label:has(input:checked) {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: white;
+  font-weight: 600;
+}
+.a3-grid label.na {
+  border-style: dashed;
+  background: var(--cream-deep);
+  color: var(--ink-soft);
+}
+.a3-grid label.na:has(input:checked) {
+  background: var(--teal);
+  border-color: var(--teal);
+  border-style: solid;
+  color: white;
+}
+.a3-grid label input[type="radio"] {
+  flex-shrink: 0;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--teal);
+}
+.a3-grid label .a3-num {
+  font-family: var(--font-serif);
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 13px;
+}
+.a3-grid label:has(input:checked) .a3-num {
+  color: white;
 }
 </style>
 </head>
@@ -565,19 +630,13 @@
 
       <div class="field">
         <label><span class="q-num">A3.</span>對於這次的<strong>麻醉自費項目</strong>,您的滿意度? <span class="required">*</span></label>
-        <div class="likert" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px;">
-          <input type="radio" name="A3" id="A3-1" value="1" required>
-          <label for="A3-1"><span class="anchor-num">1</span><span class="anchor-label">非常滿意</span></label>
-          <input type="radio" name="A3" id="A3-2" value="2">
-          <label for="A3-2"><span class="anchor-num">2</span><span class="anchor-label">滿意</span></label>
-          <input type="radio" name="A3" id="A3-3" value="3">
-          <label for="A3-3"><span class="anchor-num">3</span><span class="anchor-label">普通</span></label>
-          <input type="radio" name="A3" id="A3-4" value="4">
-          <label for="A3-4"><span class="anchor-num">4</span><span class="anchor-label">不滿意</span></label>
-          <input type="radio" name="A3" id="A3-5" value="5">
-          <label for="A3-5"><span class="anchor-num">5</span><span class="anchor-label">非常不滿意</span></label>
-          <input type="radio" name="A3" id="A3-na" value="na">
-          <label for="A3-na" style="border-style:dashed; background:var(--cream-deep);"><span class="anchor-num">—</span><span class="anchor-label">沒有使用</span></label>
+        <div class="a3-grid">
+          <label for="A3-1"><input type="radio" name="A3" id="A3-1" value="1" required><span class="a3-num">1</span><span>非常滿意</span></label>
+          <label for="A3-2"><input type="radio" name="A3" id="A3-2" value="2"><span class="a3-num">2</span><span>滿意</span></label>
+          <label for="A3-3"><input type="radio" name="A3" id="A3-3" value="3"><span class="a3-num">3</span><span>普通</span></label>
+          <label for="A3-4"><input type="radio" name="A3" id="A3-4" value="4"><span class="a3-num">4</span><span>不滿意</span></label>
+          <label for="A3-5"><input type="radio" name="A3" id="A3-5" value="5"><span class="a3-num">5</span><span>非常不滿意</span></label>
+          <label for="A3-na" class="na"><input type="radio" name="A3" id="A3-na" value="na"><span class="a3-num">—</span><span>沒有使用</span></label>
         </div>
       </div>
     </div>
