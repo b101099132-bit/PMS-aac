@@ -535,15 +535,15 @@
         <label><span class="q-num">A1.</span>術前的麻醉評估過程(門診 / 術前訪視),整體感受如何? <span class="required">*</span></label>
         <div class="likert">
           <input type="radio" name="A1" id="A1-1" value="1" required>
-          <label for="A1-1"><span class="anchor-num">1</span><span class="anchor-label">很不滿意</span></label>
+          <label for="A1-1"><span class="anchor-num">1</span><span class="anchor-label">非常滿意</span></label>
           <input type="radio" name="A1" id="A1-2" value="2">
-          <label for="A1-2"><span class="anchor-num">2</span><span class="anchor-label">不滿意</span></label>
+          <label for="A1-2"><span class="anchor-num">2</span><span class="anchor-label">滿意</span></label>
           <input type="radio" name="A1" id="A1-3" value="3">
           <label for="A1-3"><span class="anchor-num">3</span><span class="anchor-label">普通</span></label>
           <input type="radio" name="A1" id="A1-4" value="4">
-          <label for="A1-4"><span class="anchor-num">4</span><span class="anchor-label">滿意</span></label>
+          <label for="A1-4"><span class="anchor-num">4</span><span class="anchor-label">不滿意</span></label>
           <input type="radio" name="A1" id="A1-5" value="5">
-          <label for="A1-5"><span class="anchor-num">5</span><span class="anchor-label">很滿意</span></label>
+          <label for="A1-5"><span class="anchor-num">5</span><span class="anchor-label">非常不滿意</span></label>
         </div>
       </div>
 
@@ -565,21 +565,31 @@
 
       <div class="field">
         <label><span class="q-num">A3.</span>對於這次的<strong>麻醉自費項目</strong>,您的滿意度? <span class="required">*</span></label>
+        <p class="label-sub" style="margin-top:-2px; margin-bottom:10px;">若您這次沒有使用任何自費項目,請直接選下方第一個選項;有使用的話請評分。</p>
+
+        <!-- 未使用自費 — 放在 likert 上方,做成最明顯的選擇 -->
+        <div class="likert-na">
+          <input type="radio" name="A3" id="A3-na" value="na" required>
+          <label for="A3-na">
+            <span style="font-size:18px; margin-right:6px;">○</span>
+            我這次<strong>沒有使用</strong>自費項目
+          </label>
+        </div>
+
+        <div style="text-align:center; font-size:12.5px; color:var(--ink-faint); margin:10px 0 6px;">— 或 —</div>
+        <div style="font-size:13.5px; color:var(--ink-soft); margin-bottom:6px;">有使用,請給予您的滿意度評分:</div>
+
         <div class="likert">
-          <input type="radio" name="A3" id="A3-1" value="1" required>
-          <label for="A3-1"><span class="anchor-num">1</span><span class="anchor-label">非常不滿意</span></label>
+          <input type="radio" name="A3" id="A3-1" value="1">
+          <label for="A3-1"><span class="anchor-num">1</span><span class="anchor-label">非常滿意</span></label>
           <input type="radio" name="A3" id="A3-2" value="2">
-          <label for="A3-2"><span class="anchor-num">2</span><span class="anchor-label">不滿意</span></label>
+          <label for="A3-2"><span class="anchor-num">2</span><span class="anchor-label">滿意</span></label>
           <input type="radio" name="A3" id="A3-3" value="3">
           <label for="A3-3"><span class="anchor-num">3</span><span class="anchor-label">普通</span></label>
           <input type="radio" name="A3" id="A3-4" value="4">
-          <label for="A3-4"><span class="anchor-num">4</span><span class="anchor-label">滿意</span></label>
+          <label for="A3-4"><span class="anchor-num">4</span><span class="anchor-label">不滿意</span></label>
           <input type="radio" name="A3" id="A3-5" value="5">
-          <label for="A3-5"><span class="anchor-num">5</span><span class="anchor-label">非常滿意</span></label>
-        </div>
-        <div class="likert-na">
-          <input type="radio" name="A3" id="A3-na" value="na">
-          <label for="A3-na">未使用自費項目</label>
+          <label for="A3-5"><span class="anchor-num">5</span><span class="anchor-label">非常不滿意</span></label>
         </div>
       </div>
     </div>
@@ -889,15 +899,15 @@
         <label><span class="q-num">E1.</span>對這次的<strong>整體麻醉照護</strong>,您的滿意度? <span class="required">*</span></label>
         <div class="likert">
           <input type="radio" name="E1" id="E1-1" value="1" required>
-          <label for="E1-1"><span class="anchor-num">1</span><span class="anchor-label">非常不滿意</span></label>
+          <label for="E1-1"><span class="anchor-num">1</span><span class="anchor-label">非常滿意</span></label>
           <input type="radio" name="E1" id="E1-2" value="2">
-          <label for="E1-2"><span class="anchor-num">2</span><span class="anchor-label">不滿意</span></label>
+          <label for="E1-2"><span class="anchor-num">2</span><span class="anchor-label">滿意</span></label>
           <input type="radio" name="E1" id="E1-3" value="3">
           <label for="E1-3"><span class="anchor-num">3</span><span class="anchor-label">普通</span></label>
           <input type="radio" name="E1" id="E1-4" value="4">
-          <label for="E1-4"><span class="anchor-num">4</span><span class="anchor-label">滿意</span></label>
+          <label for="E1-4"><span class="anchor-num">4</span><span class="anchor-label">不滿意</span></label>
           <input type="radio" name="E1" id="E1-5" value="5">
-          <label for="E1-5"><span class="anchor-num">5</span><span class="anchor-label">非常滿意</span></label>
+          <label for="E1-5"><span class="anchor-num">5</span><span class="anchor-label">非常不滿意</span></label>
         </div>
       </div>
 
