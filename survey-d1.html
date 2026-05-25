@@ -565,22 +565,8 @@
 
       <div class="field">
         <label><span class="q-num">A3.</span>對於這次的<strong>麻醉自費項目</strong>,您的滿意度? <span class="required">*</span></label>
-        <p class="label-sub" style="margin-top:-2px; margin-bottom:10px;">若您這次沒有使用任何自費項目,請直接選下方第一個選項;有使用的話請評分。</p>
-
-        <!-- 未使用自費 — 放在 likert 上方,做成最明顯的選擇 -->
-        <div class="likert-na">
-          <input type="radio" name="A3" id="A3-na" value="na" required>
-          <label for="A3-na">
-            <span style="font-size:18px; margin-right:6px;">○</span>
-            我這次<strong>沒有使用</strong>自費項目
-          </label>
-        </div>
-
-        <div style="text-align:center; font-size:12.5px; color:var(--ink-faint); margin:10px 0 6px;">— 或 —</div>
-        <div style="font-size:13.5px; color:var(--ink-soft); margin-bottom:6px;">有使用,請給予您的滿意度評分:</div>
-
-        <div class="likert">
-          <input type="radio" name="A3" id="A3-1" value="1">
+        <div class="likert" style="display:grid; grid-template-columns: repeat(6, 1fr); gap:4px;">
+          <input type="radio" name="A3" id="A3-1" value="1" required>
           <label for="A3-1"><span class="anchor-num">1</span><span class="anchor-label">非常滿意</span></label>
           <input type="radio" name="A3" id="A3-2" value="2">
           <label for="A3-2"><span class="anchor-num">2</span><span class="anchor-label">滿意</span></label>
@@ -590,6 +576,8 @@
           <label for="A3-4"><span class="anchor-num">4</span><span class="anchor-label">不滿意</span></label>
           <input type="radio" name="A3" id="A3-5" value="5">
           <label for="A3-5"><span class="anchor-num">5</span><span class="anchor-label">非常不滿意</span></label>
+          <input type="radio" name="A3" id="A3-na" value="na">
+          <label for="A3-na" style="border-style:dashed; background:var(--cream-deep);"><span class="anchor-num">—</span><span class="anchor-label">沒有使用</span></label>
         </div>
       </div>
     </div>
@@ -660,10 +648,10 @@
       <div class="field">
         <label><span class="q-num">C1.</span>過去 24 小時內,您有沒有噁心或嘔吐? <span class="required">*</span></label>
         <div class="binary-choice">
-          <input type="radio" name="C1" id="C1-yes" value="yes" required>
-          <label for="C1-yes">有</label>
-          <input type="radio" name="C1" id="C1-no" value="no">
+          <input type="radio" name="C1" id="C1-no" value="no" required>
           <label for="C1-no">沒有</label>
+          <input type="radio" name="C1" id="C1-yes" value="yes">
+          <label for="C1-yes">有</label>
         </div>
       </div>
 
@@ -766,17 +754,17 @@
 
       <div class="field">
         <label><span class="q-num">C4.</span>您目前的<strong>活動力</strong>? <span class="required">*</span>
-          <span class="label-sub">勾選最接近您目前狀態的選項(由左到右代表恢復程度由低到高)</span>
+          <span class="label-sub">勾選最接近您目前狀態的選項</span>
         </label>
         <div class="quad-choice">
           <input type="radio" name="C4" id="C4-1" value="1" required>
-          <label for="C4-1">臥床</label>
+          <label for="C4-1">活動自如</label>
           <input type="radio" name="C4" id="C4-2" value="2">
-          <label for="C4-2">坐床緣</label>
+          <label for="C4-2">已下床</label>
           <input type="radio" name="C4" id="C4-3" value="3">
-          <label for="C4-3">已下床</label>
+          <label for="C4-3">坐床緣</label>
           <input type="radio" name="C4" id="C4-4" value="4">
-          <label for="C4-4">活動自如</label>
+          <label for="C4-4">臥床</label>
         </div>
       </div>
     </div>
@@ -915,7 +903,7 @@
         <label for="E2"><span class="q-num">E2.</span>想跟麻醉團隊或照護同仁說的話?<span class="optional-mark">可選填</span>
           <span class="label-sub">您(或家屬)有任何想分享的 — 讚美、建議、抱怨、感謝、想法、疑問,都歡迎寫下</span>
         </label>
-        <textarea id="E2" name="E2" rows="3" maxlength="500" placeholder="(可留空)"></textarea>
+        <textarea id="E2" name="E2" rows="6" maxlength="500" placeholder="(可留空)" style="min-height:160px; font-size:15.5px; line-height:1.7; padding:14px;"></textarea>
       </div>
     </div>
 
