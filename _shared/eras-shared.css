@@ -1,0 +1,1111 @@
+/* ========================================================================
+   eras-shared.css
+   PMS-aac · 安康日間手術麻醉中心 · 衛教共用樣式
+   --------------------------------------------------------------------
+   涵蓋:基礎排版 / hero / lead / lexicon / pillar / strategy /
+         action-list / checklist / reading-map / closing / references
+   暫不含:警訊區塊、24/7 hotline 卡(待日間出院流程實施後再補)
+   --------------------------------------------------------------------
+   版本:v1.0  2026-05-24
+   ====================================================================== */
+
+
+/* ============ 1. CSS Variables ============ */
+:root {
+  /* —— 顏色:沿用 EDU-AUTHORING-GUIDE 規範 —— */
+  --cream:      #FAF7F2;   /* 主背景(略帶象牙) */
+  --cream-deep: #F2EBDC;   /* 次背景 / 分隔帶 */
+  --paper:      #FFFFFF;   /* 卡片底 */
+  --ink:        #1A1A1A;   /* 主文字 */
+  --ink-soft:   #5C5C5C;   /* 輔文字 */
+  --ink-faint:  #8A8580;   /* 弱文字 / 標籤 */
+  --teal:       #1F5A5A;   /* 主色(標題、強調) */
+  --teal-tint:  #F5F9F9;   /* teal 極淺底(卡片背景) */
+  --teal-soft:  #E6EDED;   /* teal 邊框 */
+  --gold:       #A87B4D;   /* 強調 / 引用 / 邊飾 */
+  --gold-tint:  #FAF3E8;   /* gold 極淺底 */
+  --plum:       #6B5876;   /* 次要色(行動/任務) */
+  --navy:       #2C4866;   /* 次要色(資訊) */
+  --sage:       #5A7A52;   /* 次要色(放心/正向) */
+  --clay:       #9C5B3D;   /* 警示(暫保留 token,未啟用) */
+  --border:     #E8E2D5;   /* 邊框 */
+  --border-soft:#F0EBE0;   /* 弱邊框 */
+
+  /* —— 排版 token —— */
+  --font-serif: 'Noto Serif TC', 'Songti TC', serif;
+  --font-sans:  'Noto Sans TC', system-ui, -apple-system, sans-serif;
+  --text-base:  15px;
+  --text-sm:    13.5px;
+  --text-xs:    12px;
+  --leading:    1.78;
+
+  /* —— 間距 —— */
+  --gutter:     22px;
+  --card-pad:   24px 26px;
+  --section-gap:30px;
+  --radius:     4px;
+  --radius-sm:  3px;
+}
+
+
+/* ============ 2. Reset & 基礎 ============ */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading);
+  color: var(--ink);
+  background: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "palt" 1;
+}
+p { margin: 0 0 1em; }
+ul, ol { margin: 0 0 1em; padding-left: 1.4em; }
+li { margin-bottom: 0.4em; line-height: 1.75; }
+strong { font-weight: 600; }
+em { font-style: normal; }
+
+/* 容器 */
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 36px 22px 80px;
+}
+
+
+/* ============ 3. 共用 inline 標記 ============ */
+/* .em — 文中強調(底色淡 teal,非常溫和)*/
+.em {
+  color: var(--ink);
+  font-weight: 600;
+  background: linear-gradient(180deg, transparent 62%, var(--teal-tint) 62%);
+  padding: 0 1px;
+}
+
+/* gold 變體(用於金句、希望、跨段呼應)*/
+.em-gold {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+
+/* ============ 4. Hero Header ============ */
+header { margin-bottom: 32px; }
+
+.eyebrow {
+  font-family: var(--font-serif);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  font-weight: 600;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  padding-left: 1px;
+}
+
+h1 {
+  font-family: var(--font-serif);
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--teal);
+  line-height: 1.35;
+  margin: 0 0 14px;
+  letter-spacing: 0.01em;
+}
+
+.subtitle {
+  font-family: var(--font-serif);
+  font-size: 15.5px;
+  color: var(--ink-soft);
+  font-weight: 500;
+  line-height: 1.7;
+  margin: 0 0 18px;
+}
+
+.divider {
+  width: 56px;
+  height: 1.5px;
+  background: var(--gold);
+  margin: 0 0 18px;
+}
+
+.meta {
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+}
+
+
+/* ============ 5. Lead Paragraph ============ */
+.lead {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--teal);
+  border-radius: var(--radius-sm);
+  padding: 22px 24px;
+  margin-bottom: var(--section-gap);
+}
+.lead > strong {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  color: var(--teal);
+  margin-bottom: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.lead p {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  line-height: 1.85;
+}
+.lead p:last-child { margin-bottom: 0; }
+
+
+/* ============ 6. Section Title ============ */
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--teal);
+  margin: 0 0 6px;
+  letter-spacing: 0.02em;
+}
+.section-sub {
+  font-size: 13px;
+  color: var(--ink-faint);
+  margin-bottom: 18px;
+  letter-spacing: 0.03em;
+}
+
+
+/* ============ 7. Lexicon · 名詞速查 ============ */
+.lexicon {
+  background: var(--cream-deep);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: var(--section-gap);
+  position: relative;
+}
+.lexicon h4 {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  letter-spacing: 0.25em;
+  font-weight: 600;
+  color: var(--gold);
+  margin: 0 0 14px;
+}
+.lex-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 14px;
+  padding: 10px 0;
+  border-top: 1px dashed var(--border);
+  font-size: 13.5px;
+}
+.lex-row:first-of-type { border-top: 0; padding-top: 0; }
+.lex-term {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: var(--teal);
+  line-height: 1.65;
+}
+.lex-def {
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+.lex-def strong { color: var(--ink); font-weight: 600; }
+
+
+/* ============ 8. Pillar Cards(支柱卡 / 3 色變體)============ */
+.pillars-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-bottom: var(--section-gap);
+}
+.pillar-card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  border-top: 3px solid var(--teal);
+  position: relative;
+}
+.pillar-card.p1 { border-top-color: var(--teal); }
+.pillar-card.p2 { border-top-color: var(--gold); }
+.pillar-card.p3 { border-top-color: var(--sage); }
+.pillar-card.p4 { border-top-color: var(--plum); }
+.pillar-card.p5 { border-top-color: var(--navy); }
+
+.pillar-card .p-num {
+  font-family: var(--font-serif);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  font-weight: 600;
+  color: var(--teal);
+  margin-bottom: 6px;
+  display: block;
+}
+.pillar-card.p1 .p-num { color: var(--teal); }
+.pillar-card.p2 .p-num { color: var(--gold); }
+.pillar-card.p3 .p-num { color: var(--sage); }
+.pillar-card.p4 .p-num { color: var(--plum); }
+.pillar-card.p5 .p-num { color: var(--navy); }
+
+.pillar-card h4 {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.55;
+  margin: 0 0 4px;
+}
+.pillar-card .p-en {
+  font-family: var(--font-serif);
+  font-size: 11.5px;
+  font-style: italic;
+  color: var(--ink-faint);
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+  display: block;
+}
+.pillar-card p {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.78;
+  margin-bottom: 10px;
+}
+.pillar-card p:last-child { margin-bottom: 0; }
+.pillar-card p strong { color: var(--ink); font-weight: 600; }
+
+
+/* ============ 9. Strategy Cards(策略圖文卡)============ */
+.strategy-list {
+  display: grid;
+  gap: 14px;
+  margin-bottom: var(--section-gap);
+}
+.strategy-card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--teal);
+  border-radius: var(--radius-sm);
+  padding: 20px 22px;
+}
+.strategy-card .s-num {
+  font-family: var(--font-serif);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 6px;
+  display: block;
+}
+.strategy-card h4 {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--teal);
+  margin: 0 0 8px;
+  line-height: 1.55;
+}
+.strategy-card p {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+  line-height: 1.78;
+}
+.strategy-card p:last-child { margin-bottom: 0; }
+.strategy-card p strong { color: var(--ink); font-weight: 600; }
+
+
+/* ============ 10. Action List · 可行動清單 ============ */
+.action-list {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 22px 24px;
+  margin-bottom: var(--section-gap);
+}
+.action-list h4 {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--teal);
+  margin: 0 0 12px;
+}
+.action-list ul { list-style: none; padding: 0; margin: 0; }
+.action-list ul li {
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 13px;
+  font-size: 14.2px;
+  color: var(--ink);
+  line-height: 1.75;
+}
+.action-list ul li:last-child { margin-bottom: 0; }
+.action-list ul li::before {
+  content: "→";
+  position: absolute;
+  left: 4px; top: 0;
+  color: var(--teal);
+  font-weight: 700;
+}
+.action-list ul li strong {
+  display: block;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.action-list ul li .detail {
+  display: block;
+  font-size: 13.3px;
+  color: var(--ink-soft);
+  line-height: 1.72;
+}
+
+
+/* ============ 11. Checklist · 勾選清單 ============ */
+.checklist {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 20px 22px;
+  margin-bottom: var(--section-gap);
+}
+.checklist h4 {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  margin: 0 0 14px;
+}
+.checklist ul { list-style: none; padding: 0; margin: 0; }
+.checklist li {
+  position: relative;
+  padding-left: 26px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.7;
+}
+.checklist li:last-child { margin-bottom: 0; }
+.checklist li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 4px;
+  width: 14px; height: 14px;
+  border: 1.5px solid var(--gold);
+  border-radius: 2px;
+}
+
+
+/* ============ 12. Floating Label Box(浮籤對照框)============ */
+/* 用於有特殊重點需要醒目呈現的小段落,例如 ERAS 三主軸總述 */
+.float-label-box {
+  background: linear-gradient(180deg, var(--paper) 0%, var(--teal-tint) 100%);
+  border: 1.5px solid var(--teal);
+  border-radius: var(--radius);
+  padding: 24px 26px;
+  margin-bottom: var(--section-gap);
+  position: relative;
+}
+.float-label-box::before {
+  content: attr(data-label);
+  position: absolute;
+  top: -10px; left: 20px;
+  background: var(--cream);
+  padding: 2px 12px;
+  font-family: var(--font-serif);
+  font-size: 10.5px;
+  letter-spacing: 0.25em;
+  font-weight: 600;
+  color: var(--teal);
+  border: 1px solid var(--teal);
+  border-radius: 2px;
+}
+.float-label-box h4 {
+  font-family: var(--font-serif);
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 6px 0 12px;
+}
+.float-label-box p {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  line-height: 1.78;
+  margin-bottom: 8px;
+}
+.float-label-box p:last-child { margin-bottom: 0; }
+
+
+/* ============ 13. 對照 / Comparison Card(vs 對比)============ */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: var(--section-gap);
+}
+.compare-cell {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+}
+.compare-cell.before { border-top: 2px solid var(--ink-faint); }
+.compare-cell.after  { border-top: 2px solid var(--teal); background: var(--teal-tint); }
+.compare-cell .c-label {
+  font-family: var(--font-serif);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  font-weight: 600;
+  color: var(--ink-faint);
+  margin-bottom: 8px;
+  display: block;
+}
+.compare-cell.after .c-label { color: var(--teal); }
+.compare-cell h5 {
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  color: var(--ink);
+  font-weight: 600;
+  margin: 0 0 8px;
+  line-height: 1.5;
+}
+.compare-cell p { font-size: 13.2px; color: var(--ink-soft); margin: 0; line-height: 1.72; }
+
+
+/* ============ 14. Inline Note · 醫師指示提醒 ============ */
+.dr-note {
+  background: var(--gold-tint);
+  border-left: 2px solid var(--gold);
+  border-radius: 2px;
+  padding: 11px 14px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+.dr-note strong { color: var(--gold); font-weight: 600; }
+
+
+/* ============ 15. Reading Map · 閱讀路徑 ============ */
+.reading-map {
+  background: var(--cream-deep);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin-bottom: var(--section-gap);
+}
+.reading-map h4 {
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--teal);
+  margin: 0 0 6px;
+  letter-spacing: 0.05em;
+}
+.reading-map .sub {
+  font-size: 12.8px;
+  color: var(--ink-faint);
+  margin-bottom: 14px;
+  line-height: 1.7;
+}
+.reading-map ol {
+  margin: 0;
+  padding-left: 20px;
+  counter-reset: rm;
+  list-style: none;
+}
+.reading-map ol li {
+  counter-increment: rm;
+  position: relative;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  padding-left: 8px;
+  margin-bottom: 8px;
+  line-height: 1.7;
+}
+.reading-map ol li::before {
+  content: counter(rm, decimal-leading-zero);
+  position: absolute;
+  left: -22px; top: 0;
+  font-family: var(--font-serif);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+}
+.reading-map ol li.current {
+  color: var(--ink);
+  font-weight: 600;
+}
+.reading-map ol li.current::before { color: var(--teal); }
+
+
+/* ============ 16. Closing · 結語 ============ */
+.closing {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--teal);
+  border-radius: var(--radius-sm);
+  padding: 24px 26px 26px;
+  margin-bottom: var(--section-gap);
+  text-align: left;
+}
+.closing p {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.85;
+  margin-bottom: 14px;
+}
+.closing p:last-of-type { margin-bottom: 22px; }
+
+.signature {
+  font-family: var(--font-serif);
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--teal);
+  letter-spacing: 0.08em;
+  text-align: center;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--border);
+}
+.signature-note {
+  font-family: var(--font-serif);
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  text-align: center;
+  margin-top: 6px;
+  letter-spacing: 0.15em;
+}
+
+
+/* ============ 17. References · 參考資料 ============ */
+.references {
+  background: transparent;
+  padding: 18px 0 6px;
+  margin-bottom: 18px;
+}
+.ref-title {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.references ol {
+  padding-left: 20px;
+  margin: 0;
+}
+.references ol li {
+  font-size: 12px;
+  color: var(--ink-faint);
+  line-height: 1.65;
+  margin-bottom: 8px;
+}
+.references ol li em { color: var(--ink-soft); font-style: italic; }
+
+
+/* ============ 18. Footer · 頁尾(免責 / 機構)============ */
+footer {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-soft);
+  text-align: center;
+}
+footer .clinic {
+  font-family: var(--font-serif);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-faint);
+  letter-spacing: 0.2em;
+  margin-bottom: 8px;
+}
+footer .disclaimer {
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  line-height: 1.7;
+  padding: 0 6px;
+}
+
+
+/* ============ 19. 響應式 ============ */
+@media (max-width: 520px) {
+  .container { padding: 28px 18px 60px; }
+  h1 { font-size: 26px; }
+  .subtitle { font-size: 14.5px; }
+  .lex-row { grid-template-columns: 90px 1fr; gap: 10px; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .pillar-card { padding: 18px 20px; }
+  .strategy-card { padding: 16px 18px; }
+  .lead { padding: 18px 20px; }
+  .float-label-box { padding: 20px 20px; }
+  .float-label-box::before { left: 16px; font-size: 10px; }
+  .closing { padding: 20px 20px 22px; }
+  .timeline-item { padding-left: 48px; }
+  .timeline::before { left: 17px; }
+  .timeline-dot { left: 10px; }
+  .worked-example .we-row { grid-template-columns: 75px 1fr; gap: 8px; }
+  .cautious-note { padding: 18px 20px; }
+
+  /* A-series responsive */
+  .tech-grid { grid-template-columns: 1fr; }
+  .tech-matrix { grid-template-columns: 1fr; border: 0; }
+  .tech-matrix .m-cell {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+    min-height: 0;
+    text-align: left;
+    justify-content: flex-start;
+    padding: 10px 12px;
+  }
+  .tech-matrix .m-cell.header { display: none; }
+  .tech-matrix .m-cell.row-label {
+    background: var(--teal-tint);
+    color: var(--teal);
+    margin-bottom: 4px;
+    margin-top: 14px;
+    border: 0;
+    padding: 8px 4px;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+  }
+  .tech-matrix .m-cell.row-label:first-child { margin-top: 0; }
+  /* 在手機上,每個 data cell 顯示 goal 名稱 */
+  .tech-matrix .m-cell[data-goal]::before {
+    content: attr(data-goal);
+    flex: 1;
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    font-weight: 400;
+  }
+  .tech-matrix .m-cell.empty { display: none; }
+  .outcome-card { padding: 18px 20px; }
+}
+
+
+/* ============ 20. Vertical Timeline · 垂直時序線 ============ */
+/* 用途:禁食時鐘、當日流程、術後恢復時序、復健 milestone 等
+   3 種狀態:.allow(可)/ .stop(截止 / 不可)/ .focus(重點時刻)*/
+.timeline {
+  position: relative;
+  padding: 8px 0 4px;
+  margin-bottom: var(--section-gap);
+}
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 20px;
+  top: 14px; bottom: 14px;
+  width: 2px;
+  background: var(--border);
+}
+.timeline-item {
+  position: relative;
+  padding-left: 56px;
+  margin-bottom: 22px;
+}
+.timeline-item:last-child { margin-bottom: 0; }
+
+.timeline-dot {
+  position: absolute;
+  left: 13px; top: 4px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2.5px solid var(--ink-faint);
+  z-index: 1;
+  box-sizing: border-box;
+}
+.timeline-item.allow .timeline-dot { border-color: var(--sage); background: var(--sage); }
+.timeline-item.stop  .timeline-dot { border-color: var(--ink-soft); background: var(--paper); }
+.timeline-item.stop  .timeline-dot::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: var(--ink-soft);
+}
+.timeline-item.focus .timeline-dot {
+  border-color: var(--gold);
+  background: var(--gold);
+  transform: scale(1.35);
+  box-shadow: 0 0 0 4px var(--gold-tint);
+}
+
+.timeline-item .tl-time {
+  font-family: var(--font-serif);
+  font-size: 11.5px;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+  color: var(--ink-faint);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.timeline-item.allow .tl-time { color: var(--sage); }
+.timeline-item.stop  .tl-time { color: var(--ink-soft); }
+.timeline-item.focus .tl-time { color: var(--gold); }
+
+.timeline-item .tl-what {
+  font-family: var(--font-serif);
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+.timeline-item.focus .tl-what { color: var(--gold); }
+
+.timeline-item .tl-detail {
+  font-size: 13.2px;
+  color: var(--ink-soft);
+  line-height: 1.78;
+}
+.timeline-item .tl-detail strong { color: var(--ink); font-weight: 600; }
+
+
+/* ============ 21. Worked Example Sidebar · 工作範例側欄 ============ */
+/* 用途:術前 1 天時為禁食時鐘提供具體舉例(如「假設手術 8:00 AM」)*/
+.worked-example {
+  background: var(--cream-deep);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  margin-bottom: var(--section-gap);
+  border-left: 2px solid var(--gold);
+}
+.worked-example .we-label {
+  font-family: var(--font-serif);
+  font-size: 10.5px;
+  letter-spacing: 0.3em;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 6px;
+  display: block;
+}
+.worked-example h5 {
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+.worked-example .we-row {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.75;
+  padding: 4px 0;
+}
+.worked-example .we-row .we-time {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: var(--teal);
+  letter-spacing: 0.04em;
+}
+.worked-example .we-note {
+  font-size: 12.3px;
+  color: var(--ink-faint);
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+  line-height: 1.65;
+}
+
+
+/* ============ 22. Cautious Note · 慎重提醒(非警示) ============ */
+/* 用途:「不能來的情況」「需特別告知」等需要病人留意但非緊急的訊息
+   與 .dr-note 不同:這是更慎重的,clay token 但收斂 */
+.cautious-note {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--clay);
+  border-radius: var(--radius-sm);
+  padding: 20px 22px;
+  margin-bottom: var(--section-gap);
+}
+.cautious-note h4 {
+  font-family: var(--font-serif);
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--clay);
+  margin: 0 0 10px;
+  letter-spacing: 0.02em;
+}
+.cautious-note p {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  line-height: 1.78;
+  margin-bottom: 10px;
+}
+.cautious-note ul {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 10px;
+}
+.cautious-note ul li {
+  position: relative;
+  padding-left: 22px;
+  margin-bottom: 8px;
+  font-size: 13.5px;
+  color: var(--ink);
+  line-height: 1.7;
+}
+.cautious-note ul li::before {
+  content: "•";
+  position: absolute;
+  left: 6px; top: -2px;
+  color: var(--clay);
+  font-size: 18px;
+  font-weight: 700;
+}
+.cautious-note .nb {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: var(--cream-deep);
+  border-radius: 2px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+.cautious-note .nb strong { color: var(--clay); font-weight: 600; }
+
+
+/* ============ 24. Tech Mini-Card Grid · 技術概覽卡(2 cols → 1 col)============ */
+.tech-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: var(--section-gap);
+}
+.tech-mini {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  border-left: 2px solid var(--teal);
+  padding: 14px 16px;
+}
+.tech-mini.g1 { border-left-color: var(--teal); }
+.tech-mini.g2 { border-left-color: var(--gold); }
+.tech-mini.g3 { border-left-color: var(--sage); }
+.tech-mini.g4 { border-left-color: var(--plum); }
+
+.tech-mini .t-num {
+  font-family: var(--font-serif);
+  font-size: 10.5px;
+  letter-spacing: 0.25em;
+  color: var(--ink-faint);
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+}
+.tech-mini.g1 .t-num { color: var(--teal); }
+.tech-mini.g2 .t-num { color: var(--gold); }
+.tech-mini.g3 .t-num { color: var(--sage); }
+.tech-mini.g4 .t-num { color: var(--plum); }
+
+.tech-mini h5 {
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 3px;
+  line-height: 1.45;
+}
+.tech-mini .t-abbr {
+  font-family: var(--font-serif);
+  font-size: 11px;
+  font-style: italic;
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+  display: block;
+  margin-bottom: 7px;
+}
+.tech-mini p {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin: 0;
+}
+
+
+/* ============ 25. Tech Matrix · 技術 × 目標 矩陣 ============ */
+.matrix-wrap {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 20px;
+  margin-bottom: var(--section-gap);
+}
+.matrix-wrap .m-title {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  letter-spacing: 0.18em;
+  font-weight: 600;
+  color: var(--teal);
+  margin: 0 0 4px;
+}
+.matrix-wrap .m-sub {
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  margin-bottom: 16px;
+  line-height: 1.7;
+}
+
+.tech-matrix {
+  display: grid;
+  grid-template-columns: 1.2fr repeat(4, 1fr);
+  font-size: 12.5px;
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+}
+.tech-matrix .m-cell {
+  padding: 12px 8px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 48px;
+}
+.tech-matrix .m-cell.header {
+  font-family: var(--font-serif);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--teal);
+  background: var(--teal-tint);
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+}
+.tech-matrix .m-cell.row-label {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--cream-deep);
+  font-size: 12.8px;
+  justify-content: flex-start;
+  text-align: left;
+  padding: 12px 14px;
+  line-height: 1.5;
+}
+.tech-matrix .m-cell .dot-primary {
+  color: var(--teal);
+  font-size: 22px;
+  line-height: 1;
+}
+.tech-matrix .m-cell .dot-secondary {
+  color: var(--gold);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.matrix-legend {
+  display: flex;
+  gap: 22px;
+  margin-top: 14px;
+  font-size: 11.8px;
+  color: var(--ink-faint);
+  flex-wrap: wrap;
+  line-height: 1.6;
+}
+.matrix-legend span.lg { display: inline-flex; align-items: center; gap: 6px; }
+.matrix-legend span.lg .dot-primary,
+.matrix-legend span.lg .dot-secondary { line-height: 1; }
+
+
+/* ============ 26. Outcome Card · 病人感受卡 ============ */
+.outcome-list {
+  display: grid;
+  gap: 14px;
+  margin-bottom: var(--section-gap);
+}
+.outcome-card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  position: relative;
+}
+.outcome-card.o1 { border-top: 3px solid var(--teal); }
+.outcome-card.o2 { border-top: 3px solid var(--gold); }
+.outcome-card.o3 { border-top: 3px solid var(--sage); }
+.outcome-card.o4 { border-top: 3px solid var(--plum); }
+
+.outcome-card .o-eyebrow {
+  font-family: var(--font-serif);
+  font-size: 10.5px;
+  letter-spacing: 0.3em;
+  font-weight: 600;
+  color: var(--ink-faint);
+  margin-bottom: 6px;
+  display: block;
+}
+.outcome-card.o1 .o-eyebrow { color: var(--teal); }
+.outcome-card.o2 .o-eyebrow { color: var(--gold); }
+.outcome-card.o3 .o-eyebrow { color: var(--sage); }
+.outcome-card.o4 .o-eyebrow { color: var(--plum); }
+
+.outcome-card h4 {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+.outcome-card .o-lead {
+  font-size: 13.8px;
+  color: var(--ink-soft);
+  line-height: 1.78;
+  margin-bottom: 12px;
+}
+.outcome-card .o-lead:last-child { margin-bottom: 0; }
+.outcome-card .o-lead strong { color: var(--ink); font-weight: 600; }
+
+.outcome-card .contrib-list {
+  background: var(--cream-deep);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.78;
+  margin-top: 8px;
+}
+.outcome-card .contrib-list .c-label {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--ink-faint);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.outcome-card .contrib-list .tag {
+  display: inline-block;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 3px 10px;
+  font-size: 11.5px;
+  color: var(--ink);
+  margin: 0 4px 4px 0;
+  white-space: nowrap;
+}
+.outcome-card.o1 .contrib-list .tag { border-color: var(--teal-soft); color: var(--teal); }
+.outcome-card.o2 .contrib-list .tag { border-color: var(--gold); color: var(--gold); }
+.outcome-card.o3 .contrib-list .tag { border-color: var(--sage); color: var(--sage); }
+.outcome-card.o4 .contrib-list .tag { border-color: var(--plum); color: var(--plum); }

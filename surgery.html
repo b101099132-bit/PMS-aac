@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>外科醫師建檔 — PMS-aac</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #FAF7F2; --paper: #FFFFFF; --ink: #1A1A1A; --ink-soft: #5C5C5C; --ink-faint: #8A8580;
+  --teal: #1F5A5A; --teal-tint: #F5F9F9; --teal-soft: #E6EDED;
+  --gold: #A87B4D; --plum: #6B5876; --navy: #2C4866;
+  --sage: #5A7A52; --clay: #9C5B3D; --border: #E8E2D5; --border-strong: #D4CDB8;
+}
+body {
+  font-family: 'Noto Sans TC', system-ui, sans-serif;
+  background: var(--cream); color: var(--ink);
+  font-size: 15px; line-height: 1.6;
+  padding: 32px 16px 60px;
+}
+.container { max-width: 720px; margin: 0 auto; }
+header { text-align: center; margin-bottom: 32px; }
+.eyebrow { font-size: 11px; letter-spacing: 0.15em; color: var(--teal); text-transform: uppercase; margin-bottom: 8px; }
+h1 { font-family: 'Noto Serif TC', serif; font-size: 26px; font-weight: 600; }
+.subtitle { color: var(--ink-soft); font-size: 14px; margin-top: 8px; }
+
+.card { background: var(--paper); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+.card h2 { font-size: 17px; color: var(--teal); margin-bottom: 12px; font-weight: 600; }
+
+label { display: block; font-size: 13px; color: var(--ink-soft); margin-bottom: 6px; }
+label .req { color: #c53030; }
+input[type=text], input[type=date], input[type=number], input[type=password], select, textarea {
+  width: 100%; padding: 12px 14px;
+  border: 1.5px solid var(--border-strong); border-radius: 8px;
+  font-size: 16px; font-family: inherit; background: white;
+}
+textarea { min-height: 80px; resize: vertical; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--teal); }
+
+.input-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.input-row > * { flex: 1; min-width: 160px; }
+
+.btn {
+  padding: 12px 22px; background: var(--teal); color: white;
+  border: none; border-radius: 8px; font-size: 15px; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+}
+.btn:hover { background: #18484A; }
+.btn:disabled { background: #ccc; cursor: not-allowed; }
+.btn-block { width: 100%; padding: 14px; font-size: 16px; margin-top: 16px; }
+.btn-secondary { background: var(--paper); color: var(--teal); border: 1.5px solid var(--teal); }
+
+.field-group { margin-bottom: 14px; }
+
+.error-msg {
+  background: #fee; color: #c53030;
+  padding: 12px; border-radius: 6px; margin-top: 12px; font-size: 14px;
+  white-space: pre-wrap;
+}
+
+.patient-card {
+  background: var(--teal-tint); border: 1px solid var(--teal-soft);
+  border-radius: 10px; padding: 16px; margin-bottom: 10px;
+  cursor: pointer; transition: all 0.15s;
+}
+.patient-card:hover { border-color: var(--teal); }
+.patient-card .pname { font-size: 16px; font-weight: 600; }
+.patient-card .pmeta {
+  color: var(--ink-soft); font-size: 13px; margin-top: 4px;
+}
+.patient-card .pmeta span { margin-right: 14px; }
+
+.summary-box {
+  background: var(--teal-tint); border-left: 4px solid var(--teal);
+  padding: 14px 16px; border-radius: 6px; margin-bottom: 18px;
+}
+.summary-box .name { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.summary-box .info { color: var(--ink-soft); font-size: 13px; }
+
+.success-screen {
+  background: white; border: 2px solid #047857; border-radius: 12px;
+  padding: 36px 24px; text-align: center;
+}
+.success-screen .check {
+  display: inline-block; font-size: 48px; color: #047857; margin-bottom: 10px;
+}
+.success-screen h1 { font-size: 24px; color: #047857; margin-bottom: 14px; }
+.surgery-id {
+  display: inline-block;
+  background: var(--cream); padding: 12px 22px; border-radius: 8px;
+  font-size: 19px; font-weight: 600; color: var(--teal);
+  letter-spacing: 0.05em; margin: 12px 0;
+}
+
+.back-link { display: inline-block; margin-top: 16px; color: var(--teal); text-decoration: none; font-size: 14px; }
+.back-link:hover { text-decoration: underline; }
+
+.hint { font-size: 12px; color: var(--ink-faint); margin-top: 4px; }
+.loading { text-align: center; padding: 30px; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="eyebrow">Surgery Registration · 外科醫師專用</div>
+    <h1>外科醫師建檔</h1>
+    <p class="subtitle">為既有病人建立新手術紀錄</p>
+  </header>
+
+  <!-- ═════ Stage 1: 醫師登入 ═════ -->
+  <div id="login-stage" class="card">
+    <h2>🔑 醫師通行碼</h2>
+    <div class="field-group">
+      <label>請輸入您的通行碼 <span class="req">*</span></label>
+      <input type="password" id="surgeon-key" placeholder="例:LYS-2026 或 ORTHO-2026" autocomplete="off">
+      <div class="hint">系統管理員(LYS-2026)可代任何醫師建檔以做測試</div>
+    </div>
+    <button class="btn btn-block" id="login-btn">登入</button>
+    <div id="login-error" class="error-msg" hidden></div>
+  </div>
+
+  <!-- ═════ Stage 2: 末四碼搜尋病人 ═════ -->
+  <div id="search-stage" class="card" hidden>
+    <h2>🔍 找出病人</h2>
+    <div class="input-row" style="align-items:flex-end;">
+      <div class="field-group" style="flex:1; margin-bottom:0;">
+        <label>身分證末四碼 <span class="req">*</span></label>
+        <input type="text" id="idLast4" maxlength="4" inputmode="numeric" pattern="[0-9]{4}" placeholder="4 位數字">
+      </div>
+      <div class="field-group" style="flex:1; margin-bottom:0;">
+        <label>出生日期(可選)</label>
+        <input type="date" id="birthdate">
+      </div>
+      <button class="btn" id="search-btn">查詢</button>
+    </div>
+    <div class="hint" style="margin-top:8px;">💡 若同末四碼有多筆,用出生日期消歧義。若查無病人,請先請病人自助建檔</div>
+    <div id="search-error" class="error-msg" hidden></div>
+    <div id="search-results" style="margin-top:16px;"></div>
+  </div>
+
+  <!-- ═════ Stage 3: 選病人 + 建手術 ═════ -->
+  <div id="surgery-stage" class="card" hidden>
+    <h2>🏥 建立手術紀錄</h2>
+
+    <div id="patient-summary" class="summary-box"></div>
+
+    <div class="field-group">
+      <label>術式 <span class="req">*</span></label>
+      <select id="procedure-code">
+        <option value="">-- 請選擇 --</option>
+      </select>
+    </div>
+
+    <div class="input-row">
+      <div class="field-group">
+        <label>預定手術日</label>
+        <input type="date" id="scheduled-date">
+      </div>
+      <div class="field-group">
+        <label>預估手術時長(分鐘)</label>
+        <input type="number" id="estimated-duration" min="0" max="600" placeholder="例:60">
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>主訴 / 手術原因</label>
+      <input type="text" id="complaint" placeholder="例:右肩 RCT、右側輸尿管結石">
+    </div>
+
+    <div class="field-group">
+      <label>麻醉計畫(可選,日後再填亦可)</label>
+      <textarea id="anesthesia-plan" placeholder="例:RA(臂神經叢阻斷)+ 短效全麻;Acetaminophen + NSAID 多模式止痛"></textarea>
+    </div>
+
+    <button class="btn btn-block" id="create-btn">建立手術</button>
+    <button class="btn btn-block btn-secondary" id="back-btn" style="margin-top:8px;">← 重新搜尋病人</button>
+    <div id="create-error" class="error-msg" hidden></div>
+  </div>
+
+  <!-- ═════ Stage 4: 成功 ═════ -->
+  <div id="success-stage" class="success-screen" hidden>
+    <span class="check">✓</span>
+    <h1>手術已建檔</h1>
+    <p style="margin-bottom:8px;" id="success-patient"></p>
+    <p style="margin-bottom:8px;" id="success-procedure"></p>
+    <div class="surgery-id" id="success-surgery-id"></div>
+    <div style="background:var(--cream); border-radius:8px; padding:14px; margin-top:14px; text-align:left; font-size:14px;">
+      <strong>📲 後續流程</strong>
+      <ul style="margin-top:6px; padding-left:18px; line-height:1.8;">
+        <li>請病人加官方 LINE 帳號「<strong>安康日間手術麻醉團隊</strong>」</li>
+        <li>加入後使用末四碼綁定,系統會自動推送術前衛教</li>
+        <li>術後 24/72hr/7d 自動發送品質問卷</li>
+      </ul>
+    </div>
+    <div style="margin-top:18px;">
+      <button class="btn" id="new-surgery-btn">為下一位病人建檔</button>
+    </div>
+  </div>
+
+  <!-- 載入中 -->
+  <div id="loading" class="loading" hidden>處理中⋯⋯</div>
+
+  <!-- 回首頁 -->
+  <a class="back-link" href="index.html">← 回首頁</a>
+
+</div>
+
+<script>
+const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyd7bIOosg_v1lyhkcJO2oi0EzaUdMYSkf7EVJQ7oetv8QY2zhlnyaO1XaGyLs8rphF/exec';
+
+let surgeonKey = '';
+let selectedPatient = null;  // 選定的病人 {pk, name, birthdate, gender}
+
+// ── JSONP utility ────────────────────────────────
+function jsonpCall(action, params) {
+  return new Promise((resolve, reject) => {
+    const cb = '__jsonp_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+    const timer = setTimeout(() => {
+      delete window[cb];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      reject(new Error('Request timeout'));
+    }, 15000);
+
+    window[cb] = function(data) {
+      clearTimeout(timer);
+      delete window[cb];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      if (data && data.ok) resolve(data);
+      else reject(new Error((data && data.error) || 'Unknown error'));
+    };
+
+    const usp = new URLSearchParams();
+    usp.set('action', action);
+    usp.set('callback', cb);
+    for (const k in params) {
+      if (params[k] !== undefined && params[k] !== null && params[k] !== '') {
+        usp.set(k, String(params[k]));
+      }
+    }
+    const script = document.createElement('script');
+    script.src = GAS_ENDPOINT + '?' + usp.toString();
+    script.onerror = () => { clearTimeout(timer); delete window[cb]; reject(new Error('Network error')); };
+    document.body.appendChild(script);
+  });
+}
+
+function escapeHtml(s) {
+  return String(s || '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+// ── Stage 切換 ─────────────────────────────────
+function showStage(stage) {
+  ['login-stage', 'search-stage', 'surgery-stage', 'success-stage'].forEach(id => {
+    document.getElementById(id).hidden = id !== stage;
+  });
+}
+
+// ── Stage 1: Login ─────────────────────────────
+async function handleLogin() {
+  const key = document.getElementById('surgeon-key').value.trim();
+  const err = document.getElementById('login-error');
+  err.hidden = true;
+  if (!key) {
+    err.textContent = '請輸入通行碼';
+    err.hidden = false;
+    return;
+  }
+  // 把 key 存到 session,後續 endpoint 用
+  surgeonKey = key;
+  sessionStorage.setItem('surgery_key', key);
+  showStage('search-stage');
+  // 預先載入術式清單(快取備用)
+  loadProcedures().catch(e => console.error('預載術式失敗', e));
+  document.getElementById('idLast4').focus();
+}
+
+// ── Stage 2: Search ────────────────────────────
+async function handleSearch() {
+  const idLast4 = document.getElementById('idLast4').value.trim();
+  const birthdate = document.getElementById('birthdate').value;
+  const err = document.getElementById('search-error');
+  const results = document.getElementById('search-results');
+  err.hidden = true;
+  results.innerHTML = '';
+
+  if (!/^\d{4}$/.test(idLast4)) {
+    err.textContent = '請輸入 4 位數字末四碼';
+    err.hidden = false;
+    return;
+  }
+
+  const btn = document.getElementById('search-btn');
+  btn.disabled = true; btn.textContent = '查詢中...';
+
+  try {
+    const result = await jsonpCall('searchSurgeryByIdLast4', { idLast4, birthdate });
+    renderSearchResults(result.results || []);
+  } catch (e) {
+    err.textContent = '查詢失敗:' + e.message;
+    err.hidden = false;
+  } finally {
+    btn.disabled = false; btn.textContent = '查詢';
+  }
+}
+
+function renderSearchResults(results) {
+  const el = document.getElementById('search-results');
+  if (results.length === 0) {
+    el.innerHTML = `
+      <div style="text-align:center; padding:20px; color:var(--ink-faint);">
+        <p>找不到末四碼相符的病人</p>
+        <p style="font-size:13px; margin-top:8px;">請病人先用「<a href="preop.html#mode=self_register" style="color:var(--teal);">自助建檔</a>」建立病人主檔,再回來建手術</p>
+      </div>`;
+    return;
+  }
+
+  // 去重(同 pk 多筆 surgery → 只顯示一次病人)
+  const seen = new Set();
+  const uniquePatients = results.filter(r => {
+    if (seen.has(r.pk)) return false;
+    seen.add(r.pk);
+    return true;
+  });
+
+  el.innerHTML = uniquePatients.map(r => `
+    <div class="patient-card" data-pk="${r.pk}"
+         data-name="${escapeHtml(r.name)}"
+         data-birth="${escapeHtml(r.birthdate || '')}"
+         data-gender="${escapeHtml(r.gender || '')}">
+      <div class="pname">👤 ${escapeHtml(r.name)}</div>
+      <div class="pmeta">
+        <span>PK: ${r.pk}</span>
+        <span>${r.gender || ''}</span>
+        <span>${r.birthdate || ''}</span>
+      </div>
+      <div class="pmeta" style="margin-top:4px; color:var(--ink-faint); font-size:12px;">
+        ${results.filter(x => x.pk === r.pk && x.surgeryId).length > 0
+          ? '既往手術 ' + results.filter(x => x.pk === r.pk && x.surgeryId).length + ' 筆'
+          : '尚無手術紀錄'}
+      </div>
+    </div>
+  `).join('');
+
+  el.querySelectorAll('.patient-card').forEach(card => {
+    card.addEventListener('click', () => handlePickPatient({
+      pk: card.dataset.pk,
+      name: card.dataset.name,
+      birthdate: card.dataset.birth,
+      gender: card.dataset.gender
+    }));
+  });
+}
+
+function handlePickPatient(patient) {
+  selectedPatient = patient;
+  // 顯示病人摘要
+  document.getElementById('patient-summary').innerHTML = `
+    <div class="name">${escapeHtml(patient.name)}</div>
+    <div class="info">
+      PK ${escapeHtml(patient.pk)}
+      &nbsp;·&nbsp; ${escapeHtml(patient.gender || '?')}
+      &nbsp;·&nbsp; ${escapeHtml(patient.birthdate || '?')}
+    </div>
+  `;
+  showStage('surgery-stage');
+  // 重設手術表單
+  document.getElementById('procedure-code').value = '';
+  document.getElementById('scheduled-date').value = '';
+  document.getElementById('complaint').value = '';
+  document.getElementById('estimated-duration').value = '';
+  document.getElementById('anesthesia-plan').value = '';
+  document.getElementById('create-error').hidden = true;
+}
+
+// ── Stage 3: Load procedures + Create surgery ─────
+let proceduresLoaded = false;
+async function loadProcedures() {
+  if (proceduresLoaded) return;
+  try {
+    const result = await jsonpCall('preopGetProcedures', {});
+    const select = document.getElementById('procedure-code');
+    // 清除舊選項(保留第一個 "-- 請選擇 --")
+    while (select.options.length > 1) select.remove(1);
+
+    // 按手術族群分組
+    const grouped = {};
+    (result.procedures || []).forEach(p => {
+      const g = p.group || '其他';
+      if (!grouped[g]) grouped[g] = [];
+      grouped[g].push(p);
+    });
+
+    Object.keys(grouped).forEach(g => {
+      const optgroup = document.createElement('optgroup');
+      optgroup.label = g.toUpperCase();
+      grouped[g].forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.code;
+        opt.textContent = p.code + ' — ' + p.name;
+        optgroup.appendChild(opt);
+      });
+      select.appendChild(optgroup);
+    });
+    proceduresLoaded = true;
+  } catch (e) {
+    console.error('載入術式清單失敗:', e);
+  }
+}
+
+async function handleCreate() {
+  const err = document.getElementById('create-error');
+  err.hidden = true;
+
+  const procedureCode = document.getElementById('procedure-code').value;
+  if (!procedureCode) {
+    err.textContent = '請選擇術式';
+    err.hidden = false;
+    return;
+  }
+
+  const btn = document.getElementById('create-btn');
+  btn.disabled = true; btn.textContent = '建立中...';
+
+  try {
+    const result = await jsonpCall('surgeryCreate', {
+      surgeonKey: surgeonKey,
+      pk: selectedPatient.pk,
+      procedureCode: procedureCode,
+      scheduledDate: document.getElementById('scheduled-date').value,
+      complaint: document.getElementById('complaint').value.trim(),
+      estimatedDuration: document.getElementById('estimated-duration').value,
+      anesthesiaPlan: document.getElementById('anesthesia-plan').value.trim()
+    });
+    // 顯示成功畫面
+    document.getElementById('success-patient').textContent =
+      '病人:' + result.patientName + ' (PK ' + result.pk + ')';
+    document.getElementById('success-procedure').textContent =
+      '術式:' + result.procedureName;
+    document.getElementById('success-surgery-id').textContent = result.surgeryId;
+    showStage('success-stage');
+  } catch (e) {
+    err.textContent = '建立失敗:' + e.message;
+    err.hidden = false;
+    btn.disabled = false; btn.textContent = '建立手術';
+  }
+}
+
+// ── Stage 4: New surgery ──────────────────────
+function handleNewSurgery() {
+  selectedPatient = null;
+  document.getElementById('idLast4').value = '';
+  document.getElementById('birthdate').value = '';
+  document.getElementById('search-results').innerHTML = '';
+  showStage('search-stage');
+  document.getElementById('idLast4').focus();
+}
+
+// ── 綁定事件 ──────────────────────────────────
+document.getElementById('login-btn').addEventListener('click', handleLogin);
+document.getElementById('surgeon-key').addEventListener('keypress', e => {
+  if (e.key === 'Enter') handleLogin();
+});
+
+document.getElementById('search-btn').addEventListener('click', handleSearch);
+document.getElementById('idLast4').addEventListener('keypress', e => {
+  if (e.key === 'Enter') handleSearch();
+});
+
+document.getElementById('create-btn').addEventListener('click', handleCreate);
+document.getElementById('back-btn').addEventListener('click', () => {
+  showStage('search-stage');
+});
+
+document.getElementById('new-surgery-btn').addEventListener('click', handleNewSurgery);
+
+// ── 自動恢復 session 登入 ────────────────────
+const savedKey = sessionStorage.getItem('surgery_key');
+if (savedKey) {
+  surgeonKey = savedKey;
+  document.getElementById('surgeon-key').value = savedKey;
+  // 自動進入搜尋階段
+  showStage('search-stage');
+  loadProcedures().catch(e => console.error('預載術式失敗', e));
+} else {
+  showStage('login-stage');
+  document.getElementById('surgeon-key').focus();
+}
+</script>
+
+</body>
+</html>

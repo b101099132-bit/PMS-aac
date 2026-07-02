@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>簽名查看器 — PMS-aac</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #FAF7F2; --paper: #FFFFFF; --ink: #1A1A1A; --ink-soft: #5C5C5C; --ink-faint: #8A8580;
+  --teal: #1F5A5A; --teal-tint: #F5F9F9; --teal-soft: #E6EDED;
+  --border: #E8E2D5; --border-strong: #D4CDB8;
+}
+body {
+  font-family: 'Noto Sans TC', system-ui, sans-serif;
+  background: var(--cream); color: var(--ink);
+  font-size: 15px; line-height: 1.6;
+  padding: 32px 16px 60px;
+}
+.container { max-width: 720px; margin: 0 auto; }
+header { text-align: center; margin-bottom: 28px; }
+.eyebrow { font-size: 11px; letter-spacing: 0.15em; color: var(--teal); text-transform: uppercase; margin-bottom: 6px; }
+h1 { font-family: 'Noto Serif TC', serif; font-size: 24px; font-weight: 600; }
+.subtitle { color: var(--ink-soft); font-size: 14px; margin-top: 6px; }
+
+.card { background: var(--paper); border: 1px solid var(--border); border-radius: 12px; padding: 22px; margin-bottom: 16px; }
+
+label { display: block; font-size: 13px; color: var(--ink-soft); margin-bottom: 6px; }
+textarea {
+  width: 100%; min-height: 100px; padding: 10px 12px;
+  border: 1.5px solid var(--border-strong); border-radius: 8px;
+  font-family: monospace; font-size: 12px; line-height: 1.4;
+  background: white; resize: vertical;
+}
+textarea:focus { outline: none; border-color: var(--teal); }
+
+.btn {
+  padding: 10px 20px; background: var(--teal); color: white;
+  border: none; border-radius: 8px; font-size: 14px; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+}
+.btn:hover { background: #18484A; }
+.btn-secondary { background: var(--paper); color: var(--teal); border: 1.5px solid var(--teal); }
+
+.preview-box {
+  background: var(--teal-tint); border: 1px solid var(--teal-soft);
+  border-radius: 10px; padding: 16px; margin-top: 12px; text-align: center;
+}
+.preview-box img { max-width: 100%; height: auto; background: white; border: 1px solid var(--border); border-radius: 4px; }
+.preview-box .meta {
+  margin-top: 10px; font-size: 12px; color: var(--ink-soft);
+}
+
+.error-msg {
+  background: #fee; color: #c53030; padding: 10px;
+  border-radius: 6px; margin-top: 10px; font-size: 13px;
+}
+
+.tips {
+  background: var(--cream); padding: 14px; border-radius: 8px;
+  margin-top: 14px; font-size: 13px; color: var(--ink-soft);
+}
+.tips ol { padding-left: 20px; line-height: 1.8; }
+
+.back-link { display: inline-block; margin-top: 16px; color: var(--teal); text-decoration: none; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="eyebrow">Signature Viewer · 簽名查看工具</div>
+    <h1>PACU 簽名查看器</h1>
+    <p class="subtitle">貼上 Google Sheet AK 欄的 base64 → 顯示圖片</p>
+  </header>
+
+  <div class="card">
+    <label for="signature-input">貼上簽名 base64(整段,含 <code>data:image/jpeg;base64,</code> 前綴)</label>
+    <textarea id="signature-input" placeholder="data:image/jpeg;base64,/9j/4AAQSkZJRg..."></textarea>
+    <div style="margin-top: 12px;">
+      <button class="btn" id="preview-btn">📷 顯示簽名</button>
+      <button class="btn btn-secondary" id="clear-btn">清除</button>
+    </div>
+    <div id="error-box" class="error-msg" hidden></div>
+    <div id="preview-container" hidden></div>
+
+    <div class="tips">
+      <strong>💡 取得簽名 base64 的步驟</strong>
+      <ol>
+        <li>打開 Google Sheet「手術紀錄」分頁</li>
+        <li>找到該 surgery 的列</li>
+        <li>點擊 <strong>AK 欄</strong>(家屬簽名)的儲存格</li>
+        <li>看「公式列」(Formula Bar) → 整段內容應該以 <code>data:image/jpeg;base64,</code> 開頭</li>
+        <li>選取全部內容(Ctrl+A 或 ⌘+A)→ 複製(Ctrl+C)</li>
+        <li>回到本頁 → 貼到上方文字框 → 點「📷 顯示簽名」</li>
+      </ol>
+    </div>
+  </div>
+
+  <a class="back-link" href="index.html">← 回首頁</a>
+
+</div>
+
+<script>
+document.getElementById('preview-btn').addEventListener('click', () => {
+  const input = document.getElementById('signature-input').value.trim();
+  const errBox = document.getElementById('error-box');
+  const previewContainer = document.getElementById('preview-container');
+
+  errBox.hidden = true;
+  previewContainer.hidden = true;
+
+  if (!input) {
+    errBox.textContent = '請先貼上簽名內容';
+    errBox.hidden = false;
+    return;
+  }
+
+  // 驗證格式 — 必須以 data:image 開頭
+  if (!input.startsWith('data:image/')) {
+    errBox.innerHTML = '⚠️ 格式錯誤:應該以 <code>data:image/jpeg;base64,</code> 開頭<br>' +
+      '您貼的開頭是: <code>' + input.substring(0, 50) + '...</code><br>' +
+      '請確認從 Google Sheet 複製了整段內容。';
+    errBox.hidden = false;
+    return;
+  }
+
+  // 計算大小
+  const sizeKB = Math.round(input.length / 1024 * 10) / 10;
+
+  previewContainer.innerHTML = `
+    <div class="preview-box">
+      <img src="${input}" alt="PACU 簽名" onerror="this.style.display='none'; document.getElementById('img-err').hidden=false;">
+      <div id="img-err" class="error-msg" hidden>無法載入圖片,base64 內容可能損壞</div>
+      <div class="meta">
+        ✓ base64 size: ${sizeKB} KB &nbsp;·&nbsp;
+        格式: ${input.substring(5, input.indexOf(';'))}
+      </div>
+    </div>
+  `;
+  previewContainer.hidden = false;
+});
+
+document.getElementById('clear-btn').addEventListener('click', () => {
+  document.getElementById('signature-input').value = '';
+  document.getElementById('preview-container').hidden = true;
+  document.getElementById('error-box').hidden = true;
+});
+</script>
+
+</body>
+</html>

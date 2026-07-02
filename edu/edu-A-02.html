@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>您的呼吸道 · 從非侵入到可逆 — 安康日間衛教 A-02</title>
+<meta name="description" content="本中心呼吸道管理的三階段:HFNC 高流量鼻導管(非侵入)、LMA 聲門上喉罩(較不侵入)、氣管插管 + Sugammadex(必要時的可逆退場)。最小必要原則。">
+<meta name="article:modified_time" content="2026-05-24">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- 共用 CSS -->
+<link rel="stylesheet" href="_shared/eras-shared.css">
+
+<style>
+/* A-02 本頁專用 — 階梯三步驟視覺 + 適用條件對照表 */
+
+/* 階梯三步驟 */
+.ladder-steps {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  gap: 6px;
+  align-items: stretch;
+  margin-bottom: 14px;
+}
+.ladder-step {
+  background: var(--paper);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 12px;
+  text-align: center;
+}
+.ladder-step.l1 { border-color: var(--sage); background: rgba(90,122,82,0.06); }
+.ladder-step.l2 { border-color: var(--gold); background: var(--gold-tint); }
+.ladder-step.l3 { border-color: var(--teal); background: var(--teal-tint); }
+
+.ladder-step .l-num {
+  font-family: var(--font-serif);
+  font-size: 10.5px;
+  letter-spacing: 0.25em;
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+}
+.ladder-step.l1 .l-num { color: var(--sage); }
+.ladder-step.l2 .l-num { color: var(--gold); }
+.ladder-step.l3 .l-num { color: var(--teal); }
+
+.ladder-step h5 {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 4px;
+  line-height: 1.45;
+}
+.ladder-step .l-desc {
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+.ladder-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-faint);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* Deep pillar 內部三段結構(同 A-01)*/
+.pillar-card .p-section {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+}
+.pillar-card .p-section:first-of-type {
+  margin-top: 8px;
+  padding-top: 0;
+  border-top: 0;
+}
+.pillar-card .p-section .p-label {
+  font-family: var(--font-serif);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  font-weight: 600;
+  color: var(--ink-faint);
+  margin-bottom: 6px;
+  display: block;
+}
+.pillar-card.p1 .p-section .p-label { color: var(--sage); }
+.pillar-card.p2 .p-section .p-label { color: var(--gold); }
+.pillar-card.p3 .p-section .p-label { color: var(--teal); }
+
+.pillar-card .p-section p {
+  font-size: 13.8px;
+  color: var(--ink-soft);
+  line-height: 1.78;
+  margin-bottom: 6px;
+}
+.pillar-card .p-section p:last-child { margin-bottom: 0; }
+
+/* 適用條件對照表 */
+.fit-table {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: var(--section-gap);
+}
+.fit-table h4 {
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--teal);
+  margin: 0 0 14px;
+  letter-spacing: 0.05em;
+}
+.fit-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 14px;
+  padding: 10px 0;
+  border-top: 1px dashed var(--border);
+}
+.fit-row:first-of-type { border-top: 0; padding-top: 0; }
+.fit-row .fit-cat {
+  font-family: var(--font-serif);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+}
+.fit-row.r1 .fit-cat { color: var(--sage); }
+.fit-row.r2 .fit-cat { color: var(--gold); }
+.fit-row.r3 .fit-cat { color: var(--teal); }
+.fit-row .fit-desc {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.75;
+}
+.fit-row .fit-desc strong { color: var(--ink); font-weight: 600; }
+
+@media (max-width: 520px) {
+  /* 階梯在手機上垂直堆疊 */
+  .ladder-steps {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .ladder-arrow {
+    transform: rotate(90deg);
+    padding: 4px 0;
+  }
+  .fit-row { grid-template-columns: 85px 1fr; gap: 10px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ============ Hero ============ -->
+  <header>
+    <div class="eyebrow">安康日間衛教 · A-02 · 術前 5 天 · 深度衛教</div>
+    <h1>您的呼吸道<br>從非侵入到可逆</h1>
+    <p class="subtitle">能不插管就不插管;必要時,也有最好的退場<br>HFNC · LMA · Sugammadex · 三個層級的選擇</p>
+    <div class="divider"></div>
+    <div class="meta">⏱ 閱讀約 5 分鐘 · 👥 適用對象:對麻醉技術細節有興趣者</div>
+  </header>
+
+  <!-- ============ Lead ============ -->
+  <div class="lead">
+    <strong>「全身麻醉 = 插管」這個觀念,已經改變</strong>
+    <p>過去多數人對麻醉的印象,是「<span class="em">會在喉嚨插一根管子</span>」。確實,氣管插管在某些手術仍是必要的;但也是它造成了大部分病人最在意的不適 — <span class="em">術後喉嚨痛、聲音沙啞、吞嚥困難</span>。研究顯示,即使是常規的氣管插管,也有約 30–50% 的病人術後幾天會有喉嚨不適。</p>
+    <p>本中心的呼吸道管理,採用<span class="em-gold">最小必要原則</span> — 能用<span class="em">非侵入</span>方式達成目標的,絕不用<span class="em">較侵入</span>的;能用<span class="em">較不侵入</span>的喉罩,就不會用氣管插管。但如果您的手術真的需要插管,我們也準備好了<span class="em">最快、最完整的逆轉退場</span>方案。</p>
+  </div>
+
+  <!-- ============ Section 1 · 三階段視覺 ============ -->
+  <section>
+    <h2 class="section-title">最小必要原則 · 三個層級</h2>
+    <p class="section-sub">麻醉醫師會依您的術式、體型、病史,挑選最低必要的層級</p>
+
+    <div class="ladder-steps">
+      <div class="ladder-step l1">
+        <span class="l-num">Level 1</span>
+        <h5>HFNC</h5>
+        <span class="l-desc">高流量鼻導管<br>完全不碰氣道</span>
+      </div>
+      <div class="ladder-arrow">›</div>
+      <div class="ladder-step l2">
+        <span class="l-num">Level 2</span>
+        <h5>LMA</h5>
+        <span class="l-desc">聲門上喉罩<br>放在喉嚨上方</span>
+      </div>
+      <div class="ladder-arrow">›</div>
+      <div class="ladder-step l3">
+        <span class="l-num">Level 3</span>
+        <h5>ETT + Sugammadex</h5>
+        <span class="l-desc">氣管插管<br>+ 可逆退場</span>
+      </div>
+    </div>
+
+    <p style="font-size:13.5px;color:var(--ink-soft);line-height:1.85;margin-top:14px;">這個階梯<span class="em">不是品質高低</span>,而是<span class="em">介入程度</span>。<span class="em">Level 3 不代表「比較危險」</span> — 它代表「<span class="em">這個手術需要這個程度的介入</span>」,而我們有最先進的 Sugammadex 確保完全可逆。重點是:<span class="em-gold">麻醉醫師會在這 3 個選項中,挑選讓您獲得最少不適、最快恢復的那一個</span>。</p>
+  </section>
+
+  <!-- ============ Section 2 · 3 個 deep pillar ============ -->
+  <section>
+    <h2 class="section-title">三項技術 · 各自的角色</h2>
+    <p class="section-sub">每張卡片有 3 個層次:原理 / ERAS 貢獻 / 您會感受到</p>
+
+    <div class="pillars-grid">
+
+      <!-- ========== Pillar 1 · HFNC ========== -->
+      <article class="pillar-card p1">
+        <span class="p-num">Level 1 · 非侵入</span>
+        <h4>HFNC 高流量鼻導管</h4>
+        <span class="p-en">High-Flow Nasal Cannula · 40–80 L/min</span>
+
+        <div class="p-section">
+          <span class="p-label">原理 · 是什麼</span>
+          <p>HFNC 是一條柔軟的<span class="em">雙鼻管</span>,搭配專用機器,把<span class="em">加溫(37°C)、加濕(100% 飽和)的高純度氧氣</span>以高流量(40 至 80 L/min)持續送入您的鼻腔。這個流量遠高於傳統的鼻氧管(2–6 L/min)或氧氣面罩(6–15 L/min)。</p>
+          <p>它有 4 個物理效應同時運作:<span class="em">(1)</span> 精確控制吸入氧濃度;<span class="em">(2)</span> 提供溫和的氣道正壓(類似輕度 CPAP);<span class="em">(3)</span> 沖刷上呼吸道殘留二氧化碳、降低死腔;<span class="em">(4)</span> 因為氣體是加溫加濕的,即使長時間使用也不會讓鼻腔乾燥。</p>
+        </div>
+
+        <div class="p-section">
+          <span class="p-label">ERAS 貢獻 · 為何選擇</span>
+          <p><strong>1. 完全不碰氣道</strong> — 沒有任何設備進入喉嚨或氣管,因此<span class="em">術後完全沒有喉嚨痛、沒有吞嚥不適</span>。<br><strong>2. 飲食恢復最快</strong> — 醒來後可以立即喝水、進食,沒有「氣管刺激造成的暫時吞嚥障礙」。<br><strong>3. 適合特定族群</strong> — 對<span class="em">肥胖、有睡眠呼吸中止症(OSA)、肺功能稍差</span>的病人特別友善,提供比傳統氧氣面罩更穩定的氧合。<br><strong>4. 病人舒適度高</strong> — 不會像氧氣面罩那樣悶熱或壓臉。</p>
+        </div>
+
+        <div class="p-section">
+          <span class="p-label">您會感受到</span>
+          <p>麻醉誘導前,護理人員會在您的鼻孔放上 HFNC 鼻管 — 您會感覺<span class="em">兩個鼻孔有溫暖、潮濕的氣流穩定吹進來</span>,並不悶,大多數人形容「<span class="em">很舒服</span>」。手術結束、麻醉清醒後,可能依您的狀況繼續使用一段時間,確保氧合穩定後才會移除。<span class="em">整個過程,您的喉嚨從頭到尾沒有任何東西進入</span>。</p>
+        </div>
+      </article>
+
+      <!-- ========== Pillar 2 · LMA ========== -->
+      <article class="pillar-card p2">
+        <span class="p-num">Level 2 · 較不侵入</span>
+        <h4>LMA 聲門上喉罩</h4>
+        <span class="p-en">Laryngeal Mask Airway · supraglottic device</span>
+
+        <div class="p-section">
+          <span class="p-label">原理 · 是什麼</span>
+          <p>LMA 是一個<span class="em">柔軟的矽膠或塑膠喉罩</span>,前端有一個可充氣的橢圓形氣囊。在您進入麻醉後,麻醉醫師會將它<span class="em">輕輕放入口腔深處,蓋在喉嚨入口(聲門)的上方</span> — <span class="em">完全不會進入氣管</span>。氣囊充氣後形成密封,讓麻醉氣體或呼吸器的氣體能順利進入肺部。</p>
+          <p>跟傳統氣管插管的關鍵差異:<span class="em">傳統氣管管(ETT)需要穿過聲帶、進入氣管</span>(深度約 18–22 公分);<span class="em">LMA 只到喉嚨入口的高度</span>(深度約 13–15 公分),不通過聲帶。</p>
+        </div>
+
+        <div class="p-section">
+          <span class="p-label">ERAS 貢獻 · 為何選擇</span>
+          <p><strong>1. 沒有聲帶刺激</strong> — 不通過聲帶,因此<span class="em">術後喉嚨痛、聲音沙啞的機率大幅降低</span>(meta-analysis 顯示比 ETT 降低約 50–70%)。<br><strong>2. 不需深度肌肉鬆弛劑</strong> — 放置 LMA 通常只需要輕度肌鬆或無肌鬆,術後肌肉力量恢復更快。<br><strong>3. 麻醉誘導更平順</strong> — 放置時對心血管的刺激小,適合慢性病患或長者。<br><strong>4. 醒得快</strong> — 由於不需大量肌鬆藥,術後甦醒時間明顯短。</p>
+        </div>
+
+        <div class="p-section">
+          <span class="p-label">您會感受到</span>
+          <p>您不會記得 LMA 放置的過程(因為已在麻醉中)。醒來後,您可能感覺<span class="em">喉嚨有些微的乾燥感</span>(類似剛睡醒口乾),但<span class="em">不會有明顯的喉嚨痛或聲音改變</span>。多數病人在 1–2 小時內就完全沒有不適感。能夠正常喝水、進食的時間,比氣管插管的病人快很多。</p>
+        </div>
+      </article>
+
+      <!-- ========== Pillar 3 · ETT + Sugammadex ========== -->
+      <article class="pillar-card p3">
+        <span class="p-num">Level 3 · 完全插管 + 可逆退場</span>
+        <h4>氣管插管 + Sugammadex</h4>
+        <span class="p-en">Endotracheal Intubation + selective NMB reversal</span>
+
+        <div class="p-section">
+          <span class="p-label">原理 · 是什麼</span>
+          <p>某些手術仍需要<span class="em">氣管插管 + 完全肌肉鬆弛</span>:例如肩關節鏡長時間操作、需要特殊體位(俯臥、側臥)的手術、或氣道風險較高的病人。傳統做法的問題在於 — 手術結束後,<span class="em">肌肉鬆弛劑可能還沒完全代謝</span>,造成「殘留肌鬆」(殘餘肌肉無力),這是術後呼吸併發症的主因之一。</p>
+          <p><span class="em-gold">Sugammadex</span> 是一種特殊的<span class="em">「鑰匙鎖」分子</span> — 它會精準地與肌肉鬆弛劑(rocuronium、vecuronium)結合,把它<span class="em">直接從受體上拉下來、包進來、隨尿液排出</span>。傳統用的 neostigmine 是「間接逆轉」(刺激對抗物),而 Sugammadex 是<span class="em">直接拔除</span>。</p>
+        </div>
+
+        <div class="p-section">
+          <span class="p-label">ERAS 貢獻 · 為何選擇</span>
+          <p><strong>1. 完全逆轉,沒有殘留</strong> — 一篇含 2023 年的統合分析(13 個 RCT + 觀察性研究)顯示,Sugammadex 比 neostigmine 顯著降低<span class="em">術後肺部併發症</span>(肺炎、肺塌陷、需重新插管)。<br><strong>2. 呼吸肌、吞嚥肌、咀嚼肌一起恢復</strong> — 「殘餘肌鬆」不只是手臂沒力,連<span class="em">咽喉肌肉</span>都會受影響,造成嗆咳、誤吸風險。Sugammadex 確保全身肌肉一起完全恢復。<br><strong>3. 適合日間手術</strong> — 因為作用快、預測性高,病人可以在<span class="em">符合 PADSS 標準後安全離院</span>,大幅降低意外住院的風險。<br><strong>4. PONV 連帶降低</strong> — 5th PONV 共識指引(Gan 2025)引用 40 個 RCT 統合分析,證實 Sugammadex 在 PACU 降低 PONV 發生率。</p>
+        </div>
+
+        <div class="p-section">
+          <span class="p-label">您會感受到</span>
+          <p>若您的手術需要插管,醒來時可能<span class="em">短暫感覺喉嚨微痛或聲音稍啞</span>(通常 24–48 小時內緩解)。但您不會感覺到「呼吸力量不夠」、「拿杯子手會抖」、「吞嚥怪怪的」這些殘餘肌鬆的症狀 — 因為 Sugammadex 已經把肌肉力量<span class="em">完全還給您</span>了。意外住院、需要重新給氧、需要重新插管的機率,因此明顯下降。</p>
+        </div>
+
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ Section 3 · 適用條件對照 ============ -->
+  <section>
+    <h2 class="section-title">麻醉醫師如何挑選?</h2>
+    <p class="section-sub">下列為一般性對應 · 實際決定以您的麻醉醫師術前訪視評估為準</p>
+
+    <div class="fit-table">
+      <h4>本中心常見術式對應的呼吸道選擇</h4>
+
+      <div class="fit-row r1">
+        <span class="fit-cat">Level 1<br>HFNC</span>
+        <span class="fit-desc">使用<strong>區域阻斷或脊椎麻醉為主</strong>的手術 — 您仍清醒或輕度鎮靜,自己呼吸,HFNC 提供穩定氧合與舒適度。<br>例如:<strong>椎體成形術</strong>(脊椎)、<strong>多數泌尿科內視鏡</strong>(膀胱鏡、輸尿管鏡碎石,搭配脊椎麻醉)、<strong>部分骨科上肢小範圍手術</strong>(腕隧道、扳機指,搭配區域阻斷與輕度鎮靜)。</span>
+      </div>
+
+      <div class="fit-row r2">
+        <span class="fit-cat">Level 2<br>LMA</span>
+        <span class="fit-desc">需要<strong>全身麻醉 + 中等深度</strong>,但不需要長時間或深度肌鬆 — 例如:<strong>橈骨遠端骨折</strong>(復位 + 內固定)、<strong>部分肩關節鏡手術</strong>(時間較短的型式)、無深度肌鬆需求的<strong>骨科上肢術式</strong>。</span>
+      </div>
+
+      <div class="fit-row r3">
+        <span class="fit-cat">Level 3<br>ETT + Sugammadex</span>
+        <span class="fit-desc">需要<strong>長時間、特殊體位、或深度肌鬆</strong>的手術 — 例如:<strong>較複雜的肩關節鏡 RCT 修補</strong>(側臥或半坐臥,時間 2 小時以上)、需深度肌鬆才能完成的特殊操作。本中心在此情況下<span class="em">必定搭配 Sugammadex</span>,確保您離院前完全逆轉。</span>
+      </div>
+    </div>
+
+    <div class="dr-note">
+      <strong>關於決定權</strong> · 上述為一般性對應,實際選擇還會考量您的<span class="em">體型、頸部活動度、過去插管病史、慢性肺病、OSA 嚴重度</span>等因素。<span class="em">您的麻醉醫師會於術前訪視時告訴您這次將使用哪個層級</span>,並回答您任何擔心。
+    </div>
+  </section>
+
+  <!-- ============ Reading Map ============ -->
+  <div class="reading-map">
+    <h4>麻醉技術閱讀路徑</h4>
+    <div class="sub">A-02 涵蓋「呼吸道管理」這一面向。完整的精準麻醉還包含其他 3 份。</div>
+    <ol>
+      <li>A-00 · 麻醉差異化綜合篇(整體 menu)</li>
+      <li>A-01 · 精準麻醉 · 藥物與監測(Propofol TIVA / BIS / Byfavo)</li>
+      <li class="current">A-02 · 您的呼吸道 · 從非侵入到可逆(您正在讀)</li>
+      <li>A-03 · 超音波導引神經阻斷 · 精準止痛的核心</li>
+      <li>A-04 · 體溫管理 · 被忽略但關鍵的細節</li>
+    </ol>
+  </div>
+
+  <!-- ============ Closing ============ -->
+  <div class="closing">
+    <p>「<span class="em">能不打針就不打針;能打小針就不打大針</span>」 — 這是醫療的基本準則,也是現代麻醉的核心。本中心對呼吸道的設計,就是這個準則的具體實現:<span class="em-gold">不該介入的不介入;該介入的,用最不刺激的方式;必須完全介入的,有最快的退場</span>。</p>
+    <p>您不需要記住 HFNC、LMA、Sugammadex 這些名字,只需要知道:<span class="em">您的喉嚨、聲音、吞嚥,在我們的優先保護清單上</span>。下一份 A-03 將深入「超音波導引神經阻斷」 — 本中心多模式止痛的核心。</p>
+
+    <div class="signature">安康日間手術麻醉團隊 · 安莘 健康</div>
+    <div class="signature-note">莘 · 承耕莘脈 / 安康 · 首末相連</div>
+  </div>
+
+  <!-- ============ References ============ -->
+  <div class="references">
+    <div class="ref-title">參考資料</div>
+    <ol>
+      <li>Liu H, Qu P, Liu Q, Xiao F, Yang Y, Xu L, Zhang H. High-flow nasal cannula oxygen therapy: physiological basis and clinical applications in anesthesia. <em>Front Med (Lausanne).</em> 2025;12:1661569. doi:10.3389/fmed.2025.1661569.</li>
+      <li>Zhou R, Wang HT, Gu W. Efficacy of High-Flow Nasal Cannula versus Conventional Oxygen Therapy in Obese Patients during the Perioperative Period: A Systematic Review and Meta-Analysis. <em>Can Respir J.</em> 2022;2022:4415313.</li>
+      <li>Liu HM, Yu H, Zuo YD, Liang P. Postoperative pulmonary complications after sugammadex reversal of neuromuscular blockade: a systematic review and meta-analysis with trial sequential analysis. <em>BMC Anesthesiol.</em> 2023;23(1):130.</li>
+      <li>Gan TJ, Jin Z, Ayad S, et al. Fifth Consensus Guidelines for the Management of Postoperative Nausea and Vomiting: Executive Summary. <em>Anesth Analg.</em> 2025;Published online November 14, 2025. doi:10.1213/ANE.0000000000007816.</li>
+      <li>Cukierman DS, Cata JP, Gan TJ. Enhanced recovery protocols for ambulatory surgery. <em>Best Pract Res Clin Anaesthesiol.</em> 2023;37(3):285–303.</li>
+    </ol>
+  </div>
+
+  <!-- ============ Footer ============ -->
+  <footer>
+    <div class="clinic">安康日間手術麻醉中心 · 病人衛教資料</div>
+    <div class="disclaimer">本單張為一般性衛教資訊。實際使用 HFNC、LMA 或氣管插管,將依您的術式、體型、慢性病、過去麻醉經驗由您的麻醉醫師於術前訪視時個別評估決定。對任何技術有疑問,歡迎於麻醉門診、術前訪視時提出。</div>
+  </footer>
+
+</div>
+</body>
+</html>
