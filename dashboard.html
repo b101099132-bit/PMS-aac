@@ -153,6 +153,21 @@ input:focus { outline: none; border-color: var(--teal); }
 .trend-table th { background: var(--cream); font-weight: 600; color: var(--teal); }
 .trend-table tbody tr:hover { background: var(--teal-tint); }
 
+/* D1 問卷結果面板 */
+.muted { font-size: 13px; color: var(--ink-faint); font-weight: 400; }
+.sub-h { font-size: 13px; font-weight: 600; color: var(--navy); margin: 18px 0 8px; }
+.bar-row { display: grid; grid-template-columns: 54px 1fr 40px; align-items: center; gap: 8px; margin: 5px 0; font-size: 12px; color: var(--ink-soft); }
+.bar-track { background: var(--teal-soft); border-radius: 4px; height: 16px; overflow: hidden; }
+.bar-fill { background: var(--teal); height: 100%; }
+.nrs-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.comment-list { max-height: 260px; overflow-y: auto; }
+.comment-item { border-bottom: 1px dashed var(--border); padding: 8px 0; font-size: 13px; }
+.comment-item .c-at { color: var(--ink-faint); font-size: 11px; margin-right: 6px; }
+.score-good { color: var(--success); font-weight: 600; }
+.score-mid { color: var(--warning); font-weight: 600; }
+.score-bad { color: var(--danger); font-weight: 600; }
+@media (max-width: 520px) { .nrs-2col { grid-template-columns: 1fr; } }
+
 .back-link { display: inline-block; margin-top: 16px; color: var(--teal); text-decoration: none; font-size: 13px; }
 </style>
 </head>
@@ -200,6 +215,12 @@ input:focus { outline: none; border-color: var(--teal); }
       <div id="trend-table-wrap" style="overflow-x:auto;">
         <div class="loading">載入中…</div>
       </div>
+    </div>
+
+    <!-- D1 問卷結果 -->
+    <div class="card">
+      <h2>🗳️ D1 問卷結果 <span id="survey-n" class="muted"></span></h2>
+      <div id="survey-body"><div class="loading">載入中…</div></div>
     </div>
 
     <!-- 搜尋區 -->
@@ -311,6 +332,7 @@ async function handleLogin() {
 async function loadAll() {
   loadKPI();
   loadTrend(trendGran);
+  loadSurveyD1();
   loadSurgeryList();
 }
 
@@ -476,6 +498,96 @@ function renderTrendChart(periods) {
       }
     }
   });
+}
+
+// ── D1 問卷結果 ────────────────────────────────
+async function loadSurveyD1() {
+  const body = document.getElementById('survey-body');
+  body.innerHTML = '<div class="loading">載入中…</div>';
+  try {
+    const r = await jsonpCall('dashboardSurveyD1', { adminKey });
+    renderSurvey(r);
+  } catch (e) {
+    body.innerHTML = `<div class="error-msg">載入失敗:${escapeHtml(e.message)}</div>`;
+    document.getElementById('survey-n').textContent = '';
+  }
+}
+
+function scoreClass(s) { return s >= 80 ? 'score-good' : (s >= 60 ? 'score-mid' : 'score-bad'); }
+
+function renderSurvey(r) {
+  const body = document.getElementById('survey-body');
+  const nEl = document.getElementById('survey-n');
+  if (!r.n) {
+    nEl.textContent = '';
+    body.innerHTML = '<div class="empty-list">尚無 D1 問卷回覆</div>';
+    return;
+  }
+  nEl.textContent = `(回收 ${r.n} 份)`;
+
+  const kpi = `
+    <div class="kpi-grid">
+      <div class="kpi-card highlight"><div class="kpi-label">回收份數</div><div class="kpi-value">${r.n}<span class="unit">份</span></div></div>
+      <div class="kpi-card highlight"><div class="kpi-label">整體滿意度</div><div class="kpi-value">${r.satisfaction.score}<span class="unit">%</span></div><div class="kpi-sub">平均 ${r.satisfaction.avg} / 5</div></div>
+      <div class="kpi-card"><div class="kpi-label">自費滿意度</div><div class="kpi-value">${r.a3.score}<span class="unit">%</span></div><div class="kpi-sub">未使用 ${r.a3.na} 份</div></div>
+      <div class="kpi-card"><div class="kpi-label">PONV 發生率</div><div class="kpi-value">${r.ponv.yesRate}<span class="unit">%</span></div><div class="kpi-sub">${r.ponv.yesCount}/${r.ponv.n}</div></div>
+      <div class="kpi-card"><div class="kpi-label">最痛 NRS 平均</div><div class="kpi-value">${r.nrs.worst.avg}<span class="unit">/10</span></div></div>
+      <div class="kpi-card"><div class="kpi-label">現在 NRS 平均</div><div class="kpi-value">${r.nrs.now.avg}<span class="unit">/10</span></div></div>
+    </div>`;
+
+  const qRows = r.questions.map(q => `
+    <tr>
+      <td style="text-align:left;">${escapeHtml(q.label)}</td>
+      <td>${q.avg} / ${q.max}</td>
+      <td class="${scoreClass(q.score)}">${q.score}%</td>
+      <td>${q.n}</td>
+    </tr>`).join('')
+    + `<tr>
+      <td style="text-align:left;">麻醉自費滿意度</td>
+      <td>${r.a3.avg} / 5</td>
+      <td class="${scoreClass(r.a3.score)}">${r.a3.score}%</td>
+      <td>${r.a3.n}<span class="muted"> (+${r.a3.na} 未使用)</span></td>
+    </tr>`;
+  const qTable = `
+    <div class="sub-h">各題平均與滿意度(滿意度 % 越高越好)</div>
+    <div style="overflow-x:auto;">
+      <table class="trend-table">
+        <thead><tr><th style="text-align:left;">題目</th><th>平均</th><th>滿意度</th><th>n</th></tr></thead>
+        <tbody>${qRows}</tbody>
+      </table>
+    </div>`;
+
+  const nrsBar = (agg, title) => {
+    const order = ['0', '1-3', '4-6', '7-9', '10'];
+    const max = Math.max(1, ...order.map(k => agg.buckets[k]));
+    const rows = order.map(k => {
+      const c = agg.buckets[k];
+      return `<div class="bar-row"><span>${k}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(c / max * 100)}%"></div></div><span>${c}</span></div>`;
+    }).join('');
+    return `<div><div class="sub-h">${title}(平均 ${agg.avg} · n=${agg.n})</div>${rows}</div>`;
+  };
+  const nrsSection = `<div class="nrs-2col">${nrsBar(r.nrs.worst, '最痛 NRS 分佈')}${nrsBar(r.nrs.now, '現在 NRS 分佈')}</div>`;
+
+  let ponvDetail = '';
+  const sevTotal = Object.values(r.ponv.sevDist || {}).reduce((a, b) => a + b, 0);
+  if (sevTotal > 0) {
+    const sev = [1, 2, 3, 4, 5].map(i => `${i}級 ${r.ponv.sevDist[i] || 0}`).join(' · ');
+    const anti = [1, 2, 3, 4, 5].map(i => `${i} ${r.ponv.antiDist[i] || 0}`).join(' · ');
+    ponvDetail = `
+      <div class="sub-h">PONV 細節(有噁心嘔吐者 n=${sevTotal})</div>
+      <div style="font-size:13px; color:var(--ink-soft); line-height:1.9;">
+        最嚴重程度(5=最嚴重):${sev}<br>
+        止吐藥效果(1=沒給藥):${anti}
+      </div>`;
+  }
+
+  const comments = (r.comments && r.comments.length) ? `
+    <div class="sub-h">留言(E2 · 最近 ${r.comments.length} 則)</div>
+    <div class="comment-list">
+      ${r.comments.map(c => `<div class="comment-item"><span class="c-at">${escapeHtml(c.at)}</span>${escapeHtml(c.text)}</div>`).join('')}
+    </div>` : '';
+
+  body.innerHTML = kpi + qTable + nrsSection + ponvDetail + comments;
 }
 
 // ── 詳情 Modal ────────────────────────────────────
