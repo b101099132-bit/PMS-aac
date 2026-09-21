@@ -236,10 +236,23 @@
     <h2>收案資料 <span class="tag">阻斷時間是所有軌跡的時間軸</span></h2>
     <div id="enroll-msg" class="msg" hidden></div>
 
+    <div class="fld" id="en-picker-wrap">
+      <span class="lbl">選擇手術<span class="req"> *</span></span>
+      <div class="btn-row" style="margin-bottom:10px;">
+        <input type="text" id="en-search" placeholder="病人姓名、病歷 PK 或術式,留空=最近 14 天全部" autocomplete="off" style="flex:2 1 200px;">
+        <button type="button" class="btn btn-ghost" id="btn-search" style="flex:0 0 auto;">搜尋</button>
+      </div>
+      <div id="en-results"></div>
+      <span class="hint">從手術紀錄挑選,不要手動輸入編號 — 打錯就無法與手術紀錄對應</span>
+    </div>
+
     <label class="fld">
       <span class="lbl">手術編號 surgery_id<span class="req"> *</span></span>
-      <input type="text" id="en-sid" placeholder="例:20260921-0001-S1" autocomplete="off">
-      <span class="hint">與手術紀錄的編號一致;新收案請直接輸入,既有收案請從名單點選</span>
+      <input type="text" id="en-sid" placeholder="請由上方挑選" autocomplete="off" readonly>
+      <span class="hint">
+        格式為「病歷 PK-S流水號」(例:20260921-0001-S1),由外科醫師建手術時自動產生。
+        <a href="#" id="en-manual">找不到?改為手動輸入</a>
+      </span>
     </label>
 
     <div class="grid2">
@@ -1270,7 +1283,11 @@
     msg('enroll-msg', '');
     var en = existing || {};
     $('en-sid').value = existing ? currentSid : '';
-    $('en-sid').readOnly = !!existing;
+    $('en-sid').readOnly = true;
+    // 編輯既有收案時不需要挑選器;新收案才顯示
+    $('en-picker-wrap').hidden = !!existing;
+    $('en-search').value = '';
+    $('en-results').innerHTML = '';
     $('en-name').value = en.patient_name || '';
     $('en-pk').value = en.pk || '';
     $('en-tblock').value = en.T_block ? en.T_block.replace(' ', 'T') : '';
@@ -1288,6 +1305,81 @@
     $('en-notes').value = en.notes || '';
     updateConvReason();
     window.scrollTo(0, 0);
+  }
+
+  // ── 手術挑選器 ──────────────────────────────────
+  function searchSurgeries() {
+    $('btn-search').disabled = true;
+    var host = $('en-results');
+    host.innerHTML = '';
+    msg('enroll-msg', '搜尋中…', 'info');
+
+    api('nurseSearchSurgery', { q: $('en-search').value.trim(), days: 14 })
+      .then(function (res) {
+        msg('enroll-msg', '');
+        if (!res.surgeries.length) {
+          var none = document.createElement('div');
+          none.className = 'msg warn';
+          none.textContent = '最近 ' + res.days + ' 天內找不到符合的手術。'
+            + '可能是外科醫師還沒建手術,或關鍵字不符 — 可改為手動輸入編號。';
+          host.appendChild(none);
+          return;
+        }
+        res.surgeries.forEach(function (s) {
+          var d = document.createElement('div');
+          d.className = 'case';
+          d.tabIndex = 0;
+
+          var top = document.createElement('div');
+          top.className = 'top';
+          var nm = document.createElement('span');
+          nm.className = 'nm';
+          nm.textContent = s.patientName || '(未填姓名)';
+          var sid = document.createElement('span');
+          sid.className = 'sid';
+          sid.textContent = s.surgeryId;
+          top.appendChild(nm); top.appendChild(sid);
+
+          var meta = document.createElement('div');
+          meta.className = 'meta';
+          meta.textContent = [s.surgDate, s.procedure, s.doctor, s.status]
+            .filter(Boolean).join(' · ');
+
+          d.appendChild(top);
+          d.appendChild(meta);
+
+          if (s.enrolled) {
+            var f = document.createElement('div');
+            f.className = 'flags';
+            var b = document.createElement('span');
+            b.className = 'flag ok';
+            b.textContent = '已收案 — 點選會載入既有資料';
+            f.appendChild(b);
+            d.appendChild(f);
+          }
+
+          function choose() {
+            if (s.enrolled) { openCase(s.surgeryId); return; }
+            $('en-sid').value = s.surgeryId;
+            $('en-name').value = s.patientName || '';
+            $('en-pk').value = s.pk || '';
+            Array.prototype.forEach.call(host.querySelectorAll('.case'), function (c) {
+              c.classList.remove('sel');
+            });
+            d.classList.add('sel');
+            msg('enroll-msg', '已選擇 ' + s.surgeryId + ' — 請繼續填寫阻斷完成時間', 'ok');
+          }
+          d.addEventListener('click', choose);
+          d.addEventListener('keypress', function (ev) {
+            if (ev.key === 'Enter') choose();
+          });
+          host.appendChild(d);
+        });
+      })
+      .catch(function (e) {
+        msg('enroll-msg', '❌ ' + e.message, 'err');
+      })
+      .then(function () { $('btn-search').disabled = false; });
   }
 
   function updateConvReason() {
@@ -1371,13 +1463,28 @@
 
     $('btn-refresh').addEventListener('click', loadCases);
     $('btn-new').addEventListener('click', function () {
-      currentSid = ''; currentCase = null; openEnroll(null);
+      currentSid = ''; currentCase = null;
+      openEnroll(null);
+      searchSurgeries();   // 一進來就把最近 14 天的手術列出來
     });
     $('btn-enroll-back').addEventListener('click', function () {
       hide('view-enroll'); show('view-list'); loadCases();
     });
     $('btn-enroll-save').addEventListener('click', saveEnroll);
     $('en-conv').addEventListener('change', updateConvReason);
+
+    $('btn-search').addEventListener('click', searchSurgeries);
+    $('en-search').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); searchSurgeries(); }
+    });
+    $('en-manual').addEventListener('click', function (e) {
+      e.preventDefault();
+      $('en-sid').readOnly = false;
+      $('en-sid').placeholder = '例:20260921-0001-S1';
+      $('en-sid').focus();
+      msg('enroll-msg', '已切換為手動輸入。編號格式是「病歷 PK-S流水號」,'
+        + '請務必與手術紀錄 A 欄一致,否則這筆收案無法與手術資料對應。', 'warn');
+    });
 
     $('btn-case-back').addEventListener('click', function () {
       hide('view-case'); show('view-list'); loadCases();
