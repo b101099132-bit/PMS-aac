@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>個管師工作台 — PMS-aac</title>
+  <link rel="stylesheet" href="_shared/eras-shared.css">
+  <style>
+    /*
+     * 個管師工作台 v1 — 平板/手機優先
+     * 使用情境:麻醉專科護理師在病房逐床重評,單手操作、大按鈕
+     * 色系沿用 PMS-aac:teal 主色 + gold 強調
+     */
+    :root {
+      --nu-teal:   #2C5F73;
+      --nu-teal-d: #1e4352;
+      --nu-gold:   #b8860b;
+      --nu-red:    #b91c1c;
+      --nu-green:  #15803d;
+      --nu-amber:  #b45309;
+      --nu-bg:     #f5f7fa;
+      --nu-line:   #e2e8f0;
+      --nu-muted:  #64748b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background: var(--nu-bg); margin: 0; padding: 0;
+      font-size: 16px; color: #1e293b;
+      -webkit-tap-highlight-color: transparent;
+    }
+    [hidden] { display: none !important; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 14px; }
+
+    .banner {
+      background: var(--nu-teal); color: #fff; padding: 13px 20px;
+      font-weight: bold; border-radius: 10px 10px 0 0; font-size: 16px;
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    }
+    .banner .who { font-size: 13px; font-weight: normal; opacity: .85; }
+    .head {
+      background: #fff; border-radius: 0 0 10px 10px;
+      padding: 16px 20px; margin-bottom: 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    .head h1 { margin: 0; font-size: 21px; color: var(--nu-teal); }
+    .head .sub { font-size: 13px; color: var(--nu-muted); margin-top: 4px; }
+
+    .card {
+      background: #fff; border-radius: 10px; padding: 18px 20px;
+      margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    .card h2 {
+      margin: 0 0 14px; font-size: 17px; color: var(--nu-teal);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card h2 .tag {
+      font-size: 11px; font-weight: normal; color: #fff;
+      background: var(--nu-gold); padding: 2px 8px; border-radius: 10px;
+    }
+
+    label.fld { display: block; margin-bottom: 14px; }
+    label.fld > .lbl {
+      display: block; font-size: 14px; font-weight: 600;
+      margin-bottom: 6px; color: #334155;
+    }
+    label.fld > .lbl .req { color: var(--nu-red); }
+    label.fld > .hint { font-size: 12px; color: var(--nu-muted); margin-top: 4px; }
+
+    input[type=text], input[type=password], input[type=number],
+    input[type=datetime-local], select, textarea {
+      width: 100%; padding: 11px 12px; font-size: 16px;
+      border: 1px solid #cbd5e1; border-radius: 8px;
+      background: #fff; font-family: inherit; color: inherit;
+      display: block;
+    }
+    textarea { min-height: 72px; resize: vertical; }
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: var(--nu-teal);
+      box-shadow: 0 0 0 3px rgba(44,95,115,.12);
+    }
+
+    .btn {
+      display: inline-block; padding: 12px 20px; font-size: 16px;
+      border: none; border-radius: 8px; cursor: pointer;
+      font-family: inherit; font-weight: 600;
+    }
+    .btn-primary { background: var(--nu-teal); color: #fff; }
+    .btn-primary:active { background: var(--nu-teal-d); }
+    .btn-ghost { background: #fff; color: var(--nu-teal); border: 1px solid var(--nu-teal); }
+    .btn-wide { width: 100%; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-row .btn { flex: 1 1 auto; }
+
+    /* ── 分段按鈕(PADSS 0-2 / NRS 0-10 / 是否)────────── */
+    .seg { display: flex; flex-wrap: wrap; gap: 6px; }
+    .seg button {
+      flex: 1 1 auto; min-width: 42px; padding: 11px 6px;
+      font-size: 15px; font-family: inherit;
+      border: 1px solid #cbd5e1; background: #fff; color: #334155;
+      border-radius: 8px; cursor: pointer;
+    }
+    .seg button[aria-pressed="true"] {
+      background: var(--nu-teal); color: #fff; border-color: var(--nu-teal);
+      font-weight: 700;
+    }
+    .seg.nrs button { min-width: 0; padding: 11px 2px; font-size: 15px; }
+    .seg.nrs button[aria-pressed="true"] { background: var(--nu-amber); border-color: var(--nu-amber); }
+    .seg.gate button[aria-pressed="true"].pass { background: var(--nu-green); border-color: var(--nu-green); }
+    .seg.gate button[aria-pressed="true"].fail { background: var(--nu-red); border-color: var(--nu-red); }
+
+    /* ── 事件複選 ────────────────────────────────── */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chips label {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 20px;
+      font-size: 14px; cursor: pointer; background: #fff;
+    }
+    .chips label:has(input:checked) {
+      background: #fef3c7; border-color: var(--nu-amber); font-weight: 600;
+    }
+    .chips input { margin: 0; }
+
+    /* ── 名單 ────────────────────────────────────── */
+    .case {
+      border: 1px solid var(--nu-line); border-radius: 10px;
+      padding: 13px 15px; margin-bottom: 10px; background: #fff; cursor: pointer;
+    }
+    .case:active { background: #f8fafc; }
+    .case.sel { border-color: var(--nu-teal); box-shadow: 0 0 0 2px rgba(44,95,115,.15); }
+    .case .top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+    .case .nm { font-weight: 700; font-size: 16px; }
+    .case .sid { font-size: 12px; color: var(--nu-muted); font-family: ui-monospace, monospace; }
+    .case .meta { font-size: 13px; color: var(--nu-muted); margin-top: 5px; }
+    .case .flags { margin-top: 7px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .flag {
+      font-size: 12px; padding: 3px 9px; border-radius: 10px;
+      background: #fee2e2; color: var(--nu-red); font-weight: 600;
+    }
+    .flag.ok { background: #dcfce7; color: var(--nu-green); }
+    .flag.info { background: #e0f2fe; color: #075985; }
+
+    /* ── 狀態訊息 ────────────────────────────────── */
+    .msg { padding: 12px 15px; border-radius: 8px; font-size: 14px; margin-bottom: 14px; }
+    .msg.err { background: #fee2e2; color: #991b1b; }
+    .msg.ok  { background: #dcfce7; color: #14532d; }
+    .msg.warn{ background: #fef3c7; color: #78350f; }
+    .msg.info{ background: #e0f2fe; color: #075985; }
+
+    .lockbox {
+      border: 2px solid var(--nu-gold); background: #fffbeb;
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 14px;
+    }
+    .lockbox .t { font-weight: 700; color: #78350f; margin-bottom: 4px; }
+    .lockbox .v { font-size: 20px; font-weight: 700; color: #78350f;
+                  font-family: ui-monospace, monospace; }
+    .lockbox .n { font-size: 12px; color: #92400e; margin-top: 5px; }
+
+    .padss-total {
+      display: flex; align-items: baseline; gap: 10px;
+      padding: 12px 15px; border-radius: 8px; background: #f1f5f9; margin-bottom: 14px;
+    }
+    .padss-total .num { font-size: 26px; font-weight: 700; color: var(--nu-teal); }
+    .padss-total .txt { font-size: 14px; color: var(--nu-muted); }
+    .padss-total.pass { background: #dcfce7; }
+    .padss-total.pass .num { color: var(--nu-green); }
+
+    .tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+    .tabs button {
+      flex: 1 1 auto; padding: 11px 10px; font-size: 15px; font-family: inherit;
+      border: 1px solid var(--nu-line); background: #fff; color: var(--nu-muted);
+      border-radius: 8px; cursor: pointer; font-weight: 600;
+    }
+    .tabs button[aria-selected="true"] {
+      background: var(--nu-teal); color: #fff; border-color: var(--nu-teal);
+    }
+
+    table.log { width: 100%; border-collapse: collapse; font-size: 13px; }
+    table.log th, table.log td {
+      padding: 7px 8px; border-bottom: 1px solid var(--nu-line); text-align: left;
+    }
+    table.log th { color: var(--nu-muted); font-weight: 600; font-size: 12px; }
+    .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 520px) { .grid2 { grid-template-columns: 1fr; } }
+
+    .foot { text-align: center; font-size: 12px; color: var(--nu-muted); padding: 16px 0 30px; }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="banner">
+    <span>個管師工作台 · Stage A</span>
+    <span class="who" id="who"></span>
+  </div>
+  <div class="head">
+    <h1>肩關節鏡不插管 — 疼痛軌跡收案</h1>
+    <div class="sub">所有時間以「阻斷完成時間」為軸 · 首次達離院標準會自動鎖定</div>
+  </div>
+
+  <!-- ═══ 登入 ═══ -->
+  <section id="view-login" class="card">
+    <h2>登入</h2>
+    <div id="login-err" class="msg err" hidden></div>
+    <label class="fld">
+      <span class="lbl">個管師通行碼</span>
+      <input type="password" id="key-input" placeholder="NURSE_KEY" autocomplete="off">
+    </label>
+    <label class="fld">
+      <span class="lbl">您的姓名<span class="req"> *</span></span>
+      <input type="text" id="assessor-input" placeholder="記錄在每一筆資料上" autocomplete="off">
+    </label>
+    <button class="btn btn-primary btn-wide" id="btn-login">登入</button>
+  </section>
+
+  <!-- ═══ 名單 ═══ -->
+  <section id="view-list" hidden>
+    <div class="card">
+      <h2>收案名單 <span class="tag" id="case-count"></span></h2>
+      <div id="list-msg" class="msg info" hidden></div>
+      <div id="case-list"></div>
+      <div class="btn-row" style="margin-top:14px;">
+        <button class="btn btn-ghost" id="btn-refresh">重新整理</button>
+        <button class="btn btn-primary" id="btn-new">新增收案</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 收案 / 阻斷資料 ═══ -->
+  <section id="view-enroll" class="card" hidden>
+    <h2>收案資料 <span class="tag">阻斷時間是所有軌跡的時間軸</span></h2>
+    <div id="enroll-msg" class="msg" hidden></div>
+
+    <label class="fld">
+      <span class="lbl">手術編號 surgery_id<span class="req"> *</span></span>
+      <input type="text" id="en-sid" placeholder="例:20260921-0001-S1" autocomplete="off">
+      <span class="hint">與手術紀錄的編號一致;新收案請直接輸入,既有收案請從名單點選</span>
+    </label>
+
+    <div class="grid2">
+      <label class="fld">
+        <span class="lbl">病人姓名</span>
+        <input type="text" id="en-name" autocomplete="off">
+      </label>
+      <label class="fld">
+        <span class="lbl">病人 PK</span>
+        <input type="text" id="en-pk" autocomplete="off">
+      </label>
+    </div>
+
+    <label class="fld">
+      <span class="lbl">阻斷完成時間<span class="req"> *</span></span>
+      <input type="datetime-local" id="en-tblock">
+      <span class="hint">精確到分鐘。所有 NRS 與給藥都以此為零點對齊</span>
+    </label>
+
+    <label class="fld">
+      <span class="lbl">離開恢復室時間</span>
+      <input type="datetime-local" id="en-t0">
+      <span class="hint">用來算實際住院時數與虛擬離院的相對位置</span>
+    </label>
+
+    <div class="grid2">
+      <label class="fld">
+        <span class="lbl">阻斷方式</span>
+        <select id="en-blocktype">
+          <option value="">— 請選擇 —</option>
+          <option>ISB 斜角肌間</option>
+          <option>SCB 鎖骨上</option>
+          <option>SSNB+ANB 上肩胛+腋</option>
+          <option>其他</option>
+        </select>
+      </label>
+      <label class="fld">
+        <span class="lbl">側別</span>
+        <select id="en-side">
+          <option value="">— 請選擇 —</option>
+          <option>左</option>
+          <option>右</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="grid2">
+      <label class="fld">
+        <span class="lbl">局麻藥(種類/濃度/容積)</span>
+        <input type="text" id="en-drug" placeholder="例:0.5% ropivacaine 20mL" autocomplete="off">
+      </label>
+      <label class="fld">
+        <span class="lbl">佐劑</span>
+        <input type="text" id="en-adj" placeholder="例:dexamethasone 4mg 周邊" autocomplete="off">
+      </label>
+    </div>
+
+    <label class="fld">
+      <span class="lbl">是否轉換為全身麻醉<span class="req"> *</span></span>
+      <select id="en-conv">
+        <option value="">— 請選擇 —</option>
+        <option>否</option>
+        <option>置入喉頭罩</option>
+        <option>插管</option>
+      </select>
+      <span class="hint">「不插管完成率」的分子就靠這一欄</span>
+    </label>
+
+    <label class="fld" id="en-convreason-wrap" hidden>
+      <span class="lbl">轉換原因</span>
+      <input type="text" id="en-convreason" autocomplete="off">
+    </label>
+
+    <h2 style="margin-top:22px;">術前資料 <span class="tag">事後補不來</span></h2>
+    <div class="grid2">
+      <label class="fld">
+        <span class="lbl">術前疼痛 NRS(0-10)</span>
+        <input type="number" id="en-preopnrs" min="0" max="10" inputmode="numeric">
+      </label>
+      <label class="fld">
+        <span class="lbl">術前疼痛已持續(週)</span>
+        <input type="number" id="en-preopweeks" min="0" inputmode="numeric">
+      </label>
+    </div>
+    <div class="grid2">
+      <label class="fld">
+        <span class="lbl">術前止痛藥</span>
+        <input type="text" id="en-preopanalg" placeholder="例:NSAID 每日" autocomplete="off">
+      </label>
+      <label class="fld">
+        <span class="lbl">術前是否用鴉片</span>
+        <select id="en-preopopioid">
+          <option value="">— 請選擇 —</option>
+          <option>否</option>
+          <option>是</option>
+        </select>
+      </label>
+    </div>
+
+    <label class="fld">
+      <span class="lbl">備註</span>
+      <textarea id="en-notes"></textarea>
+    </label>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="btn-enroll-back">返回名單</button>
+      <button class="btn btn-primary" id="btn-enroll-save">儲存收案資料</button>
+    </div>
+  </section>
+
+  <!-- ═══ 個案作業 ═══ -->
+  <section id="view-case" hidden>
+
+    <div class="card">
+      <h2 id="case-title">個案</h2>
+      <div id="case-info" class="msg info"></div>
+      <div id="lock-box" class="lockbox" hidden>
+        <div class="t">🔒 虛擬離院時點(已鎖定)</div>
+        <div class="v" id="lock-time"></div>
+        <div class="n">首次同時達到 PADSS ≥ 9 與呼吸、上肢兩道關卡的時刻。之後的重評不會再更動它。</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="btn-case-back">返回名單</button>
+        <button class="btn btn-ghost" id="btn-case-edit">編輯收案資料</button>
+      </div>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button role="tab" data-tab="assess" aria-selected="true">病房重評</button>
+      <button role="tab" data-tab="drug" aria-selected="false">給藥登記</button>
+      <button role="tab" data-tab="night" aria-selected="false">夜間補登</button>
+      <button role="tab" data-tab="log" aria-selected="false">已存紀錄</button>
+    </div>
+
+    <!-- ── 重評 ── -->
+    <div class="card" id="tab-assess">
+      <h2>病房重評</h2>
+      <div id="assess-msg" class="msg" hidden></div>
+
+      <label class="fld">
+        <span class="lbl">評估時間<span class="req"> *</span></span>
+        <input type="datetime-local" id="as-time">
+        <span class="hint" id="as-hours"></span>
+      </label>
+
+      <div id="padss-fields"></div>
+
+      <div class="padss-total" id="padss-total-box">
+        <span class="num" id="padss-total">—</span>
+        <span class="txt" id="padss-total-txt">PADSS 總分(滿分 10,≥ 9 才算達標)</span>
+      </div>
+
+      <label class="fld">
+        <span class="lbl">呼吸關卡<span class="req"> *</span></span>
+        <div class="seg gate" data-field="gate_resp">
+          <button type="button" class="pass" data-value="通過">通過</button>
+          <button type="button" class="fail" data-value="未通過">未通過</button>
+        </div>
+        <span class="hint">無呼吸困難主訴,室內空氣下 SpO₂ 回到術前基準</span>
+      </label>
+
+      <label class="fld">
+        <span class="lbl">上肢關卡<span class="req"> *</span></span>
+        <div class="seg gate" data-field="gate_limb">
+          <button type="button" class="pass" data-value="通過">通過</button>
+          <button type="button" class="fail" data-value="未通過">未通過</button>
+        </div>
+        <span class="hint">吊帶已戴妥,且已當面教會麻木期防燙傷、防壓傷</span>
+      </label>
+
+      <label class="fld">
+        <span class="lbl">目前疼痛 NRS<span class="req"> *</span></span>
+        <div class="seg nrs" data-field="nrs" id="as-nrs"></div>
+      </label>
+
+      <div class="grid2">
+        <label class="fld">
+          <span class="lbl">噁心嘔吐</span>
+          <select id="as-ponv">
+            <option value="">— 請選擇 —</option>
+            <option>無</option>
+            <option>噁心</option>
+            <option>嘔吐</option>
+          </select>
+        </label>
+        <label class="fld">
+          <span class="lbl">阻斷還在作用嗎</span>
+          <select id="as-block">
+            <option value="">— 請選擇 —</option>
+            <option>還在(手仍麻)</option>
+            <option>開始退(有感覺了)</option>
+            <option>已退掉</option>
+            <option>無法判斷</option>
+          </select>
+          <span class="hint">這欄是轉折點的直接證據</span>
+        </label>
+      </div>
+
+      <label class="fld">
+        <span class="lbl">需醫療介入事件(可複選)</span>
+        <div class="chips" id="as-events"></div>
+        <span class="hint">口服藥按時給予不算。勾選的項目會進入「虛擬離院後需介入事件」的分析</span>
+      </label>
+
+      <label class="fld">
+        <span class="lbl">備註</span>
+        <textarea id="as-notes"></textarea>
+      </label>
+
+      <button class="btn btn-primary btn-wide" id="btn-assess-save">儲存重評</button>
+    </div>
+
+    <!-- ── 給藥 ── -->
+    <div class="card" id="tab-drug" hidden>
+      <h2>給藥登記</h2>
+      <div id="drug-msg" class="msg" hidden></div>
+
+      <label class="fld">
+        <span class="lbl">給藥時間<span class="req"> *</span></span>
+        <input type="datetime-local" id="dg-time">
+        <span class="hint" id="dg-hours"></span>
+      </label>
+
+      <label class="fld">
+        <span class="lbl">給藥類型<span class="req"> *</span></span>
+        <div class="seg" data-field="schedule_type">
+          <button type="button" data-value="定時">定時</button>
+          <button type="button" data-value="PRN">PRN(突破性)</button>
+        </div>
+        <span class="hint">定時 acetaminophen 是「定時」;Dynastat 與 Tramadol 現行是「PRN」</span>
+      </label>
+
+      <label class="fld">
+        <span class="lbl">藥物<span class="req"> *</span></span>
+        <input type="text" id="dg-drug" list="drug-list" placeholder="例:Acetaminophen" autocomplete="off">
+        <datalist id="drug-list">
+          <option value="Acetaminophen"></option>
+          <option value="Dynastat (parecoxib)"></option>
+          <option value="Tramadol"></option>
+          <option value="Ketorolac"></option>
+          <option value="Morphine"></option>
+        </datalist>
+      </label>
+
+      <div class="grid2">
+        <label class="fld">
+          <span class="lbl">劑量</span>
+          <input type="text" id="dg-dose" placeholder="例:1g / 40mg / 50mg" autocomplete="off">
+        </label>
+        <label class="fld">
+          <span class="lbl">途徑</span>
+          <select id="dg-route">
+            <option value="">— 請選擇 —</option>
+            <option>IV 靜脈</option>
+            <option>PO 口服</option>
+            <option>IM 肌肉</option>
+            <option>其他</option>
+          </select>
+          <span class="hint">靜脈轉口服的空檔要看得出來</span>
+        </label>
+      </div>
+
+      <label class="fld" id="dg-nrs-wrap">
+        <span class="lbl">給藥當下 NRS<span class="req" id="dg-nrs-req" hidden> *（PRN 必填）</span></span>
+        <div class="seg nrs" data-field="nrs_at_admin" id="dg-nrs"></div>
+        <span class="hint">PRN 必填。沒有它就無法校正「護理師是在 NRS 幾分給藥」這個門檻</span>
+      </label>
+
+      <label class="fld">
+        <span class="lbl">備註</span>
+        <textarea id="dg-notes"></textarea>
+      </label>
+
+      <button class="btn btn-primary btn-wide" id="btn-drug-save">儲存給藥</button>
+    </div>
+
+    <!-- ── 夜間補登 ── -->
+    <div class="card" id="tab-night" hidden>
+      <h2>夜間補登 <span class="tag">隔日早上用</span></h2>
+      <div class="msg warn">
+        夜間不新增流程。隔日早上把三條既有管道的資料合併補登在這裡:<br>
+        ① 給藥紀錄的第一劑 PRN ② 常規護理紀錄的 NRS ③ 病人在 LINE 的自主回報
+      </div>
+      <div id="night-msg" class="msg" hidden></div>
+
+      <h2 style="font-size:15px;">補一筆疼痛分數</h2>
+      <div class="grid2">
+        <label class="fld">
+          <span class="lbl">測量時間<span class="req"> *</span></span>
+          <input type="datetime-local" id="ni-time">
+        </label>
+        <label class="fld">
+          <span class="lbl">資料來源<span class="req"> *</span></span>
+          <select id="ni-source">
+            <option value="">— 請選擇 —</option>
+            <option>常規護理紀錄</option>
+            <option>LINE 自主回報</option>
+            <option>病人隔日回憶</option>
+            <option>夜班護理師定點</option>
+          </select>
+        </label>
+      </div>
+      <label class="fld">
+        <span class="lbl">NRS<span class="req"> *</span></span>
+        <div class="seg nrs" data-field="nrs" id="ni-nrs"></div>
+      </label>
+      <label class="fld">
+        <span class="lbl">備註(例:被痛醒、家屬代述)</span>
+        <input type="text" id="ni-notes" autocomplete="off">
+      </label>
+      <button class="btn btn-primary btn-wide" id="btn-night-save">補登疼痛分數</button>
+
+      <hr style="margin:24px 0; border:none; border-top:1px solid var(--nu-line);">
+
+      <h2 style="font-size:15px;">登記實際出院</h2>
+      <label class="fld">
+        <span class="lbl">實際出院時間</span>
+        <input type="datetime-local" id="ni-discharge">
+      </label>
+      <label class="fld">
+        <span class="lbl" style="display:flex;align-items:center;gap:8px;font-weight:normal;">
+          <input type="checkbox" id="ni-close" style="width:auto;display:inline-block;">
+          同時把本案標記為「已結案」
+        </span>
+      </label>
+      <button class="btn btn-ghost btn-wide" id="btn-discharge-save">儲存出院時間</button>
+    </div>
+
+    <!-- ── 已存紀錄 ── -->
+    <div class="card" id="tab-log" hidden>
+      <h2>已存紀錄</h2>
+      <div id="log-body"></div>
+    </div>
+
+  </section>
+
+  <div class="foot">PMS-aac · 個管師工作台 v1.0 · 資料寫入四張獨立工作表</div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyd7bIOosg_v1lyhkcJO2oi0EzaUdMYSkf7EVJQ7oetv8QY2zhlnyaO1XaGyLs8rphF/exec';
+
+  var nurseKey = '';
+  var assessor = '';
+  var currentSid = '';
+  var currentCase = null;
+
+  // ═══════════════════════════════════════════════════
+  // JSONP(沿用 pacu.html 的做法;本頁 payload 都很小)
+  // ═══════════════════════════════════════════════════
+  function api(action, params) {
+    return new Promise(function (resolve, reject) {
+      var cbName = '__nu_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+      var script;
+      var timer = setTimeout(function () {
+        delete window[cbName];
+        if (script && script.parentNode) script.parentNode.removeChild(script);
+        reject(new Error('連線逾時(20 秒)'));
+      }, 20000);
+
+      window[cbName] = function (data) {
+        clearTimeout(timer);
+        delete window[cbName];
+        if (script && script.parentNode) script.parentNode.removeChild(script);
+        if (data && data.ok) resolve(data);
+        else reject(new Error((data && data.error) || '未知錯誤'));
+      };
+
+      var usp = new URLSearchParams();
+      usp.set('action', action);
+      usp.set('callback', cbName);
+      usp.set('nurseKey', nurseKey);
+      for (var k in params) {
+        if (params[k] !== undefined && params[k] !== null && params[k] !== '') {
+          usp.set(k, String(params[k]));
+        }
+      }
+      script = document.createElement('script');
+      script.src = GAS_ENDPOINT + '?' + usp.toString();
+      script.onerror = function () {
+        clearTimeout(timer);
+        delete window[cbName];
+        reject(new Error('網路錯誤'));
+      };
+      document.body.appendChild(script);
+    });
+  }
+
+  // ═══════════════════════════════════════════════════
+  // 小工具
+  // ═══════════════════════════════════════════════════
+  function $(id) { return document.getElementById(id); }
+  function show(id) { $(id).hidden = false; }
+  function hide(id) { $(id).hidden = true; }
+
+  function msg(id, text, kind) {
+    var el = $(id);
+    if (!text) { el.hidden = true; return; }
+    el.className = 'msg ' + (kind || 'info');
+    el.textContent = text;
+    el.hidden = false;
+  }
+
+  /** 本地時間 → datetime-local 值 */
+  function localValue(d) {
+    var p = function (n) { return String(n).padStart(2, '0'); };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) +
+           'T' + p(d.getHours()) + ':' + p(d.getMinutes());
+  }
+  function nowValue() { return localValue(new Date()); }
+
+  /** 'YYYY-MM-DD HH:mm'(後端格式)→ Date */
+  function parseServer(s) {
+    if (!s) return null;
+    var m = String(s).match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);
+    if (!m) return null;
+    return new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]);
+  }
+
+  function hoursSinceBlock(inputValue) {
+    if (!currentCase || !currentCase.enroll || !currentCase.enroll.T_block) return '';
+    var b = parseServer(currentCase.enroll.T_block);
+    var t = parseServer(inputValue);
+    if (!b || !t) return '';
+    var h = (t.getTime() - b.getTime()) / 3600000;
+    return '阻斷後 ' + (Math.round(h * 10) / 10) + ' 小時';
+  }
+
+  // ── 分段按鈕 ────────────────────────────────────
+  var segState = {};
+
+  function buildSeg(container, values, labels) {
+    container.innerHTML = '';
+    values.forEach(function (v, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.dataset.value = String(v);
+      b.textContent = labels ? labels[i] : String(v);
+      b.setAttribute('aria-pressed', 'false');
+      container.appendChild(b);
+    });
+  }
+
+  function segKey(container) {
+    return (container.closest('[id]') ? container.closest('[id]').id : '') + ':' + container.dataset.field;
+  }
+
+  function wireSeg(container) {
+    container.addEventListener('click', function (ev) {
+      var btn = ev.target.closest('button');
+      if (!btn || !container.contains(btn)) return;
+      Array.prototype.forEach.call(container.querySelectorAll('button'), function (b) {
+        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+      });
+      segState[segKey(container)] = btn.dataset.value;
+      if (container.dataset.field && container.dataset.field.indexOf('padss') === 0) updatePadssTotal();
+      if (container.dataset.field === 'schedule_type') updateDrugMode();
+    });
+  }
+
+  function segGet(container) { return segState[segKey(container)]; }
+
+  function segReset(container) {
+    Array.prototype.forEach.call(container.querySelectorAll('button'), function (b) {
+      b.setAttribute('aria-pressed', 'false');
+    });
+    delete segState[segKey(container)];
+  }
+
+  // ═══════════════════════════════════════════════════
+  // PADSS 五項
+  // ═══════════════════════════════════════════════════
+  var PADSS = [
+    { key: 'padss_vs',         label: '生命徵象',
+      opts: ['偏離術前 > 40%', '偏離 20-40%', '偏離 < 20%'] },
+    { key: 'padss_ambulation', label: '活動能力',
+      opts: ['無法行走', '需協助行走', '步態穩定、無頭暈'] },
+    { key: 'padss_ponv',       label: '噁心嘔吐',
+      opts: ['嚴重、治療無效', '中度、需治療', '輕微或無'] },
+    { key: 'padss_pain',       label: '疼痛控制',
+      opts: ['無法接受', '可接受(需口服藥)', '輕微或無'] },
+    { key: 'padss_bleeding',   label: '手術部位出血',
+      opts: ['嚴重', '中度', '輕微或無'] }
+  ];
+
+  var EVENTS = [
+    '注射止痛藥', '注射止吐藥', '需要氧氣', '需醫師親自評估',
+    '傷口處置', '生命徵象異常需處置', '其他'
+  ];
+
+  function buildAssessForm() {
+    var host = $('padss-fields');
+    host.innerHTML = '';
+    PADSS.forEach(function (item) {
+      var lab = document.createElement('label');
+      lab.className = 'fld';
+      var head = document.createElement('span');
+      head.className = 'lbl';
+      head.innerHTML = 'PADSS · ' + item.label + '<span class="req"> *</span>';
+      var seg = document.createElement('div');
+      seg.className = 'seg';
+      seg.dataset.field = item.key;
+      buildSeg(seg, [0, 1, 2], item.opts.map(function (t, i) { return i + ' · ' + t; }));
+      wireSeg(seg);
+      lab.appendChild(head);
+      lab.appendChild(seg);
+      host.appendChild(lab);
+    });
+
+    var ev = $('as-events');
+    ev.innerHTML = '';
+    EVENTS.forEach(function (name) {
+      var l = document.createElement('label');
+      var c = document.createElement('input');
+      c.type = 'checkbox';
+      c.value = name;
+      l.appendChild(c);
+      l.appendChild(document.createTextNode(name));
+      ev.appendChild(l);
+    });
+  }
+
+  function padssSegs() {
+    return Array.prototype.slice.call($('padss-fields').querySelectorAll('.seg'));
+  }
+
+  function updatePadssTotal() {
+    var segs = padssSegs();
+    var vals = segs.map(function (s) { return segGet(s); });
+    var box = $('padss-total-box');
+    if (vals.some(function (v) { return v === undefined; })) {
+      $('padss-total').textContent = '—';
+      $('padss-total-txt').textContent = 'PADSS 總分(滿分 10,≥ 9 才算達標)';
+      box.classList.remove('pass');
+      return;
+    }
+    var total = vals.reduce(function (a, b) { return a + Number(b); }, 0);
+    $('padss-total').textContent = total;
+    $('padss-total-txt').textContent = total >= 9
+      ? '達 PADSS 標準 — 兩道關卡也通過的話會鎖定虛擬離院時點'
+      : '未達標(需 ≥ 9)';
+    box.classList.toggle('pass', total >= 9);
+  }
+
+  // ═══════════════════════════════════════════════════
+  // 登入
+  // ═══════════════════════════════════════════════════
+  function doLogin() {
+    var k = $('key-input').value.trim();
+    var who = $('assessor-input').value.trim();
+    if (!k) { msg('login-err', '請輸入通行碼', 'err'); return; }
+    if (!who) { msg('login-err', '請輸入您的姓名', 'err'); return; }
+
+    nurseKey = k;
+    assessor = who;
+    $('btn-login').disabled = true;
+    msg('login-err', '');
+
+    api('nurseGetCases', {}).then(function (res) {
+      try {
+        sessionStorage.setItem('nurse_key', k);
+        sessionStorage.setItem('nurse_who', who);
+      } catch (e) { /* 私密視窗會丟錯,忽略 */ }
+      $('who').textContent = who;
+      hide('view-login');
+      show('view-list');
+      renderCases(res.cases);
+    }).catch(function (e) {
+      nurseKey = '';
+      msg('login-err', e.message, 'err');
+    }).then(function () {
+      $('btn-login').disabled = false;
+    });
+  }
+
+  // ═══════════════════════════════════════════════════
+  // 名單
+  // ═══════════════════════════════════════════════════
+  function loadCases() {
+    msg('list-msg', '載入中…', 'info');
+    return api('nurseGetCases', {}).then(function (res) {
+      msg('list-msg', '');
+      renderCases(res.cases);
+    }).catch(function (e) {
+      msg('list-msg', e.message, 'err');
+    });
+  }
+
+  function renderCases(cases) {
+    $('case-count').textContent = cases.length + ' 例';
+    var host = $('case-list');
+    host.innerHTML = '';
+    if (!cases.length) {
+      var p = document.createElement('div');
+      p.className = 'msg info';
+      p.textContent = '還沒有收案。按「新增收案」開始第一例。';
+      host.appendChild(p);
+      return;
+    }
+    cases.forEach(function (c) {
+      var d = document.createElement('div');
+      d.className = 'case';
+      d.tabIndex = 0;
+
+      var top = document.createElement('div');
+      top.className = 'top';
+      var nm = document.createElement('span');
+      nm.className = 'nm';
+      nm.textContent = c.patientName || '(未填姓名)';
+      var sid = document.createElement('span');
+      sid.className = 'sid';
+      sid.textContent = c.surgeryId;
+      top.appendChild(nm); top.appendChild(sid);
+
+      var meta = document.createElement('div');
+      meta.className = 'meta';
+      var bits = [];
+      if (c.tBlock) bits.push('阻斷 ' + c.tBlock);
+      if (c.hoursSinceBlock !== '') bits.push('術後 ' + Math.floor(c.hoursSinceBlock) + ' 小時');
+      bits.push('重評 ' + c.assessCount + ' 次');
+      bits.push('給藥 ' + c.drugCount + ' 筆');
+      meta.textContent = bits.join(' · ');
+
+      var flags = document.createElement('div');
+      flags.className = 'flags';
+      if (c.padssMetTime) {
+        var f = document.createElement('span');
+        f.className = 'flag ok';
+        f.textContent = '🔒 虛擬離院 ' + c.padssMetTime;
+        flags.appendChild(f);
+      }
+      if (c.firstPrnTime) {
+        var fp = document.createElement('span');
+        fp.className = 'flag info';
+        fp.textContent = '首劑 PRN ' + c.firstPrnTime;
+        flags.appendChild(fp);
+      }
+      (c.attention || []).forEach(function (r) {
+        var a = document.createElement('span');
+        a.className = 'flag';
+        a.textContent = r;
+        flags.appendChild(a);
+      });
+      if (c.enrollStatus === '已結案') {
+        var cs = document.createElement('span');
+        cs.className = 'flag ok';
+        cs.textContent = '已結案';
+        flags.appendChild(cs);
+      }
+
+      d.appendChild(top);
+      d.appendChild(meta);
+      if (flags.children.length) d.appendChild(flags);
+      d.addEventListener('click', function () { openCase(c.surgeryId); });
+      d.addEventListener('keypress', function (ev) {
+        if (ev.key === 'Enter') openCase(c.surgeryId);
+      });
+      host.appendChild(d);
+    });
+  }
+
+  // ═══════════════════════════════════════════════════
+  // 個案
+  // ═══════════════════════════════════════════════════
+  function openCase(sid) {
+    currentSid = sid;
+    return api('nurseGetCase', { sid: sid }).then(function (res) {
+      currentCase = res;
+      hide('view-list');
+      hide('view-enroll');
+      show('view-case');
+      renderCaseHeader();
+      resetAssessForm();
+      resetDrugForm();
+      resetNightForm();
+      renderLogs();
+      switchTab('assess');
+      window.scrollTo(0, 0);
+    }).catch(function (e) {
+      msg('list-msg', e.message, 'err');
+    });
+  }
+
+  function renderCaseHeader() {
+    var en = currentCase.enroll;
+    $('case-title').textContent = (en.patient_name || '(未填姓名)') + ' · ' + currentSid;
+
+    var bits = [];
+    if (en.T_block) bits.push('阻斷完成 ' + en.T_block);
+    if (en.T0_pacu_out) bits.push('離開恢復室 ' + en.T0_pacu_out);
+    if (en.block_type) bits.push(en.block_type);
+    if (en.conversion_to_GA) bits.push('轉全麻:' + en.conversion_to_GA);
+    if (en.first_prn_time) bits.push('首劑 PRN ' + en.first_prn_time);
+    if (en.first_opioid_time) bits.push('首劑鴉片 ' + en.first_opioid_time);
+    $('case-info').textContent = bits.join(' ｜ ') || '尚未填寫收案資料';
+
+    if (en.padss_met_time) {
+      $('lock-time').textContent = en.padss_met_time;
+      show('lock-box');
+    } else {
+      hide('lock-box');
+    }
+
+    if (!en.T_block) {
+      msg('assess-msg', '⚠️ 這一例還沒填「阻斷完成時間」,所有相對時間都算不出來。請先到「編輯收案資料」補上。', 'warn');
+    } else {
+      msg('assess-msg', '');
+    }
+  }
+
+  /** 超過 2 小時才登記的視為補登 — 分析時要能區分即時與回溯 */
+  function entryMode(inputValue) {
+    var t = parseServer(inputValue);
+    if (!t) return '即時';
+    return (Date.now() - t.getTime() > 2 * 3600000) ? '補登' : '即時';
+  }
+
+  function switchTab(name) {
+    ['assess', 'drug', 'night', 'log'].forEach(function (t) {
+      $('tab-' + t).hidden = (t !== name);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.tabs button'), function (b) {
+      b.setAttribute('aria-selected', b.dataset.tab === name ? 'true' : 'false');
+    });
+    if (name === 'log') renderLogs();
+  }
+
+  // ── 重評表單 ────────────────────────────────────
+  function resetAssessForm() {
+    $('as-time').value = nowValue();
+    $('as-hours').textContent = hoursSinceBlock($('as-time').value);
+    padssSegs().forEach(segReset);
+    segReset(document.querySelector('#tab-assess .seg.gate[data-field="gate_resp"]'));
+    segReset(document.querySelector('#tab-assess .seg.gate[data-field="gate_limb"]'));
+    segReset($('as-nrs'));
+    $('as-ponv').value = '';
+    $('as-block').value = '';
+    $('as-notes').value = '';
+    Array.prototype.forEach.call($('as-events').querySelectorAll('input'), function (c) {
+      c.checked = false;
+    });
+    updatePadssTotal();
+  }
+
+  function saveAssessment() {
+    var segs = padssSegs();
+    var payload = { sid: currentSid, assessed_at: $('as-time').value, assessor: assessor };
+
+    var missing = [];
+    segs.forEach(function (s) {
+      var v = segGet(s);
+      if (v === undefined) missing.push('PADSS ' + s.dataset.field);
+      else payload[s.dataset.field] = v;
+    });
+
+    var gr = document.querySelector('#tab-assess .seg.gate[data-field="gate_resp"]');
+    var gl = document.querySelector('#tab-assess .seg.gate[data-field="gate_limb"]');
+    if (segGet(gr) === undefined) missing.push('呼吸關卡');
+    else payload.gate_resp = segGet(gr);
+    if (segGet(gl) === undefined) missing.push('上肢關卡');
+    else payload.gate_limb = segGet(gl);
+
+    var nrs = segGet($('as-nrs'));
+    if (nrs === undefined) missing.push('疼痛 NRS');
+    else payload.nrs = nrs;
+
+    if (!$('as-time').value) missing.push('評估時間');
+
+    if (missing.length) {
+      msg('assess-msg', '還有必填未完成:' + missing.join('、'), 'err');
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    payload.ponv = $('as-ponv').value;
+    payload.block_still_working = $('as-block').value;
+    payload.notes = $('as-notes').value;
+    payload.entry_mode = entryMode($('as-time').value);
+    payload.events = Array.prototype.slice.call($('as-events').querySelectorAll('input:checked'))
+      .map(function (c) { return c.value; }).join('、');
+
+    $('btn-assess-save').disabled = true;
+    msg('assess-msg', '儲存中…', 'info');
+
+    var resultText = '';
+    var resultKind = 'ok';
+
+    api('nurseSaveAssessment', payload).then(function (res) {
+      resultText = '✅ 已儲存 · PADSS ' + res.padssTotal + ' 分';
+      if (res.lockedSimulatedDischarge) {
+        resultText += ' · 🔒 已鎖定虛擬離院時點';
+      } else if (res.meetsDischarge && res.alreadyLockedAt) {
+        resultText += ' · 虛擬離院時點先前已鎖定於 ' + res.alreadyLockedAt + ',不再更動';
+      } else if (!res.meetsDischarge) {
+        resultText += ' · 尚未達離院標準';
+        resultKind = 'warn';
+      }
+      return api('nurseGetCase', { sid: currentSid });
+    }).then(function (res) {
+      currentCase = res;
+      renderCaseHeader();
+      resetAssessForm();
+      msg('assess-msg', resultText, resultKind);
+    }).catch(function (e) {
+      msg('assess-msg', '❌ ' + e.message, 'err');
+    }).then(function () {
+      $('btn-assess-save').disabled = false;
+      window.scrollTo(0, 0);
+    });
+  }
+
+  // ── 給藥表單 ────────────────────────────────────
+  function resetDrugForm() {
+    $('dg-time').value = nowValue();
+    $('dg-hours').textContent = hoursSinceBlock($('dg-time').value);
+    segReset(document.querySelector('#tab-drug .seg[data-field="schedule_type"]'));
+    segReset($('dg-nrs'));
+    $('dg-drug').value = '';
+    $('dg-dose').value = '';
+    $('dg-route').value = '';
+    $('dg-notes').value = '';
+    msg('drug-msg', '');
+    updateDrugMode();
+  }
+
+  /** 夜間補登分頁必須跟著病人重置,否則會把前一位的值寫到下一位 */
+  function resetNightForm() {
+    $('ni-time').value = nowValue();
+    $('ni-discharge').value = nowValue();
+    $('ni-source').value = '';
+    $('ni-notes').value = '';
+    $('ni-close').checked = false;
+    segReset($('ni-nrs'));
+    msg('night-msg', '');
+  }
+
+  function updateDrugMode() {
+    var st = segGet(document.querySelector('#tab-drug .seg[data-field="schedule_type"]'));
+    $('dg-nrs-req').hidden = (st !== 'PRN');
+  }
+
+  function saveDrug() {
+    var stSeg = document.querySelector('#tab-drug .seg[data-field="schedule_type"]');
+    var st = segGet(stSeg);
+    var drug = $('dg-drug').value.trim();
+    var nrs = segGet($('dg-nrs'));
+
+    var missing = [];
+    if (!$('dg-time').value) missing.push('給藥時間');
+    if (!st) missing.push('給藥類型');
+    if (!drug) missing.push('藥物');
+    if (st === 'PRN' && nrs === undefined) missing.push('給藥當下 NRS(PRN 必填)');
+    if (missing.length) {
+      msg('drug-msg', '還有必填未完成:' + missing.join('、'), 'err');
+      return;
+    }
+
+    $('btn-drug-save').disabled = true;
+    msg('drug-msg', '儲存中…', 'info');
+
+    api('nurseSaveAnalgesia', {
+      sid: currentSid,
+      given_at: $('dg-time').value,
+      drug: drug,
+      dose: $('dg-dose').value,
+      route: $('dg-route').value,
+      schedule_type: st,
+      nrs_at_admin: nrs,
+      given_by: assessor,
+      entry_mode: entryMode($('dg-time').value),
+      notes: $('dg-notes').value
+    }).then(function (res) {
+      var t = '✅ 已儲存 ' + res.drug;
+      if (res.hoursSinceBlock !== '') t += ' · 阻斷後 ' + res.hoursSinceBlock + ' 小時';
+      if (res.firstPrnUpdated) t += ' · 已記為首劑 PRN';
+      if (res.firstOpioidUpdated) t += ' · 已記為首劑鴉片';
+      msg('drug-msg', t, 'ok');
+      return api('nurseGetCase', { sid: currentSid });
+    }).then(function (res) {
+      currentCase = res;
+      renderCaseHeader();
+      resetDrugForm();
+    }).catch(function (e) {
+      msg('drug-msg', '❌ ' + e.message, 'err');
+    }).then(function () {
+      $('btn-drug-save').disabled = false;
+    });
+  }
+
+  // ── 夜間補登 ────────────────────────────────────
+  function saveNightPain() {
+    var nrs = segGet($('ni-nrs'));
+    var missing = [];
+    if (!$('ni-time').value) missing.push('測量時間');
+    if (!$('ni-source').value) missing.push('資料來源');
+    if (nrs === undefined) missing.push('NRS');
+    if (missing.length) {
+      msg('night-msg', '還有必填未完成:' + missing.join('、'), 'err');
+      return;
+    }
+    $('btn-night-save').disabled = true;
+    msg('night-msg', '儲存中…', 'info');
+
+    api('nurseSavePain', {
+      sid: currentSid,
+      measured_at: $('ni-time').value,
+      nrs: nrs,
+      source: $('ni-source').value,
+      context: '夜間補登',
+      notes: $('ni-notes').value
+    }).then(function (res) {
+      var t = '✅ 已補登 NRS ' + res.nrs;
+      if (res.hoursSinceBlock !== '') t += ' · 阻斷後 ' + res.hoursSinceBlock + ' 小時';
+      msg('night-msg', t, 'ok');
+      segReset($('ni-nrs'));
+      $('ni-notes').value = '';
+    }).catch(function (e) {
+      msg('night-msg', '❌ ' + e.message, 'err');
+    }).then(function () {
+      $('btn-night-save').disabled = false;
+    });
+  }
+
+  function saveDischarge() {
+    if (!$('ni-discharge').value) {
+      msg('night-msg', '請填出院時間', 'err');
+      return;
+    }
+    $('btn-discharge-save').disabled = true;
+    api('nurseSetDischarge', {
+      sid: currentSid,
+      actual_discharge_time: $('ni-discharge').value,
+      close_case: $('ni-close').checked ? '是' : ''
+    }).then(function (res) {
+      var t = '✅ 已儲存出院時間';
+      if (res.losHours !== '') t += ' · 住院 ' + res.losHours + ' 小時';
+      if (res.simulatedToActualHours !== '') {
+        t += ' · 虛擬離院到實際出院相隔 ' + res.simulatedToActualHours + ' 小時';
+      }
+      msg('night-msg', t, 'ok');
+      return api('nurseGetCase', { sid: currentSid });
+    }).then(function (res) {
+      currentCase = res;
+      renderCaseHeader();
+    }).catch(function (e) {
+      msg('night-msg', '❌ ' + e.message, 'err');
+    }).then(function () {
+      $('btn-discharge-save').disabled = false;
+    });
+  }
+
+  // ── 已存紀錄 ────────────────────────────────────
+  function table(rows, cols, heads) {
+    if (!rows.length) {
+      var p = document.createElement('div');
+      p.className = 'msg info';
+      p.textContent = '尚無紀錄';
+      return p;
+    }
+    var wrap = document.createElement('div');
+    wrap.className = 'scroll';
+    var t = document.createElement('table');
+    t.className = 'log';
+    var thead = document.createElement('thead');
+    var tr = document.createElement('tr');
+    heads.forEach(function (h) {
+      var th = document.createElement('th');
+      th.textContent = h;
+      tr.appendChild(th);
+    });
+    thead.appendChild(tr);
+    t.appendChild(thead);
+    var tb = document.createElement('tbody');
+    rows.forEach(function (r) {
+      var row = document.createElement('tr');
+      cols.forEach(function (c) {
+        var td = document.createElement('td');
+        td.textContent = r[c] || '';
+        row.appendChild(td);
+      });
+      tb.appendChild(row);
+    });
+    t.appendChild(tb);
+    wrap.appendChild(t);
+    return wrap;
+  }
+
+  function renderLogs() {
+    var host = $('log-body');
+    host.innerHTML = '';
+    if (!currentCase) return;
+
+    var h3a = document.createElement('h2');
+    h3a.style.fontSize = '15px';
+    h3a.textContent = '疼痛紀錄(' + currentCase.pain.length + ' 筆)';
+    host.appendChild(h3a);
+    host.appendChild(table(currentCase.pain,
+      ['measured_at', 'hours_since_block', 'nrs', 'source', 'notes'],
+      ['時間', '阻斷後(h)', 'NRS', '來源', '備註']));
+
+    var h3b = document.createElement('h2');
+    h3b.style.fontSize = '15px';
+    h3b.style.marginTop = '22px';
+    h3b.textContent = '給藥紀錄(' + currentCase.analgesia.length + ' 筆)';
+    host.appendChild(h3b);
+    host.appendChild(table(currentCase.analgesia,
+      ['given_at', 'hours_since_block', 'drug', 'dose', 'route', 'schedule_type', 'nrs_at_admin'],
+      ['時間', '阻斷後(h)', '藥物', '劑量', '途徑', '類型', '當下NRS']));
+
+    var h3c = document.createElement('h2');
+    h3c.style.fontSize = '15px';
+    h3c.style.marginTop = '22px';
+    h3c.textContent = '病房重評(' + currentCase.assessments.length + ' 次)';
+    host.appendChild(h3c);
+    host.appendChild(table(currentCase.assessments,
+      ['assessed_at', 'hours_since_block', 'padss_total', 'nrs', 'meets_discharge', 'block_still_working', 'events'],
+      ['時間', '阻斷後(h)', 'PADSS', 'NRS', '達標', '阻斷狀態', '事件']));
+  }
+
+  // ═══════════════════════════════════════════════════
+  // 收案表單
+  // ═══════════════════════════════════════════════════
+  function openEnroll(existing) {
+    hide('view-list'); hide('view-case'); show('view-enroll');
+    msg('enroll-msg', '');
+    var en = existing || {};
+    $('en-sid').value = existing ? currentSid : '';
+    $('en-sid').readOnly = !!existing;
+    $('en-name').value = en.patient_name || '';
+    $('en-pk').value = en.pk || '';
+    $('en-tblock').value = en.T_block ? en.T_block.replace(' ', 'T') : '';
+    $('en-t0').value = en.T0_pacu_out ? en.T0_pacu_out.replace(' ', 'T') : '';
+    $('en-blocktype').value = en.block_type || '';
+    $('en-side').value = en.block_side || '';
+    $('en-drug').value = en.block_drug || '';
+    $('en-adj').value = en.block_adjuvant || '';
+    $('en-conv').value = en.conversion_to_GA || '';
+    $('en-convreason').value = en.conversion_reason || '';
+    $('en-preopnrs').value = en.preop_nrs || '';
+    $('en-preopweeks').value = en.preop_pain_weeks || '';
+    $('en-preopanalg').value = en.preop_analgesic || '';
+    $('en-preopopioid').value = en.preop_opioid || '';
+    $('en-notes').value = en.notes || '';
+    updateConvReason();
+    window.scrollTo(0, 0);
+  }
+
+  function updateConvReason() {
+    var v = $('en-conv').value;
+    var hideIt = (v === '' || v === '否');
+    $('en-convreason-wrap').hidden = hideIt;
+    // 隱藏時一併清空,否則從「插管」改回「否」會留下矛盾的轉換原因
+    if (hideIt) $('en-convreason').value = '';
+  }
+
+  function saveEnroll() {
+    var sid = $('en-sid').value.trim();
+    var missing = [];
+    if (!sid) missing.push('手術編號');
+    if (!$('en-tblock').value) missing.push('阻斷完成時間');
+    if (!$('en-conv').value) missing.push('是否轉換為全身麻醉');
+    if (missing.length) {
+      msg('enroll-msg', '還有必填未完成:' + missing.join('、'), 'err');
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    $('btn-enroll-save').disabled = true;
+    msg('enroll-msg', '儲存中…', 'info');
+
+    api('nurseEnroll', {
+      sid: sid,
+      patient_name: $('en-name').value,
+      pk: $('en-pk').value,
+      proc_code: 'SHOULDER',
+      site: 'MAIN',
+      case_manager: assessor,
+      T_block: $('en-tblock').value,
+      T0_pacu_out: $('en-t0').value,
+      block_type: $('en-blocktype').value,
+      block_side: $('en-side').value,
+      block_drug: $('en-drug').value,
+      block_adjuvant: $('en-adj').value,
+      conversion_to_GA: $('en-conv').value,
+      conversion_reason: $('en-convreason').value,
+      preop_nrs: $('en-preopnrs').value,
+      preop_pain_weeks: $('en-preopweeks').value,
+      preop_analgesic: $('en-preopanalg').value,
+      preop_opioid: $('en-preopopioid').value,
+      notes: $('en-notes').value
+    }).then(function (res) {
+      msg('enroll-msg', res.created ? '✅ 已建立收案' : '✅ 已更新收案', 'ok');
+      currentSid = sid;
+      return openCase(sid);
+    }).catch(function (e) {
+      msg('enroll-msg', '❌ ' + e.message, 'err');
+    }).then(function () {
+      $('btn-enroll-save').disabled = false;
+    });
+  }
+
+  // ═══════════════════════════════════════════════════
+  // 綁定
+  // ═══════════════════════════════════════════════════
+  function init() {
+    buildAssessForm();
+
+    // NRS 0-10 三處
+    [['as-nrs'], ['dg-nrs'], ['ni-nrs']].forEach(function (pair) {
+      var el = $(pair[0]);
+      buildSeg(el, [0,1,2,3,4,5,6,7,8,9,10]);
+      wireSeg(el);
+    });
+
+    // 其餘分段按鈕
+    Array.prototype.forEach.call(
+      document.querySelectorAll('.seg.gate, .seg[data-field="schedule_type"]'), wireSeg);
+
+    $('btn-login').addEventListener('click', doLogin);
+    $('key-input').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') $('assessor-input').focus();
+    });
+    $('assessor-input').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') doLogin();
+    });
+
+    $('btn-refresh').addEventListener('click', loadCases);
+    $('btn-new').addEventListener('click', function () {
+      currentSid = ''; currentCase = null; openEnroll(null);
+    });
+    $('btn-enroll-back').addEventListener('click', function () {
+      hide('view-enroll'); show('view-list'); loadCases();
+    });
+    $('btn-enroll-save').addEventListener('click', saveEnroll);
+    $('en-conv').addEventListener('change', updateConvReason);
+
+    $('btn-case-back').addEventListener('click', function () {
+      hide('view-case'); show('view-list'); loadCases();
+    });
+    $('btn-case-edit').addEventListener('click', function () {
+      openEnroll(currentCase ? currentCase.enroll : null);
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('.tabs button'), function (b) {
+      b.addEventListener('click', function () { switchTab(b.dataset.tab); });
+    });
+
+    $('as-time').addEventListener('change', function () {
+      $('as-hours').textContent = hoursSinceBlock($('as-time').value);
+    });
+    $('dg-time').addEventListener('change', function () {
+      $('dg-hours').textContent = hoursSinceBlock($('dg-time').value);
+    });
+
+    $('btn-assess-save').addEventListener('click', saveAssessment);
+    $('btn-drug-save').addEventListener('click', saveDrug);
+    $('btn-night-save').addEventListener('click', saveNightPain);
+    $('btn-discharge-save').addEventListener('click', saveDischarge);
+
+    $('ni-time').value = nowValue();
+    $('ni-discharge').value = nowValue();
+
+    // 嘗試還原上次登入(避免逐床操作時反覆輸入)
+    try {
+      var sk = sessionStorage.getItem('nurse_key');
+      var sw = sessionStorage.getItem('nurse_who');
+      if (sk) $('key-input').value = sk;
+      if (sw) $('assessor-input').value = sw;
+    } catch (e) { /* 私密視窗會丟錯,忽略 */ }
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+
+</body>
+</html>
