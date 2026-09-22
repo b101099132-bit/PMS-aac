@@ -305,8 +305,43 @@
         <input type="text" id="en-drug" placeholder="例:0.5% ropivacaine 20mL" autocomplete="off">
       </label>
       <label class="fld">
-        <span class="lbl">佐劑</span>
+        <span class="lbl">周邊佐劑(加在阻斷藥裡的)</span>
         <input type="text" id="en-adj" placeholder="例:dexamethasone 4mg 周邊" autocomplete="off">
+        <span class="hint">只填「加進阻斷藥裡」的;靜脈給的請填下一欄</span>
+      </label>
+    </div>
+
+    <div class="grid2">
+      <label class="fld">
+        <span class="lbl">靜脈 dexamethasone<span class="req"> *</span></span>
+        <select id="en-dexiv">
+          <option value="">— 請選擇 —</option>
+          <option>否</option>
+          <option>是</option>
+          <option>不明</option>
+        </select>
+        <span class="hint">已知的獨立危險因子,必須與周邊佐劑分開記錄</span>
+      </label>
+      <label class="fld" id="en-dexdose-wrap" hidden>
+        <span class="lbl">靜脈 dexamethasone 劑量</span>
+        <input type="text" id="en-dexdose" placeholder="例:8mg" autocomplete="off">
+      </label>
+    </div>
+
+    <div class="grid2">
+      <label class="fld">
+        <span class="lbl">植入錨釘數量</span>
+        <input type="number" id="en-anchor" min="0" inputmode="numeric" placeholder="無則填 0">
+      </label>
+      <label class="fld">
+        <span class="lbl">是否涉及骨質處理</span>
+        <select id="en-bone">
+          <option value="">— 請選擇 —</option>
+          <option>無</option>
+          <option>有(錨釘)</option>
+          <option>有(肩峰成形或其他骨質處理)</option>
+        </select>
+        <span class="hint">單純清創、無骨質處理者選「無」</span>
       </label>
     </div>
 
@@ -349,6 +384,49 @@
           <option>否</option>
           <option>是</option>
         </select>
+      </label>
+    </div>
+
+    <h2 style="margin-top:22px;">同意書 <span class="tag">研究同意一律紙本</span></h2>
+    <div class="msg info">
+      IRB 不採電子同意。<strong>研究受試者同意書(ICF)請以紙本簽署並依規定歸檔</strong>,
+      本系統只登記「是否已簽、日期、取得同意者」,<strong>不存任何簽名影像</strong>。
+    </div>
+
+    <div class="grid2">
+      <label class="fld">
+        <span class="lbl">研究同意書(紙本)已簽署<span class="req"> *</span></span>
+        <select id="en-consent">
+          <option value="">— 請選擇 —</option>
+          <option>是</option>
+          <option>否(未收案)</option>
+        </select>
+      </label>
+      <label class="fld">
+        <span class="lbl">簽署日期</span>
+        <input type="date" id="en-consent-at">
+      </label>
+    </div>
+
+    <label class="fld">
+      <span class="lbl">取得同意者</span>
+      <input type="text" id="en-consent-by" placeholder="說明並取得同意的研究團隊成員" autocomplete="off">
+      <span class="hint">須為 IRB 人員名單內、經主持人授權者</span>
+    </label>
+
+    <div class="grid2">
+      <label class="fld">
+        <span class="lbl">電子平台個資使用同意</span>
+        <select id="en-consent-data">
+          <option value="">— 請選擇 —</option>
+          <option>是</option>
+          <option>否</option>
+        </select>
+        <span class="hint">LINE ID 等聯絡資料的使用同意,與研究同意分開</span>
+      </label>
+      <label class="fld">
+        <span class="lbl">簽署日期</span>
+        <input type="date" id="en-consent-data-at">
       </label>
     </div>
 
@@ -1303,7 +1381,17 @@
     $('en-preopanalg').value = en.preop_analgesic || '';
     $('en-preopopioid').value = en.preop_opioid || '';
     $('en-notes').value = en.notes || '';
+    $('en-dexiv').value = en.dexamethasone_iv || '';
+    $('en-dexdose').value = en.dexamethasone_iv_dose || '';
+    $('en-anchor').value = en.anchor_count || '';
+    $('en-bone').value = en.bone_work || '';
+    $('en-consent').value = en.consent_research || '';
+    $('en-consent-at').value = (en.consent_at || '').slice(0, 10);
+    $('en-consent-by').value = en.consent_by || '';
+    $('en-consent-data').value = en.consent_data_use || '';
+    $('en-consent-data-at').value = (en.consent_data_at || '').slice(0, 10);
     updateConvReason();
+    updateDexDose();
     window.scrollTo(0, 0);
   }
 
@@ -1390,12 +1478,20 @@
     if (hideIt) $('en-convreason').value = '';
   }
 
+  function updateDexDose() {
+    var hideIt = ($('en-dexiv').value !== '是');
+    $('en-dexdose-wrap').hidden = hideIt;
+    if (hideIt) $('en-dexdose').value = '';
+  }
+
   function saveEnroll() {
     var sid = $('en-sid').value.trim();
     var missing = [];
     if (!sid) missing.push('手術編號');
     if (!$('en-tblock').value) missing.push('阻斷完成時間');
     if (!$('en-conv').value) missing.push('是否轉換為全身麻醉');
+    if (!$('en-dexiv').value) missing.push('靜脈 dexamethasone');
+    if (!$('en-consent').value) missing.push('研究同意書(紙本)是否已簽署');
     if (missing.length) {
       msg('enroll-msg', '還有必填未完成:' + missing.join('、'), 'err');
       window.scrollTo(0, 0);
@@ -1424,6 +1520,15 @@
       preop_pain_weeks: $('en-preopweeks').value,
       preop_analgesic: $('en-preopanalg').value,
       preop_opioid: $('en-preopopioid').value,
+      dexamethasone_iv: $('en-dexiv').value,
+      dexamethasone_iv_dose: $('en-dexdose').value,
+      anchor_count: $('en-anchor').value,
+      bone_work: $('en-bone').value,
+      consent_research: $('en-consent').value,
+      consent_at: $('en-consent-at').value,
+      consent_by: $('en-consent-by').value,
+      consent_data_use: $('en-consent-data').value,
+      consent_data_at: $('en-consent-data-at').value,
       notes: $('en-notes').value
     }).then(function (res) {
       msg('enroll-msg', res.created ? '✅ 已建立收案' : '✅ 已更新收案', 'ok');
@@ -1472,6 +1577,7 @@
     });
     $('btn-enroll-save').addEventListener('click', saveEnroll);
     $('en-conv').addEventListener('change', updateConvReason);
+    $('en-dexiv').addEventListener('change', updateDexDose);
 
     $('btn-search').addEventListener('click', searchSurgeries);
     $('en-search').addEventListener('keypress', function (e) {
