@@ -463,6 +463,70 @@
   resize: vertical;
   min-height: 80px;
 }
+
+/* ★ 2026-09-23 新增 — 3 欄選項格,樣式與 survey-d1.html 的 .a3-grid 一致 */
+.a3-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+.a3-grid label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 6px;
+  min-height: 48px;
+  background: var(--paper);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--ink);
+  transition: all 0.12s ease;
+  user-select: none;
+}
+.a3-grid label:hover {
+  border-color: var(--teal);
+  background: var(--teal-tint);
+}
+.a3-grid label:has(input:checked) {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: white;
+  font-weight: 600;
+}
+.a3-grid label.na {
+  border-style: dashed;
+  background: var(--cream-deep);
+  color: var(--ink-soft);
+}
+.a3-grid label.na:has(input:checked) {
+  background: var(--teal);
+  border-color: var(--teal);
+  border-style: solid;
+  color: white;
+}
+.a3-grid label input[type="radio"] {
+  flex-shrink: 0;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--teal);
+}
+.a3-grid label .a3-num {
+  font-family: var(--font-serif);
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 13px;
+}
+.a3-grid label:has(input:checked) .a3-num {
+  color: white;
+}
+@media (max-width: 420px) {
+  .a3-grid label { font-size: 12.5px; min-height: 44px; padding: 8px 4px; }
+}
 </style>
 </head>
 <body>
@@ -821,6 +885,50 @@
         <textarea id="D2a" name="D2a" rows="2" maxlength="500" placeholder="(可留空)"></textarea>
       </div>
 
+      </div>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         F · 手臂恢復與後續就醫
+         ════════════════════════════════════════════════════════════════ -->
+    <div class="form-section" data-section="F">
+      <div class="section-label"><span class="section-num">F</span>手臂恢復與後續就醫</div>
+
+      <div class="field">
+        <label><span class="q-num">F1.</span>手術那隻手臂的<strong>麻木或無力</strong>,恢復了嗎? <span class="required">*</span></label>
+        <div class="a3-grid">
+          <label for="F1-1"><input type="radio" name="F1" id="F1-1" value="1" required><span class="a3-num">1</span><span>完全恢復</span></label>
+          <label for="F1-2"><input type="radio" name="F1" id="F1-2" value="2"><span class="a3-num">2</span><span>部分恢復</span></label>
+          <label for="F1-3"><input type="radio" name="F1" id="F1-3" value="3"><span class="a3-num">3</span><span>幾乎沒恢復</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label><span class="q-num">F2.</span>如果還沒完全恢復,對<strong>日常生活</strong>的影響? <span class="required">*</span></label>
+        <div class="a3-grid">
+          <label for="F2-1"><input type="radio" name="F2" id="F2-1" value="1" required><span class="a3-num">1</span><span>沒有影響</span></label>
+          <label for="F2-2"><input type="radio" name="F2" id="F2-2" value="2"><span class="a3-num">2</span><span>輕微影響</span></label>
+          <label for="F2-3"><input type="radio" name="F2" id="F2-3" value="3"><span class="a3-num">3</span><span>明顯影響</span></label>
+          <label for="F2-4" class="na"><input type="radio" name="F2" id="F2-4" value="na"><span class="a3-num">—</span><span>已完全恢復</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label><span class="q-num">F3.</span>出院之後,您有沒有因為這次手術<strong>自己去看醫生</strong>? <span class="required">*</span></label>
+        <div class="a3-grid">
+          <label for="F3-1"><input type="radio" name="F3" id="F3-1" value="1" required><span class="a3-num">1</span><span>沒有</span></label>
+          <label for="F3-2"><input type="radio" name="F3" id="F3-2" value="2"><span class="a3-num">2</span><span>本院急診</span></label>
+          <label for="F3-3"><input type="radio" name="F3" id="F3-3" value="3"><span class="a3-num">3</span><span>本院門診</span></label>
+          <label for="F3-4"><input type="radio" name="F3" id="F3-4" value="4"><span class="a3-num">4</span><span>其他醫院</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="F4"><span class="q-num">F4.</span>如果有去看醫生,是因為什麼?<span class="optional-mark">可選填</span>
+          <span class="label-sub">例如:太痛、發燒、傷口、手一直沒力、其他不舒服</span>
+        </label>
+        <input type="text" id="F4" name="F4" maxlength="200" placeholder="(沒有去看醫生請留空)">
+      </div>
+
       <div class="field">
         <label for="D3"><span class="q-num">D3.</span>還有什麼想跟我們說的話?<span class="optional-mark">可選填</span>
           <span class="label-sub">讚美、建議、抱怨、感謝、想法、疑問,任何都歡迎</span>
@@ -879,6 +987,13 @@
   // ★ 三處編碼需同步維護
   // ★ 衛教檔位置:edu/{id}.html
   const EDU_MAP = {
+    // ★ 2026-09-23 新增 — 總院肩關節鏡 6 份(代碼加 SH- 前綴,與安康版區隔)
+    'SH-G-01': '這次手術與恢復的全貌',
+    'SH-G-02': '肩關節鏡不插管的麻醉方式',
+    'SH-A':    '術前 3 天怎麼準備',
+    'SH-B':    '住院這一晚與回家後第一天',
+    'SH-PAIN': '止痛藥怎麼吃',
+    'SH-PONV': '噁心想吐怎麼辦',
     // 通用 (3)
     'G-01': '現代麻醉照護介紹',
     'G-02': '加速康復(ERAS)概念',

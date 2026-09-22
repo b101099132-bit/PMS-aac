@@ -350,6 +350,70 @@
   resize: vertical;
   min-height: 80px;
 }
+
+/* ★ 2026-09-23 新增 — 3 欄選項格,樣式與 survey-d1.html 的 .a3-grid 一致 */
+.a3-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+.a3-grid label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 6px;
+  min-height: 48px;
+  background: var(--paper);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--ink);
+  transition: all 0.12s ease;
+  user-select: none;
+}
+.a3-grid label:hover {
+  border-color: var(--teal);
+  background: var(--teal-tint);
+}
+.a3-grid label:has(input:checked) {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: white;
+  font-weight: 600;
+}
+.a3-grid label.na {
+  border-style: dashed;
+  background: var(--cream-deep);
+  color: var(--ink-soft);
+}
+.a3-grid label.na:has(input:checked) {
+  background: var(--teal);
+  border-color: var(--teal);
+  border-style: solid;
+  color: white;
+}
+.a3-grid label input[type="radio"] {
+  flex-shrink: 0;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--teal);
+}
+.a3-grid label .a3-num {
+  font-family: var(--font-serif);
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 13px;
+}
+.a3-grid label:has(input:checked) .a3-num {
+  color: white;
+}
+@media (max-width: 420px) {
+  .a3-grid label { font-size: 12.5px; min-height: 44px; padding: 8px 4px; }
+}
 </style>
 </head>
 <body>
@@ -527,6 +591,40 @@
           <input type="radio" name="A4" id="A4-4" value="4">
           <label for="A4-4">有,需要急診<br><small>或住院</small></label>
         </div>
+      </div>
+
+      </div>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         B · 手臂恢復與後續就醫
+         ════════════════════════════════════════════════════════════════ -->
+    <div class="form-section" data-section="B">
+      <div class="section-label"><span class="section-num">B</span>手臂恢復與後續就醫</div>
+
+      <div class="field">
+        <label><span class="q-num">B1.</span>手術那隻手臂的<strong>麻木或無力</strong>,恢復了嗎? <span class="required">*</span></label>
+        <div class="a3-grid">
+          <label for="B1-1"><input type="radio" name="B1" id="B1-1" value="1" required><span class="a3-num">1</span><span>完全恢復</span></label>
+          <label for="B1-2"><input type="radio" name="B1" id="B1-2" value="2"><span class="a3-num">2</span><span>部分恢復</span></label>
+          <label for="B1-3"><input type="radio" name="B1" id="B1-3" value="3"><span class="a3-num">3</span><span>幾乎沒恢復</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label><span class="q-num">B2.</span>出院之後,您有沒有因為這次手術<strong>自己去看醫生</strong>? <span class="required">*</span></label>
+        <div class="a3-grid">
+          <label for="B2-1"><input type="radio" name="B2" id="B2-1" value="1" required><span class="a3-num">1</span><span>沒有</span></label>
+          <label for="B2-2"><input type="radio" name="B2" id="B2-2" value="2"><span class="a3-num">2</span><span>本院急診</span></label>
+          <label for="B2-3"><input type="radio" name="B2" id="B2-3" value="3"><span class="a3-num">3</span><span>本院門診</span></label>
+          <label for="B2-4"><input type="radio" name="B2" id="B2-4" value="4"><span class="a3-num">4</span><span>其他醫院</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="B3"><span class="q-num">B3.</span>如果有去看醫生,是因為什麼?<span class="optional-mark">可選填</span>
+          <span class="label-sub">例如:太痛、發燒、傷口、手一直沒力、其他不舒服</span>
+        </label>
+        <input type="text" id="B3" name="B3" maxlength="200" placeholder="(沒有去看醫生請留空)">
       </div>
 
       <div class="field">

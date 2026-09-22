@@ -30,6 +30,7 @@
   --clay:       #9C5B3D;   /* 警示(暫保留 token,未啟用) */
   --border:     #E8E2D5;   /* 邊框 */
   --border-soft:#F0EBE0;   /* 弱邊框 */
+  --border-strong:#D4CDB8; /* 強邊框 — 表單輸入框、選項框(問卷頁大量使用) */
 
   /* —— 排版 token —— */
   --font-serif: 'Noto Serif TC', 'Songti TC', serif;

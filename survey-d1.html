@@ -1002,6 +1002,75 @@
     </div>
 
     <!-- ════════════════════════════════════════════════════════════════
+         F · 昨晚的疼痛經過(阻斷退掉的時間點)
+         ════════════════════════════════════════════════════════════════ -->
+    <div class="form-section" data-section="F">
+      <div class="section-label">昨晚的疼痛經過</div>
+      <p style="font-size:14px;color:var(--ink-soft);line-height:1.75;margin:-2px 0 16px;">
+        神經阻斷的效果通常會在手術後某個時間點退掉,這一段是我們最想了解的。
+        想不起來確切時間也沒關係,選「不記得」就好,不必勉強回想。
+      </p>
+
+      <div class="field">
+        <label><span class="q-num">F1.</span>昨晚您有沒有<strong>被痛醒</strong>? <span class="required">*</span></label>
+        <div class="a3-grid">
+          <label for="F1-1"><input type="radio" name="F1" id="F1-1" value="1" required><span class="a3-num">1</span><span>沒有</span></label>
+          <label for="F1-2"><input type="radio" name="F1" id="F1-2" value="2"><span class="a3-num">2</span><span>有</span></label>
+          <label for="F1-3" class="na"><input type="radio" name="F1" id="F1-3" value="3"><span class="a3-num">—</span><span>不記得</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="F2"><span class="q-num">F2.</span>如果有被痛醒,大約是<strong>幾點</strong>?<span class="optional-mark">可選填</span>
+          <span class="label-sub">沒有被痛醒、或想不起來,本題請留空</span>
+        </label>
+        <input type="time" id="F2" name="F2">
+      </div>
+
+      <div class="field">
+        <label><span class="q-num">F3.</span>手術後手臂的<strong>麻感</strong>,現在退掉了嗎? <span class="required">*</span></label>
+        <div class="a3-grid">
+          <label for="F3-1"><input type="radio" name="F3" id="F3-1" value="1" required><span class="a3-num">1</span><span>已經退了</span></label>
+          <label for="F3-2"><input type="radio" name="F3" id="F3-2" value="2"><span class="a3-num">2</span><span>還沒完全退</span></label>
+          <label for="F3-3" class="na"><input type="radio" name="F3" id="F3-3" value="3"><span class="a3-num">—</span><span>不記得</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="F3t"><span class="q-num">F3a.</span>如果已經退了,大約是<strong>幾點</strong>開始有感覺的?<span class="optional-mark">可選填</span>
+          <span class="label-sub">從完全沒感覺,變成開始有感覺、或開始痛的那個時間</span>
+        </label>
+        <input type="time" id="F3t" name="F3t">
+      </div>
+
+      <div class="field">
+        <label><span class="q-num">F4.</span>昨晚到現在,除了<strong>固定時間給的止痛藥</strong>以外,有再額外用到止痛藥嗎? <span class="required">*</span></label>
+        <div class="a3-grid">
+          <label for="F4-1"><input type="radio" name="F4" id="F4-1" value="1" required><span class="a3-num">1</span><span>沒有用到</span></label>
+          <label for="F4-2"><input type="radio" name="F4" id="F4-2" value="2"><span class="a3-num">2</span><span>有用到</span></label>
+          <label for="F4-3" class="na"><input type="radio" name="F4" id="F4-3" value="3"><span class="a3-num">—</span><span>不記得</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="F4t"><span class="q-num">F4a.</span>如果有,<strong>第一次</strong>是幾點?<span class="optional-mark">可選填</span>
+          <span class="label-sub">第一次覺得需要、並且拿到額外止痛藥的時間</span>
+        </label>
+        <input type="time" id="F4t" name="F4t">
+      </div>
+
+      <div class="field">
+        <label><span class="q-num">F5.</span>這段期間,止痛藥您是<strong>怎麼吃的</strong>? <span class="required">*</span></label>
+        <div class="a3-grid">
+          <label for="F5-1"><input type="radio" name="F5" id="F5-1" value="1" required><span class="a3-num">1</span><span>按時吃</span></label>
+          <label for="F5-2"><input type="radio" name="F5" id="F5-2" value="2"><span class="a3-num">2</span><span>痛了才吃</span></label>
+          <label for="F5-3"><input type="radio" name="F5" id="F5-3" value="3"><span class="a3-num">3</span><span>兩種都有</span></label>
+          <label for="F5-4" class="na"><input type="radio" name="F5" id="F5-4" value="4"><span class="a3-num">—</span><span>沒有吃</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════
          送出
          ════════════════════════════════════════════════════════════════ -->
     <div class="submit-area">
@@ -1123,7 +1192,7 @@
 
       if (!shouldShow) {
         el.querySelectorAll('input[type="radio"]:checked').forEach(r => { r.checked = false; });
-        el.querySelectorAll('textarea').forEach(t => { t.value = ''; });
+        el.querySelectorAll('textarea, input[type="text"], input[type="time"]').forEach(t => { t.value = ''; });
       }
     });
   }
@@ -1134,7 +1203,7 @@
       saveDraft();
     });
   });
-  document.querySelectorAll('textarea').forEach(t => {
+  document.querySelectorAll('textarea, input[type="text"], input[type="time"]').forEach(t => {
     t.addEventListener('input', saveDraft);
   });
 
@@ -1174,7 +1243,7 @@
     document.querySelectorAll('input[type="radio"]:checked').forEach(r => {
       data[r.name] = r.value;
     });
-    document.querySelectorAll('textarea').forEach(t => {
+    document.querySelectorAll('textarea, input[type="text"], input[type="time"]').forEach(t => {
       if (t.value.trim()) data[t.name] = t.value.trim();
     });
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
@@ -1191,8 +1260,9 @@
           radio.checked = true;
           return;
         }
-        const textarea = document.querySelector(`textarea[name="${name}"]`);
-        if (textarea) textarea.value = value;
+        const free = document.querySelector(
+          `textarea[name="${name}"], input[type="text"][name="${name}"], input[type="time"][name="${name}"]`);
+        if (free) free.value = value;
       });
       updateConditionals();
       updateProgress();
@@ -1223,7 +1293,7 @@
     document.querySelectorAll('input[type="radio"]:checked').forEach(r => {
       data[r.name] = r.value;
     });
-    document.querySelectorAll('textarea, input[type="text"]').forEach(t => {
+    document.querySelectorAll('textarea, input[type="text"], input[type="time"]').forEach(t => {
       const v = t.value.trim();
       if (v) data[t.name] = v;
     });
